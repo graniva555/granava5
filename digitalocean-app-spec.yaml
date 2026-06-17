@@ -1,0 +1,13 @@
+# DigitalOcean App Platform — Static Site spec for Granava (SPA)
+# In your app: Settings → App Spec → paste/merge this. The key line is
+# catchall_document: index.html  (so /products, /markets etc. don't 404 on refresh).
+name: granava
+static_sites:
+  - name: granava-web
+    git:
+      repo_clone_url: https://github.com/YOUR_USERNAME/YOUR_REPO.git
+      branch: main
+    build_command: npm install && npm run build
+    output_dir: dist
+    index_document: index.html
+    catchall_document: index.html
