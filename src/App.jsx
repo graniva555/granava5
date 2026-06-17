@@ -1,381 +1,1547 @@
-import { Routes, Route, Link, useParams, useLocation } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { PRODUCTS, MARKETS, getProduct, getMarket } from './data.js'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 
-function Header() {
-  const [open, setOpen] = useState(false)
-  return (
-    <header className="navbar">
-      <div className="navbar-inner">
-        <Link to="/" className="logo" aria-label="Granava — Home" onClick={() => setOpen(false)}>
-          <svg className="logo-mark" viewBox="0 0 480 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
-            <text x="240" y="55" textAnchor="middle" fontFamily="'Josefin Sans','Century Gothic',Arial,sans-serif" fontSize="54" fontWeight="300" fill="#c9a96e" letterSpacing="20">GRANAVA</text>
-            <line x1="18" y1="73" x2="462" y2="73" stroke="#c9a96e" strokeWidth="0.9" />
-          </svg>
-          <span className="logo-tagline">NATURAL GRANITE</span>
-        </Link>
-        <nav className={`nav-links ${open ? 'open' : ''}`}>
-          <Link to="/products" onClick={() => setOpen(false)}>Collection</Link>
-          <Link to="/markets" onClick={() => setOpen(false)}>Markets</Link>
-          <Link to="/about" onClick={() => setOpen(false)}>About</Link>
-          <Link to="/contact" onClick={() => setOpen(false)}>Contact</Link>
-        </nav>
-        <Link to="/contact" className="nav-cta">Get a Quote</Link>
-        <button className="nav-burger" aria-label="Menu" onClick={() => setOpen(!open)}>
-          <span /><span /><span />
-        </button>
-      </div>
-    </header>
-  )
-}
 
-function Footer() {
-  return (
-    <footer className="footer">
-      <div className="footer-inner">
-        <div className="footer-grid">
-          <div>
-            <div className="footer-logo"><b>GRANAVA</b><small>NATURAL GRANITE</small></div>
-            <p className="footer-desc">Premium granite exported directly from India's finest quarries to architects, fabricators and developers worldwide.</p>
-          </div>
-          <div className="footer-col">
-            <h4>Products</h4>
-            <ul>{PRODUCTS.map((p) => <li key={p.slug}><Link to={`/products/${p.slug}`}>{p.short}</Link></li>)}</ul>
-          </div>
-          <div className="footer-col">
-            <h4>Markets</h4>
-            <ul>{MARKETS.map((m) => <li key={m.slug}><Link to={`/markets/${m.slug}`}>{m.country}</Link></li>)}</ul>
-          </div>
-          <div className="footer-col">
-            <h4>Contact</h4>
-            <ul>
-              <li><a href="mailto:info@granava.in">info@granava.in</a></li>
-              <li>Ongole, Andhra Pradesh</li>
-              <li>India</li>
-            </ul>
-          </div>
+    const { useState, useEffect, useRef, useCallback } = React;
+
+    // ── Routing ────────────────────────────────────────────────────────────
+    function getRoute() {
+      // Path-based routing (real URLs, SEO-friendly). Each page sets window.__ROUTE__.
+      if (window.__ROUTE__) return window.__ROUTE__;
+      let path = window.location.pathname;
+      // Strip trailing index.html and .html, normalize
+      path = path.replace(/index\.html$/, '/').replace(/\.html$/, '');
+      if (path === '' || path === '/') return '/';
+      // Normalize: strip trailing slash (but keep leading)
+      const seg = path.replace(/\/+$/, '') || '/';
+      // Sub-routes: /products/:slug and /markets/:slug return the FULL path
+      if (seg.startsWith('/products/') || seg.startsWith('/markets/')) return seg;
+      // Top-level routes
+      const map = { '/products': '/products', '/markets': '/markets', '/about': '/about', '/contact': '/contact', '/': '/' };
+      if (map[seg]) return map[seg];
+      const last = '/' + seg.split('/').filter(Boolean).pop();
+      if (map[last]) return map[last];
+      // hash fallback for backward compatibility
+      const h = window.location.hash;
+      if (h && h !== '#') return h.slice(1);
+      return '/';
+    }
+
+    /**
+     * Converts any raw ID/slug to the canonical lowercase-hyphen form
+     * that matches every product's `slug` field exactly.
+     *
+     * Defends against:
+     *  • trailing/leading whitespace  ("steel-gray " → "steel-gray")
+     *  • percent-encoding             ("steel%20gray" → "steel-gray")
+     *  • wrong casing                 ("Steel-Gray"  → "steel-gray")
+     *  • spaces instead of hyphens   ("steel gray"  → "steel-gray")
+     *
+     * @param {string} raw
+     * @returns {string}
+     */
+    function normalizeSlug(raw) {
+      return decodeURIComponent(raw)   // decode %XX sequences first
+        .trim()                         // strip leading / trailing whitespace
+        .toLowerCase()                  // force lowercase
+        .replace(/\s+/g, '-')           // spaces → hyphens
+        .replace(/[^a-z0-9-]/g, '');   // strip anything else
+    }
+
+    function useRoute() {
+      const [route, setRoute] = useState(getRoute);
+      useEffect(() => {
+        const SPA_ROUTES = ['/', '/products', '/markets', '/about', '/contact'];
+        const go = (next, push, file) => {
+          window.__ROUTE__ = next;
+          if (push) window.history.pushState({ route: next }, '', file || (next === '/' ? '/' : next));
+          setRoute(next);
+          if (!next.startsWith('/products/')) window.scrollTo(0, 0);
+        };
+        // Intercept clicks on internal links → smooth SPA nav (no full reload)
+        const clickHandler = (e) => {
+          const a = e.target.closest('a');
+          if (!a) return;
+          const href = a.getAttribute('href');
+          if (!href) return;
+          // only intercept same-site SPA routes; let detail-page .html links reload normally
+          const FILE_TO_ROUTE = { '/': '/', '/products': '/products', '/markets': '/markets', '/about': '/about', '/contact': '/contact' };
+          if (FILE_TO_ROUTE[href] !== undefined) {
+            e.preventDefault();
+            go(FILE_TO_ROUTE[href], true, href);
+          }
+        };
+        // Browser back/forward
+        const popHandler = () => { window.__ROUTE__ = null; go(getRoute(), false); };
+        // Legacy hash support
+        const hashHandler = () => { window.__ROUTE__ = null; go(getRoute(), false); };
+        document.addEventListener('click', clickHandler);
+        window.addEventListener('popstate', popHandler);
+        window.addEventListener('hashchange', hashHandler);
+        return () => {
+          document.removeEventListener('click', clickHandler);
+          window.removeEventListener('popstate', popHandler);
+          window.removeEventListener('hashchange', hashHandler);
+        };
+      }, []);
+      return route;
+    }
+
+    // ── FadeUp wrapper (scroll-triggered) ──────────────────────────────────
+    const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function FadeUp({ children, delay = 0, style = {}, className = '' }) {
+      const ref = useRef(null);
+      const [vis, setVis] = useState(prefersReducedMotion);
+      useEffect(() => {
+        if (prefersReducedMotion) return;
+        const el = ref.current;
+        if (!el) return;
+        // threshold 0.04 = fires early; no negative rootMargin = no cross-section bleed
+        const obs = new IntersectionObserver(([e]) => {
+          if (e.isIntersecting) { setVis(true); obs.unobserve(el); }
+        }, { threshold: 0.04, rootMargin: '0px 0px 0px 0px' });
+        obs.observe(el);
+        return () => obs.disconnect();
+      }, []);
+      return (
+        <div ref={ref} className={className} style={{
+          opacity: vis ? 1 : 0,
+          /* 12px instead of 24px — much smaller shift, no section-bleed on mobile */
+          transform: vis ? 'none' : 'translateY(12px)',
+          /* width:100% ensures it fills its row — fixes layout gaps on scroll-back */
+          width: '100%',
+          /* no willChange on invisible state — avoids stacking-context interference */
+          transition: prefersReducedMotion ? 'none' : `opacity 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}ms, transform 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}ms`,
+          ...style
+        }}>
+          {children}
         </div>
-        <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} Granava. All rights reserved.</p>
-          <p>Premium Natural Granite Exporter · India</p>
-        </div>
-      </div>
-    </footer>
-  )
-}
+      );
+    }
 
-function ScrollTop() {
-  const { pathname } = useLocation()
-  useEffect(() => { window.scrollTo(0, 0) }, [pathname])
-  return null
-}
+    // ── Particle Canvas ────────────────────────────────────────────────────
+    function ParticleCanvas() {
+      const ref = useRef(null);
+      useEffect(() => {
+        // Skip canvas entirely on mobile — saves GPU, battery and paint time
+        if (window.matchMedia('(max-width: 768px)').matches) return;
+        const canvas = ref.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+        let animId;
+        let pts = [];
 
-function Home() {
-  useEffect(() => { document.title = 'Granava | Indian Granite Exporter — Black Galaxy, Jet Black & Natural Stone' }, [])
-  return (
-    <>
-      <section className="hero">
-        <div className="hero-inner">
-          <span className="eyebrow">Direct from Indian Quarries</span>
-          <h1>India's Premier<br /><em>Granite</em> Exporter<br />to the World</h1>
-          <p>Four exceptional granites — Black Galaxy, Jet Black, Black Pearl &amp; Steel Gray — exported directly to architects, fabricators and developers across the UK, USA, UAE and East Asia.</p>
-          <div className="hero-ctas">
-            <Link to="/products" className="btn btn-gold">View Collection</Link>
-            <Link to="/contact" className="btn btn-outline">Request a Quote</Link>
-          </div>
-        </div>
-      </section>
-      <Collection />
-      <section className="band">
-        <div className="band-inner">
-          <div className="band-item"><b>4</b><span>Premium Granites</span></div>
-          <div className="band-item"><b>20+</b><span>Years Exporting</span></div>
-          <div className="band-item"><b>25+</b><span>Countries Served</span></div>
-          <div className="band-item"><b>100%</b><span>Export Documentation</span></div>
-        </div>
-      </section>
-    </>
-  )
-}
+        function resize() {
+          canvas.style.willChange = 'transform';
+          canvas.width = canvas.offsetWidth || window.innerWidth;
+          canvas.height = canvas.offsetHeight || window.innerHeight;
+          const count = window.innerWidth < 768 ? 60 : (window.innerWidth < 1200 ? 110 : 170);
+          pts = Array.from({ length: count }, (_, i) => ({
 
-function Collection() {
-  return (
-    <section className="section">
-      <div className="section-head">
-        <span className="eyebrow">Our Collection</span>
-        <h2>Four Stones. <em>Infinite Possibilities.</em></h2>
-      </div>
-      <div className="grid">
-        {PRODUCTS.map((p) => (
-          <Link key={p.slug} to={`/products/${p.slug}`} className="card">
-            <div className={`card-vis ${p.tex}`}>{p.img && <img src={p.img} alt={`${p.name} slab`} loading="lazy" />}</div>
-            <div className="card-body">
-              <span className="card-origin">{p.origin}</span>
-              <h3>{p.name}</h3>
-              <p className="card-tag">{p.tagline}</p>
-              <span className="card-cta">View Specifications →</span>
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.16,
+            vy: (Math.random() - 0.5) * 0.16 - 0.035,
+            r: i < 22 ? Math.random() * 1.7 + 0.9 : Math.random() * 0.65 + 0.15,
+            base: i < 22 ? Math.random() * 0.75 + 0.2 : Math.random() * 0.35 + 0.05,
+            ph: Math.random() * Math.PI * 2,
+            spd: Math.random() * 0.013 + 0.007,
+            type: Math.random() < 0.72 ? 'plat' : 'blue',
+          }));
+        }
+
+        resize();
+        let resizeTick = false;
+        const ro = new ResizeObserver(() => {
+          if (!resizeTick) {
+            resizeTick = true;
+            requestAnimationFrame(() => { resize(); resizeTick = false; });
+          }
+        });
+        ro.observe(canvas.parentElement);
+
+        function draw() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          for (const p of pts) {
+            p.x += p.vx; p.y += p.vy; p.ph += p.spd;
+            if (p.x < -4) p.x = canvas.width + 4;
+            if (p.x > canvas.width + 4) p.x = -4;
+            if (p.y < -4) p.y = canvas.height + 4;
+            if (p.y > canvas.height + 4) p.y = -4;
+            const a = p.base * (0.62 + 0.38 * Math.sin(p.ph));
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = p.type === 'blue'
+              ? `rgba(100,160,210,${a.toFixed(2)})`
+              : `rgba(184,158,124,${a.toFixed(2)})`;
+            ctx.fill();
+          }
+          animId = requestAnimationFrame(draw);
+        }
+        draw();
+        // Pause animation when tab is not visible
+        const onVisibility = () => {
+          if (document.hidden) { cancelAnimationFrame(animId); }
+          else { animId = requestAnimationFrame(draw); }
+        };
+        document.addEventListener('visibilitychange', onVisibility);
+        return () => {
+          cancelAnimationFrame(animId);
+          ro.disconnect();
+          document.removeEventListener('visibilitychange', onVisibility);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        };
+      }, []);
+      return <canvas ref={ref} className="hero-canvas" />;
+    }
+
+    // ── Navbar ─────────────────────────────────────────────────────────────
+    const NAV = [
+      { l: 'Home', p: '/', f: '/' }, { l: 'Products', p: '/products', f: '/products' },
+      { l: 'Markets', p: '/markets', f: '/markets' }, { l: 'About', p: '/about', f: '/about' },
+      { l: 'Contact', p: '/contact', f: '/contact' },
+    ];
+
+    function Navbar({ route }) {
+      const [scrolled, setScrolled] = useState(false);
+      const [open, setOpen]         = useState(false);
+
+      /* ── Scroll detection (rAF-debounced) ──────────────────── */
+      useEffect(() => {
+        let ticking = false;
+        const onScroll = () => {
+          if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(() => {
+              setScrolled(window.scrollY > 24);
+              ticking = false;
+            });
+          }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+      }, []);
+
+      /* ── Close on route change ──────────────────────────────── */
+      useEffect(() => { setOpen(false); }, [route]);
+
+      /* ── Escape key closes overlay ──────────────────────────── */
+      useEffect(() => {
+        const onKey = (e) => { if (e.key === 'Escape') setOpen(false); };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+      }, []);
+
+      /* ── Body scroll lock when overlay is open ──────────────── */
+      useEffect(() => {
+        document.body.style.overflow = open ? 'hidden' : '';
+        return () => { document.body.style.overflow = ''; };
+      }, [open]);
+
+      const close = () => setOpen(false);
+
+      return (
+        <>
+          {/* ── Topbar ─────────────────────────────────────────── */}
+          <nav className={`navbar${scrolled ? ' scrolled' : ''}`}
+               role="navigation" aria-label="Main navigation">
+            <div className="navbar-inner">
+
+              {/* Logo */}
+              <a href="/" className="navbar-logo" aria-label="Granava — Home">
+                <svg className="navbar-logo-mark"
+                  viewBox="0 0 480 80" xmlns="http://www.w3.org/2000/svg"
+                  role="img" aria-hidden="true" focusable="false">
+                  <text x="240" y="55" textAnchor="middle"
+                    fontFamily="'Josefin Sans','Century Gothic',Arial,sans-serif"
+                    fontSize="54" fontWeight="300" fill="#c9a96e"
+                    letterSpacing="20" shapeRendering="geometricPrecision">GRANAVA</text>
+                  <line x1="18" y1="73" x2="462" y2="73"
+                    stroke="#c9a96e" strokeWidth="0.9"/>
+                </svg>
+                <span className="navbar-tagline" aria-hidden="true">NATURAL GRANITE</span>
+              </a>
+
+              {/* Desktop links */}
+              <ul className="navbar-links" role="list">
+                {NAV.map(n => (
+                  <li key={n.p}>
+                    <a href={n.f} className={route === n.p ? 'active' : ''}>{n.l}</a>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Desktop CTA */}
+              <a href="/contact" className="btn-gold navbar-cta">Get a Quote</a>
+
+              {/* Hamburger — mobile only */}
+              <button
+                className={`nav-burger${open ? ' is-open' : ''}`}
+                onClick={() => setOpen(v => !v)}
+                aria-label={open ? 'Close navigation' : 'Open navigation'}
+                aria-expanded={open}
+                aria-controls="mobile-nav-overlay"
+              >
+                <span className="burger-bar" aria-hidden="true" />
+                <span className="burger-bar" aria-hidden="true" />
+                <span className="burger-bar" aria-hidden="true" />
+              </button>
             </div>
-          </Link>
-        ))}
-      </div>
-    </section>
-  )
-}
+          </nav>
 
-function Markets() {
-  useEffect(() => { document.title = 'Export Markets — UK, USA, UAE & East Asia | Granava' }, [])
-  return (
-    <section className="section">
-      <div className="section-head">
-        <span className="eyebrow">Markets We Serve</span>
-        <h2>Global Reach. <em>Local Understanding.</em></h2>
-      </div>
-      <div className="grid">
-        {MARKETS.map((m) => (
-          <Link key={m.slug} to={`/markets/${m.slug}`} className="card mkt">
-            <span className="mkt-flag">{m.flag}</span>
-            <h3>{m.country}</h3>
-            <span className="card-origin">{m.region}</span>
-            <p className="card-tag">{m.tagline}</p>
-            <span className="card-cta">View Market →</span>
-          </Link>
-        ))}
-      </div>
-    </section>
-  )
-}
-
-function FinishSelector({ finishes }) {
-  const [active, setActive] = useState(0)
-  return (
-    <div className="finishes">
-      {finishes.map((f, i) => (
-        <button key={f} type="button" className={`chip ${i === active ? 'active' : ''}`} onClick={() => setActive(i)}>{f}</button>
-      ))}
-    </div>
-  )
-}
-
-function Faq({ q, a }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <div className={`faq ${open ? 'open' : ''}`}>
-      <button type="button" className="faq-q" onClick={() => setOpen(!open)}>
-        <span>{q}</span><span className="faq-icon">{open ? '−' : '+'}</span>
-      </button>
-      {open && <p className="faq-a">{a}</p>}
-    </div>
-  )
-}
-
-function ProductDetail() {
-  const { slug } = useParams()
-  const p = getProduct(slug)
-  useEffect(() => { if (p) document.title = `${p.name} — Granava` }, [p])
-  if (!p) return <NotFound />
-  return (
-    <article className="detail">
-      <nav className="breadcrumb"><Link to="/">Home</Link> › <Link to="/products">Collection</Link> › <span>{p.short}</span></nav>
-      <div className="detail-grid">
-        <div className="detail-visual">
-          <div className={`detail-vis ${p.tex}`} aria-hidden="true" />
-        </div>
-        <div className="detail-body">
-          <span className="eyebrow">{p.origin}</span>
-          <h1>{p.name}</h1>
-          <p className="detail-tag">{p.tagline}</p>
-          <p className="detail-desc">{p.desc}</p>
-          <h4>Available Finishes</h4>
-          <FinishSelector finishes={p.finishes} />
-          <p className="moq">Minimum order: {p.moq}</p>
-          <div className="hero-ctas">
-            <a className="btn btn-gold" href={`mailto:info@granava.in?subject=Sample Request: ${p.name}`}>Request a Sample</a>
-            <a className="btn btn-outline" href={`mailto:info@granava.in?subject=Pricing: ${p.name}`}>Get Pricing</a>
-          </div>
-        </div>
-      </div>
-
-      <section className="body-sec">
-        <h2><span className="sec-num">01</span> Technical Specifications</h2>
-        <div className="specs-grid">
-          {p.specs.map((s) => (
-            <div key={s.label} className="spec-row"><span>{s.label}</span><span>{s.value}</span></div>
-          ))}
-        </div>
-      </section>
-
-      <section className="body-sec">
-        <h2><span className="sec-num">02</span> Common Applications</h2>
-        <div className="uses-grid">
-          {p.applications.map((a) => <span key={a} className="use-pill">{a}</span>)}
-        </div>
-      </section>
-
-      <section className="body-sec">
-        <h2><span className="sec-num">03</span> Care &amp; Maintenance</h2>
-        <div className="care-list">
-          {p.care.map((c, i) => (
-            <div key={c.title} className="care-item">
-              <div className="care-icon">{String(i + 1).padStart(2, '0')}</div>
-              <div><h3>{c.title}</h3><p>{c.text}</p></div>
+          {/* ── Full-screen glassmorphism overlay ─────────────── */}
+          <div
+            id="mobile-nav-overlay"
+            className={`nav-overlay${open ? ' is-open' : ''}`}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile navigation"
+            aria-hidden={!open}
+          >
+            {/* Brand in overlay */}
+            <div className="nav-ov-brand">
+              <span className="nav-ov-wordmark">GRANAVA</span>
+              <span className="nav-ov-tagline">Natural Granite</span>
             </div>
-          ))}
-        </div>
-      </section>
 
-      <section className="body-sec">
-        <h2><span className="sec-num">04</span> Frequently Asked Questions</h2>
-        <div className="faq-list">
-          {p.faqs.map((f) => <Faq key={f.q} q={f.q} a={f.a} />)}
-        </div>
-      </section>
+            {/* Staggered nav links */}
+            <nav className="nav-ov-links" aria-label="Site pages">
+              {NAV.map((n, i) => (
+                <a
+                  key={n.p}
+                  href={n.f}
+                  className={`nav-ov-link${route === n.p ? ' is-active' : ''}`}
+                  onClick={close}
+                  tabIndex={open ? 0 : -1}
+                >
+                  <span className="nav-ov-num" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="nav-ov-label">{n.l}</span>
+                  <span className="nav-ov-arrow" aria-hidden="true">→</span>
+                </a>
+              ))}
+            </nav>
 
-      <div className="related">
-        <h4>Also in our collection</h4>
-        <div className="related-links">
-          {PRODUCTS.filter((x) => x.slug !== p.slug).map((x) => (
-            <Link key={x.slug} to={`/products/${x.slug}`} className="related-link">{x.short} →</Link>
-          ))}
-        </div>
-      </div>
-    </article>
-  )
-}
-
-function MarketDetail() {
-  const { slug } = useParams()
-  const m = getMarket(slug)
-  useEffect(() => { if (m) document.title = `Granite Export to ${m.country} — Granava` }, [m])
-  if (!m) return <NotFound />
-  return (
-    <article className="detail">
-      <nav className="breadcrumb"><Link to="/">Home</Link> › <Link to="/markets">Markets</Link> › <span>{m.country}</span></nav>
-      <div className="market-hero">
-        <span className="mkt-flag-lg">{m.flag}</span>
-        <span className="eyebrow">{m.region}</span>
-        <h1>Granite Export to {m.country}</h1>
-        <p className="detail-desc">{m.intro}</p>
-        <div className="hero-ctas">
-          <a className="btn btn-gold" href={`mailto:info@granava.in?subject=Enquiry from ${m.country}`}>Email Our Export Team</a>
-          <Link to="/products" className="btn btn-outline">View Collection</Link>
-        </div>
-      </div>
-      {m.highlights.length > 0 && (
-        <section className="body-sec">
-          <h2><span className="sec-num">01</span> Projects &amp; Sectors</h2>
-          <div className="highlight-list">
-            {m.highlights.map((h, i) => (
-              <div key={i} className="highlight-item"><span className="highlight-dot" />{h}</div>
-            ))}
+            {/* Bottom: CTA + contact */}
+            <div className="nav-ov-bottom">
+              <a href="/contact" className="nav-ov-cta" onClick={close}
+                 tabIndex={open ? 0 : -1}>
+                Get a Quote →
+              </a>
+              <div className="nav-ov-contact">
+                <a href="mailto:info@granava.in" tabIndex={open ? 0 : -1}>
+                  info@granava.in
+                </a>
+                <span style={{ color: 'rgba(255,255,255,0.15)' }}>·</span>
+                <span style={{ fontSize:11, color:'rgba(255,255,255,0.25)' }}>
+                  Ongole, Andhra Pradesh
+                </span>
+              </div>
+            </div>
           </div>
-        </section>
-      )}
-      <div className="related">
-        <h4>Other markets we serve</h4>
-        <div className="related-links">
-          {MARKETS.filter((x) => x.slug !== m.slug).map((x) => (
-            <Link key={x.slug} to={`/markets/${x.slug}`} className="related-link">{x.country} →</Link>
-          ))}
-        </div>
-      </div>
-    </article>
-  )
-}
+        </>
+      );
+    }
 
-function About() {
-  useEffect(() => { document.title = 'About Granava — Premium Indian Granite Exporter' }, [])
-  return (
-    <article className="detail">
-      <nav className="breadcrumb"><Link to="/">Home</Link> › <span>About</span></nav>
-      <div className="market-hero">
-        <span className="eyebrow">About Granava</span>
-        <h1>Stone, Sourced at the Origin</h1>
-        <p className="detail-desc">Granava is a premium natural granite exporter based in Ongole, Andhra Pradesh — at the heart of India's finest granite belt. We supply Black Galaxy, Black Pearl, Steel Gray and Jet Black granite directly from source quarries to architects, fabricators and developers across the UK, USA, UAE and East Asia.</p>
-        <p className="detail-desc">By working directly with quarries rather than through intermediaries, we control quality from block selection through finishing — and pass the cost advantage to our clients. Every order ships with complete export documentation.</p>
-      </div>
-      <section className="body-sec">
-        <h2><span className="sec-num">01</span> Why Granava</h2>
-        <div className="uses-grid">
-          <span className="use-pill">Direct quarry sourcing</span>
-          <span className="use-pill">Export-grade selection</span>
-          <span className="use-pill">Full documentation</span>
-          <span className="use-pill">Worldwide shipping</span>
-          <span className="use-pill">Consistent quality</span>
-          <span className="use-pill">Competitive pricing</span>
-        </div>
-      </section>
-      <div className="related">
-        <h4>Explore</h4>
-        <div className="related-links">
-          <Link to="/products" className="related-link">View Collection →</Link>
-          <Link to="/markets" className="related-link">Our Markets →</Link>
-          <Link to="/contact" className="related-link">Contact Us →</Link>
-        </div>
-      </div>
-    </article>
-  )
-}
+    // ── Footer ─────────────────────────────────────────────────────────────
+    function Footer() {
+      const currentYear = new Date().getFullYear();
+      return (
+        <footer className="footer">
+          <div className="container">
+            
+            {/* ── DESKTOP FOOTER (hidden on mobile) ── */}
+            <div className="footer-desktop">
+            <div className="footer-grid">
+              <div className="footer-col">
+                <div style={{ marginBottom:20 }}>
+                  <svg viewBox="0 0 480 112" width="160" height="37"
+                    xmlns="http://www.w3.org/2000/svg" role="img"
+                    aria-label="Granava" focusable="false">
+                    <text x="240" y="57" textAnchor="middle"
+                      fontFamily="'Josefin Sans','Century Gothic',Arial,sans-serif"
+                      fontSize="54" fontWeight="300" fill="#c9a96e"
+                      letterSpacing="20" shapeRendering="geometricPrecision">GRANAVA</text>
+                    <line x1="18" y1="74" x2="462" y2="74"
+                      stroke="#c9a96e" strokeWidth="0.9" opacity="0.6"/>
+                    <text x="240" y="98" textAnchor="middle"
+                      fontFamily="'Josefin Sans','Century Gothic',Arial,sans-serif"
+                      fontSize="11.5" fontWeight="300" fill="rgba(255,255,255,0.85)"
+                      letterSpacing="7.5" shapeRendering="geometricPrecision">NATURAL GRANITE</text>
+                  </svg>
+                </div>
+                <p style={{ maxWidth: 260 }}>
+                  Premium natural granite sourced directly from India's finest quarries, exported to
+                  architects and developers worldwide.
+                </p>
+                <div style={{ marginTop: 24, display: 'flex', gap: 12 }}>
+                  <a href="/contact" className="btn-gold" style={{ fontSize: 11, padding: '9px 18px' }}>Contact Us</a>
+                </div>
+              </div>
+              <div className="footer-col">
+                <h4>Quick Links</h4>
+                <ul>{NAV.map(n => <li key={n.p}><a href={n.f}>{n.l}</a></li>)}</ul>
+              </div>
+              <div className="footer-col">
+                <h4>Products</h4>
+                <ul>
+                  <li><a href="/products">Black Galaxy Granite</a></li>
+                  <li><a href="/products">Black Pearl Granite</a></li>
+                  <li><a href="/products">Steel Gray Granite</a></li>
+                  <li><a href="/products">Jet Black Granite</a></li>
+                  <li><a href="/contact">Request Sample</a></li>
+                  <li><a href="/contact">Get Pricing</a></li>
+                </ul>
+              </div>
+              <div className="footer-col">
+                <h4>Contact</h4>
+                <p>📍 Ongole, Andhra Pradesh, India</p>
+                <p>📧 info@granava.in</p>
+                <p>📞 +91 00000 00000</p>
+                <p style={{ marginTop: 14, fontSize: 12, color: 'var(--muted)', borderTop: '1px solid var(--border)', paddingTop: 14 }}>
+                  Mon–Fri 9 AM – 6 PM IST<br />Saturday 9 AM – 2 PM IST
+                </p>
+              </div>
+            </div>
+            <div className="footer-bottom">
+              <p>© {currentYear} Granava. All rights reserved.</p>
+              <p>Premium Natural Granite Exporter · India</p>
+            </div>
+            </div>{/* /footer-desktop */}
 
-function Contact() {
-  useEffect(() => { document.title = 'Contact Granava — Request a Quote or Samples' }, [])
-  return (
-    <article className="detail">
-      <nav className="breadcrumb"><Link to="/">Home</Link> › <span>Contact</span></nav>
-      <div className="market-hero">
-        <span className="eyebrow">Get in Touch</span>
-        <h1>Request a <em>Quote</em></h1>
-        <p className="detail-desc">Email our export team for granite samples, pricing, and shipping quotes to your destination. We respond to all enquiries within one business day.</p>
-        <div className="contact-cards">
-          <a className="contact-card" href="mailto:info@granava.in">
-            <span className="contact-label">Email</span>
-            <span className="contact-value">info@granava.in</span>
-          </a>
-          <div className="contact-card">
-            <span className="contact-label">Location</span>
-            <span className="contact-value">Ongole, Andhra Pradesh, India</span>
+            {/* ── MOBILE FOOTER — compact accordion layout ── */}
+            <div className="footer-mobile">
+
+              {/* Brand block */}
+              <div className="fm-brand">
+                <span className="fm-brand-name">GRANAVA</span>
+                <span className="fm-brand-tag">Natural Granite</span>
+                <p>Premium granite exported directly from India's finest quarries to the world.</p>
+                <a href="/contact" className="btn-gold">Get a Quote →</a>
+              </div>
+
+              {/* Contact strip */}
+              <div className="fm-contact">
+                <div className="fm-contact-item">
+                  <span>Email</span>
+                  <a href="mailto:info@granava.in">info@granava.in</a>
+                </div>
+                <div className="fm-contact-item">
+                  <span>Origin</span>
+                  Andhra Pradesh, India
+                </div>
+                <div className="fm-contact-item">
+                  <span>Markets</span>
+                  UK · US · UAE
+                </div>
+              </div>
+
+              {/* Accordion sections */}
+              <div className="fm-accordion">
+                <details>
+                  <summary>Quick Links</summary>
+                  <ul>
+                    {NAV.map(n => (
+                      <li key={n.p}><a href={n.f}>{n.l}</a></li>
+                    ))}
+                  </ul>
+                </details>
+                <details>
+                  <summary>Our Products</summary>
+                  <ul>
+                    <li><a href="/products">Black Galaxy Granite</a></li>
+                    <li><a href="/products">Black Pearl Granite</a></li>
+                    <li><a href="/products">Steel Gray Granite</a></li>
+                    <li><a href="/products">Jet Black Granite</a></li>
+                    <li><a href="/contact">Request a Sample</a></li>
+                  </ul>
+                </details>
+              </div>
+
+              {/* Copyright */}
+              <div className="fm-copyright">
+                <p>© {currentYear} Granava. All rights reserved.</p>
+                <p>Premium Natural Granite Exporter · India</p>
+              </div>
+
+            </div>{/* /footer-mobile */}
+
+          </div>
+        </footer>
+      );
+    }
+
+    // ── HOME PAGE ──────────────────────────────────────────────────────────
+    const HOME_PRODS = [
+      {
+        num: '01', slug: 'black-galaxy', name: 'Black Galaxy', type: 'Granite',
+        cls: 'granite-galaxy', img: null,
+        origin: 'Nellore, Andhra Pradesh',
+        desc: 'Deep black with golden bronze metallic flecks — the night sky, captured in stone. Among the world\'s most sought-after premium dark granites.',
+        finishes: ['Polished', 'Honed', 'Flamed', 'Leathered'],
+      },
+      {
+        num: '02', slug: 'black-pearl',  name: 'Black Pearl', type: 'Granite',
+        cls: 'granite-pearl', img: null,
+        origin: 'Karnataka, India',
+        desc: 'Jet black with a pearl-like metallic lustre. When high-polished, it achieves a mirror depth unmatched by any other natural stone.',
+        finishes: ['High Polish', 'Honed', 'Brushed'],
+      },
+      {
+        num: '03', slug: 'steel-gray',   name: 'Steel Gray', type: 'Granite',
+        cls: 'granite-steel', img: null,
+        origin: 'Krishnagiri, Tamil Nadu',
+        desc: 'Sophisticated charcoal-gray with fine silver veining. Architecturally versatile — equally at home in minimal interiors and heritage restoration.',
+        finishes: ['Polished', 'Honed', 'Flamed', 'Brushed'],
+      },
+      {
+        num: '04', slug: 'jet-black',    name: 'Jet Black', type: 'Granite',
+        cls: 'granite-jet', img: null,
+        origin: 'Karimnagar, Telangana',
+        desc: 'Absolute, uniform black with a mirror-like depth unlike any other stone. Zero visible inclusions — pure velvety darkness that commands every space it touches.',
+        finishes: ['Mirror Polish', 'Honed', 'Flamed', 'Leathered'],
+      },
+    ];
+
+    const FEATURES = [
+      { icon: '◈', t: 'Premium Grade', d: 'Only first-quality A-grade slabs with zero tolerance for surface defects, inconsistent colouring, or structural irregularities.' },
+      { icon: '◉', t: 'Global Shipping', d: 'Full export documentation, sea freight coordination, and delivery to 25+ countries with professional customs clearance support.' },
+      { icon: '◧', t: 'Custom Sizes', d: 'Cut-to-specification service for any project requirement — from precision mosaic tiles to monumental slab installations.' },
+      { icon: '◈', t: 'Direct from Source', d: 'Quarry-to-customer supply chain based in Andhra Pradesh, the origin of the world\'s finest Black Galaxy granite.' },
+    ];
+
+    const HOME_MARKETS = [
+      {
+        num: '01', country: 'United Kingdom', region: 'Europe', slug: 'united-kingdom', page: '/markets/united-kingdom/',
+        highlight: false,
+        desc: 'Heritage restoration specialists and luxury residential developers across England, Scotland, and Wales.',
+        buyers: ['Architects', 'Heritage Specialists', 'Stone Fabricators', 'Luxury Developers'],
+      },
+      {
+        num: '02', country: 'United States', region: 'North America', slug: 'united-states', page: '/markets/united-states/',
+        highlight: false,
+        desc: 'Kitchen and bathroom fabricators, commercial flooring contractors, and luxury hotel developers coast to coast.',
+        buyers: ['Kitchen Fabricators', 'Hotel Developers', 'Commercial Contractors'],
+      },
+      {
+        num: '03', country: 'UAE & Middle East', region: 'Gulf Region', slug: 'uae-middle-east', page: '/markets/uae-middle-east/',
+        highlight: false,
+        desc: 'Palace contractors, five-star hospitality groups, and grand civic development projects across the region.',
+        buyers: ['Palace Contractors', 'Hospitality Groups', 'Civic Developers'],
+      },
+      {
+        num: '04', country: 'East Asia', region: 'Japan · Korea · Singapore', slug: 'east-asia', page: '/markets/east-asia/',
+        highlight: false,
+        desc: 'Memorial craftsmen, luxury interior designers, and civic construction across Japan, South Korea, China, and Singapore.',
+        buyers: ['Memorial Craftsmen', 'Interior Designers', 'Civic Construction'],
+      },
+    ];
+
+    function HomePage() {
+      useEffect(() => {
+        document.title = 'Granava | Indian Granite Exporter — Black Galaxy, Jet Black & Natural Stone';
+        setMeta('Export-grade Black Galaxy, Jet Black, Black Pearl & Steel Gray granite from India. Trusted granite supplier for architects & fabricators in UK, USA, UAE & East Asia.');
+      }, []);
+      return (
+        <div>
+          {/* Hero */}
+          <section className="hero" aria-label="Hero — Granava Granite Export">
+            <ParticleCanvas />
+            <div className="hero-grid-overlay" />
+            <div className="hero-overlay" />
+            <div className="hero-content">
+              <div style={{ maxWidth: 640 }}>
+                <div className="h-fade d1" style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 32 }}>
+                  <span className="eyebrow">Direct from Indian Quarries</span>
+                  <span style={{ display: 'block', width: 48, height: 1, background: 'var(--gold)' }} />
+                  <span className="eyebrow" style={{ color: 'var(--muted)' }}>Andhra Pradesh, India</span>
+                </div>
+                <h1 className="display-xl h-fade d2" style={{ marginBottom: 28 }}>
+                  India's Premier<br />
+                  <em style={{ color: 'var(--gold)', fontStyle: 'italic' }}>Granite</em> Exporter<br />
+                  to the World
+                </h1>
+                <p className="h-fade d3" style={{ fontSize: 17, color: 'var(--muted)', maxWidth: 520, marginBottom: 40, lineHeight: 1.75 }}>
+                  Four exceptional granites — Black Galaxy, Jet Black, Black Pearl &amp; Steel Gray —
+                  quarried in India and exported directly to architects, fabricators and developers
+                  across the UK, USA, UAE and East Asia.
+                </p>
+                <div className="h-fade d4 hero-cta-row">
+                  <a href="/products" className="btn-gold">Explore Collection →</a>
+                  <a href="/contact" className="btn-outline">Request a Quote</a>
+                </div>
+                <div className="hero-stats h-fade d5">
+                  <div className="hero-stat">
+                    <span className="hero-stat-num">4</span>
+                    <span className="hero-stat-label">Continents</span>
+                  </div>
+                  <div className="hero-stat-div"/>
+                  <div className="hero-stat">
+                    <span className="hero-stat-num">4</span>
+                    <span className="hero-stat-label">Granite Varieties</span>
+                  </div>
+                  <div className="hero-stat-div"/>
+                  <div className="hero-stat">
+                    <span className="hero-stat-num">20+</span>
+                    <span className="hero-stat-label">Years of Export</span>
+                  </div>
+                  <div className="hero-stat-div"/>
+                  <div className="hero-stat">
+                    <span className="hero-stat-num">UK · US · UAE</span>
+                    <span className="hero-stat-label">Key Markets</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="hero-bottom-line" />
+            <div className="scroll-indicator">
+              <div className="scroll-line" />
+              <span>Scroll</span>
+            </div>
+          </section>
+
+          {/* Our Collection — editorial stone gallery */}
+          <section className="section-sm" style={{ background: 'var(--bg)', paddingBottom: 0 }}>
+            <div className="container" style={{ paddingBottom: 48 }}>
+              <FadeUp>
+                <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', flexWrap:'wrap', gap:16 }}>
+                  <div>
+                    <span className="eyebrow">Our Collection</span>
+                    <h2 className="display-md" style={{ marginTop:10, marginBottom:0 }}>Three Stones.</h2>
+                    <h2 className="display-md" style={{ color:'var(--gold)', marginBottom:0, fontStyle:'italic' }}>Infinite Possibilities.</h2>
+                  </div>
+                  <a href="/products" className="catalogue-link" style={{
+                    fontFamily:'var(--font-sans)', fontSize:11, fontWeight:600,
+                    letterSpacing:'0.14em', textTransform:'uppercase',
+                    color:'var(--muted)', borderBottom:'1px solid var(--border)',
+                    paddingBottom:2, whiteSpace:'nowrap',
+                    transition:'color 0.2s, border-color 0.2s',
+                  }}>View Full Catalogue →</a>
+                </div>
+              </FadeUp>
+            </div>
+
+            {/* Stone grid — full bleed, 1px-gap editorial layout */}
+            <FadeUp delay={100}>
+              <div className="stone-grid">
+                {HOME_PRODS.map((p, i) => (
+                  <a
+                    key={p.slug}
+                    href={`/products/${p.slug}/`}
+                    className="stone-card"
+                    data-product-id={p.slug}
+                  >
+                    {/* Visual panel */}
+                    <div className="stone-vis">
+                      {p.img
+                        ? <img src={p.img} alt={p.name} loading="lazy" decoding="async" className="stone-vis-tex" style={{objectFit:'cover'}} />
+                        : <div className={`stone-vis-tex ${p.cls}`} />
+                      }
+                      <div className="stone-vis-fade" />
+                      <div className="stone-vis-label">
+                        <span className="stone-vis-num">{p.num} — {p.type}</span>
+                        <span className="stone-vis-name">{p.name}</span>
+                      </div>
+                    </div>
+
+                    {/* Content panel */}
+                    <div className="stone-body">
+                      <div className="stone-meta">
+                        <span className="stone-origin">{p.origin}</span>
+                        <span className="stone-type-pill">{p.type}</span>
+                      </div>
+                      <p className="stone-desc">{p.desc}</p>
+                      <div className="stone-finishes">
+                        {p.finishes.map(f => (
+                          <span key={f} className="stone-finish">{f}</span>
+                        ))}
+                      </div>
+                      <span className="stone-cta">
+                        View Specifications <span className="stone-cta-arrow">→</span>
+                      </span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </FadeUp>
+          </section>
+
+          {/* Why Choose Us */}
+          <section className="section">
+            <div className="container">
+              <FadeUp style={{ textAlign: 'center', marginBottom: 56 }}>
+                <span className="eyebrow">Why Choose Us</span>
+                <h2 className="display-md" style={{ marginTop: 10 }}>Built on Quality.<br />Trusted Globally.</h2>
+              </FadeUp>
+              <div className="feature-grid">
+                {FEATURES.map((f, i) => (
+                  <FadeUp key={f.t} delay={i * 75}>
+                    <div className="feature-item">
+                      <div className="feature-icon">{f.icon}</div>
+                      <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.15rem', marginBottom: 12 }}>{f.t}</h3>
+                      <p style={{ fontSize: 13.5, color: 'var(--muted)', lineHeight: 1.72 }}>{f.d}</p>
+                    </div>
+                  </FadeUp>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Markets We Serve — horizontal editorial list */}
+          <section className="section" style={{ background: 'var(--surface)' }}>
+            <div className="container">
+              <FadeUp>
+                <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', flexWrap:'wrap', gap:16, marginBottom:56 }}>
+                  <div>
+                    <span className="eyebrow">Markets We Serve</span>
+                    <h2 className="display-md" style={{ marginTop:10, marginBottom:0 }}>
+                      Global Reach.<br />
+                      <em style={{ fontStyle:'italic', color:'var(--gold)' }}>Local Understanding.</em>
+                    </h2>
+                  </div>
+                  <a href="/markets" style={{
+                    fontFamily:'var(--font-sans)', fontSize:11, fontWeight:600,
+                    letterSpacing:'0.14em', textTransform:'uppercase',
+                    color:'var(--muted)', borderBottom:'1px solid var(--border)',
+                    paddingBottom:2, whiteSpace:'nowrap',
+                    transition:'color 0.2s, border-color 0.2s',
+                  }}>All Markets →</a>
+                </div>
+              </FadeUp>
+
+              {/* Editorial row list */}
+              <div className="mkt-list">
+                {HOME_MARKETS.map((m, i) => (
+                  <FadeUp key={m.country} delay={i * 70}>
+                    <a href={m.page} className="mkt-row">
+                      {/* 01 number */}
+                      <span className="mkt-num">{m.num}</span>
+
+                      {/* Country name block */}
+                      <div className="mkt-name-block">
+                        <span className="mkt-region">{m.region}</span>
+                        <span className="mkt-country">{m.country}</span>
+                      </div>
+
+                      {/* Buyer profile tags */}
+                      <div className="mkt-buyers-block">
+                        <span className="mkt-buyers-label">Key Buyers</span>
+                        <div className="mkt-buyer-tags">
+                          {m.buyers.map(b => (
+                            <span key={b} className="mkt-buyer-tag">{b}</span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Arrow */}
+                      <span className="mkt-arrow">→</span>
+                    </a>
+                  </FadeUp>
+                ))}
+              </div>
+
+              {/* Stat strip under markets list */}
+              <FadeUp delay={300}>
+                <div className="mkt-stat-strip">
+                  {[
+                    { n:'4', l:'Export Markets', gold:true },
+                    { n:'25+', l:'Countries Served', gold:false },
+                    { n:'UK · US · UAE · Asia', l:'Primary Regions', gold:false },
+                    { n:'24h', l:'Quote Response', gold:false },
+                  ].map((s, i, arr) => (
+                    <div key={s.l} className="mkt-stat-item" style={{
+                      borderRight: i < arr.length-1 ? '1px solid var(--border)' : 'none',
+                      background: s.gold ? 'rgba(201,169,110,0.05)' : 'transparent',
+                    }}>
+                      <div style={{ fontFamily:'var(--font-serif)', fontSize:'1.55rem', fontWeight:500, color:'var(--text)', lineHeight:1, marginBottom:6 }}>{s.n}</div>
+                      <div style={{ fontSize:'9.5px', fontWeight:600, letterSpacing:'0.15em', textTransform:'uppercase', color:'var(--muted)' }}>{s.l}</div>
+                    </div>
+                  ))}
+                </div>
+              </FadeUp>
+            </div>
+          </section>
+
+          {/* CTA */}
+          <section className="section-sm">
+            <div className="container">
+              <FadeUp>
+                <div className="cta-banner">
+                  <span className="eyebrow" style={{ display: 'block', marginBottom: 16 }}>Ready to Source?</span>
+                  <h2 className="display-md" style={{ marginBottom: 18 }}>
+                    Request a Quote —<br />
+                    <em style={{ color: 'var(--gold)' }}>Response within 24 hours</em>
+                  </h2>
+                  <p style={{ color: 'var(--muted)', maxWidth: 460, margin: '0 auto 36px', fontSize: 15 }}>
+                    Tell us your project requirements and receive a detailed price sheet with
+                    sample availability by the next business day.
+                  </p>
+                  <a href="/contact" className="btn-gold">Submit an Inquiry →</a>
+                </div>
+              </FadeUp>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    // ── PRODUCTS PAGE ──────────────────────────────────────────────────────
+    const PRODS = [
+      {
+        name: 'Black Galaxy Granite', slug: 'black-galaxy',
+        origin: 'Nellore, Andhra Pradesh, India',
+        cls: 'granite-galaxy',
+        tagline: 'The night sky, captured in stone.',
+        desc: `Quarried exclusively from the Nellore district of Andhra Pradesh, Black Galaxy is among the world's most recognised premium granites. Its near-black base is scattered with golden and bronze metallic flecks — a naturally occurring crystalline effect that intensifies dramatically under light. No two slabs are identical, making each installation genuinely unique.`,
+        uses: ['Feature walls', 'Kitchen countertops', 'Bathroom vanities', 'Commercial flooring', 'Monuments & memorials', 'Exterior facades'],
+        finishes: ['Polished', 'Honed', 'Flamed', 'Leathered'],
+        sizes: '30×30 · 60×60 · 60×90 · Custom slabs to 320×180 cm',
+        thickness: '15mm · 18mm · 20mm · 30mm',
+        moq: '100 sq. metres',
+        rev: false,
+        img: null,   // ← replace with '/images/black-galaxy.jpg' when ready
+      },
+      {
+        name: 'Black Pearl Granite',  slug: 'black-pearl',
+        origin: 'Karnataka, India',
+        cls: 'granite-pearl',
+        tagline: 'Depth and lustre in pure black.',
+        desc: `Black Pearl originates from Karnataka and delivers a pure, mirror-deep black surface with a distinctive pearl-like metallic shimmer across the face. When high-polished, it achieves a reflective quality rarely surpassed by any other natural stone — drawing the eye in any interior context.`,
+        uses: ['Countertops & worktops', 'Wall cladding', 'Premium flooring', 'Lift car interiors', 'High-end retail fixtures', 'Hotel lobbies'],
+        finishes: ['High Polish', 'Honed', 'Brushed'],
+        sizes: '60×60 · 60×90 · 90×180 · Full slab',
+        thickness: '18mm · 20mm · 30mm',
+        moq: '80 sq. metres',
+        rev: true,
+        img: null,   // ← replace with '/images/black-pearl.jpg' when ready
+      },
+      {
+        name: 'Steel Gray Granite',   slug: 'steel-gray',
+        origin: 'Krishnagiri, Tamil Nadu, India',
+        cls: 'granite-steel',
+        tagline: 'Architectural sophistication in every vein.',
+        desc: `From Tamil Nadu's Krishnagiri district, Steel Gray is defined by its restrained, sophisticated palette — deep charcoal and steel-blue tones threaded with fine white and silver veining. Its versatility bridges the contemporary and classical, equally at home in a minimalist Tokyo interior and a heritage stone restoration in Edinburgh.`,
+        uses: ['Architectural facades', 'Commercial flooring', 'Countertops', 'Heritage restoration', 'Memorial stones', 'Landscape paving'],
+        finishes: ['Polished', 'Honed', 'Flamed', 'Brushed', 'Sandblasted'],
+        sizes: '30×30 · 60×60 · 60×90 · Custom slabs',
+        thickness: '15mm · 18mm · 20mm · 30mm · 40mm',
+        moq: '120 sq. metres',
+        rev: false,
+        img: null,   // ← replace with '/images/steel-gray.jpg' when ready
+      },
+      {
+        name: 'Jet Black Granite',    slug: 'jet-black',
+        origin: 'Karimnagar, Telangana, India',
+        cls: 'granite-jet',
+        tagline: 'Absolute darkness. Absolute elegance.',
+        desc: `Jet Black is the purest expression of natural granite — quarried from the ancient formations of Karimnagar, Telangana, it presents an almost void-like uniformity of colour with zero visible veining or inclusions. When mirror-polished, the surface achieves a depth of black that no manufactured material can replicate. Architects prize it for the way it transforms a space: walls appear to dissolve, countertops become obsidian pools, floors become a statement. An uncompromising choice for spaces that demand absolute presence.`,
+        uses: ['Feature walls & statement surfaces', 'Kitchen countertops', 'Bathroom floors & vanities', 'Commercial lobbies', 'Luxury retail & hospitality', 'Memorial & monumental work'],
+        finishes: ['Mirror Polish', 'Honed', 'Flamed', 'Leathered'],
+        sizes: '30×30 · 60×60 · 60×90 · 90×180 · Custom slabs to 300×180 cm',
+        thickness: '15mm · 18mm · 20mm · 30mm',
+        moq: '100 sq. metres',
+        rev: true,
+        img: null,   // ← replace with '/images/jet-black.jpg' when ready
+      },
+    ];
+
+    function ProductsPage() {
+      // Extract optional product slug from hash: /products/black-galaxy → 'black-galaxy'
+      const route = useRoute();
+      // normalizeSlug() fixes casing, percent-encoding, spaces, trailing chars
+      const targetSlug = route.startsWith('/products/')
+        ? normalizeSlug(route.slice('/products/'.length))
+        : null;
+
+      // Scroll to the specific product after mount/route-change
+      useEffect(() => {
+        if (!targetSlug) return;
+
+        console.log('[Granava] targetSlug resolved to:', targetSlug);
+
+        /**
+         * Retry loop — rAF fires once per frame, but products 3 & 4
+         * (Steel Gray, Jet Black) are below-fold; React may not have
+         * committed their DOM nodes by the first frame.
+         * We retry up to MAX_ATTEMPTS times, 50ms apart.
+         */
+        const MAX_ATTEMPTS = 10;
+        let attempts = 0;
+
+        function tryScroll() {
+          attempts += 1;
+          const el = document.getElementById(`product-${targetSlug}`);
+
+          console.log(`[Granava] scroll attempt ${attempts}: element=`, el);
+
+          if (!el) {
+            if (attempts < MAX_ATTEMPTS) {
+              setTimeout(tryScroll, 50); // retry after 50 ms
+            } else {
+              console.warn('[Granava] product element not found after', MAX_ATTEMPTS, 'attempts. id looked up:', `product-${targetSlug}`);
+            }
+            return;
+          }
+
+          const navH = parseInt(
+            getComputedStyle(document.documentElement).getPropertyValue('--nav-h')
+          ) || 80;
+          const top = el.getBoundingClientRect().top + window.scrollY - navH - 24;
+
+          console.log('[Granava] scrolling to top:', top, 'navH:', navH);
+          window.scrollTo({ top, behavior: 'smooth' });
+
+          el.classList.add('product-detail--highlight');
+          setTimeout(() => el.classList.remove('product-detail--highlight'), 1400);
+        }
+
+        // Start after first paint
+        requestAnimationFrame(tryScroll);
+      }, [targetSlug]);
+
+      useEffect(() => {
+        document.title = 'Black Galaxy, Black Pearl, Steel Gray & Jet Black Granite Export | Granava India';
+        // Breadcrumb schema
+        const bc = document.getElementById('ld-breadcrumb');
+        if (bc) bc.textContent = JSON.stringify({"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.granava.in/"},{"@type":"ListItem","position":2,"name":"Products","item":"https://www.granava.in/#/products"}]});
+        setMeta('Technical specifications for Black Galaxy, Jet Black, Black Pearl & Steel Gray granite for export. Available in polished, honed, flamed & leathered finishes. Request samples.');
+      }, []);
+      return (
+        <div>
+          {/* ── Editorial hero ── */}
+          <div className="coll-hero">
+            <div className="container">
+              <FadeUp>
+                <span className="eyebrow">Our Collection</span>
+                <h1 className="coll-hero-title">The Granava Collection</h1>
+                <p className="coll-hero-sub">
+                  Four exceptional granites — each individually quarry-graded, inspected,
+                  and prepared for international export to the highest standards.
+                </p>
+                <div className="coll-hero-meta">
+                  <div><b>4</b><span>Premium Varieties</span></div>
+                  <div><b>25+</b><span>Countries Served</span></div>
+                  <div><b>20+</b><span>Years of Export</span></div>
+                </div>
+              </FadeUp>
+            </div>
+          </div>
+
+          {/* ── Gallery grid of product cards ── */}
+          <section className="section">
+            <div className="container">
+              <div className="coll-grid">
+                {PRODS.map((p, i) => (
+                  <FadeUp key={p.slug} delay={i * 80}>
+                    <a
+                      href={`/products/${p.slug}/`}
+                      className="coll-card"
+                      id={`product-${p.slug}`}
+                      data-product-id={p.slug}
+                    >
+                      <div className={`coll-card-vis ${p.cls}`}>
+                        {p.img && (
+                          <img src={p.img} alt={`${p.name} granite slab`} loading="lazy" decoding="async" />
+                        )}
+                        <span className="coll-card-num">{String(i + 1).padStart(2, '0')}</span>
+                        <div className="coll-card-overlay">
+                          <span className="coll-card-cta">View Specifications →</span>
+                        </div>
+                      </div>
+                      <div className="coll-card-body">
+                        <span className="eyebrow">{p.origin}</span>
+                        <h2 className="coll-card-name">{p.name}</h2>
+                        <p className="coll-card-tag">{p.tagline}</p>
+                        <div className="coll-card-finishes">
+                          {p.finishes.slice(0, 4).map(f => (
+                            <span key={f} className="finish-badge">{f}</span>
+                          ))}
+                        </div>
+                        <div className="coll-card-foot">
+                          <span className="coll-card-moq">MOQ · {p.moq}</span>
+                          <span className="coll-card-arrow">→</span>
+                        </div>
+                      </div>
+                    </a>
+                  </FadeUp>
+                ))}
+              </div>
+
+              {/* ── CTA strip ── */}
+              <FadeUp>
+                <div className="coll-cta">
+                  <div>
+                    <h3>Not sure which granite suits your project?</h3>
+                    <p>Our export team will help you choose the right stone, finish, and specification.</p>
+                  </div>
+                  <a href="/contact" className="btn-gold">Talk to Our Team →</a>
+                </div>
+              </FadeUp>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    // ── MARKETS PAGE ───────────────────────────────────────────────────────
+    const MARKETS = [
+      {
+        flag: '🇬🇧', name: 'United Kingdom', code: 'UK', page: '/markets/united-kingdom/',
+        tagline: 'Architectural heritage meets contemporary ambition.',
+        p1: 'Granava supplies granite to some of the UK\'s most demanding architectural projects — from RIBA-shortlisted commercial developments to Grade II heritage building restorations in London, Edinburgh, and beyond.',
+        p2: 'UK clients value our consistent batch colouration, compliance with British Standards, and our ability to match exact specifications for sensitive heritage stone replacement work.',
+        tags: ['Flooring', 'Wall Cladding', 'Heritage Restoration', 'Countertops', 'External Paving'],
+      },
+      {
+        flag: '🇺🇸', name: 'United States', code: 'USA', page: '/markets/united-states/',
+        tagline: 'Where kitchen design meets natural luxury.',
+        p1: 'The American market sets the global benchmark for granite countertop quality expectations. Granava serves fabricators, kitchen designers, general contractors, and luxury hotel developers from New York to Los Angeles.',
+        p2: 'We provide material certifications for food-contact surfaces and work with US import partners to streamline customs processing and warehouse delivery timelines across all 50 states.',
+        tags: ['Countertops', 'Commercial Flooring', 'Hotel Lobbies', 'Bathroom Vanities', 'Residential'],
+      },
+      {
+        flag: '🌏', name: 'East Asia', code: 'Japan · South Korea · China · Singapore', page: '/markets/east-asia/',
+        tagline: 'Precision, permanence, and prestige.',
+        p1: 'East Asian markets demand the highest level of surface consistency and finishing precision. From Japanese memorial stone workshops requiring perfect grain uniformity to Singapore\'s ultra-luxury residential developments, Granava meets the region\'s exacting standards.',
+        p2: 'We maintain dedicated quality protocols for East Asian orders, including enhanced visual grading, reinforced packaging, and detailed inspection documentation in Japanese, Korean, and Chinese on request.',
+        tags: ['Memorials', 'Monuments', 'Luxury Interiors', 'Civic Projects', 'Commercial Flooring'],
+      },
+      {
+        flag: '🇦🇪', name: 'UAE & Middle East', code: 'UAE · Saudi Arabia · Qatar · Kuwait', page: '/markets/uae-middle-east/',
+        tagline: 'Stone worthy of the region\'s grandest ambitions.',
+        p1: 'The Gulf market demands materials that project power and permanence. Palace lobbies, royal residences, five-star hotel atriums, and landmark civic developments rely on Granava for granite that commands respect at any scale.',
+        p2: 'We have established relationships with Dubai and Abu Dhabi stone distributors and can coordinate delivery to project sites across Saudi Arabia, Qatar, Kuwait, and Bahrain with full customs documentation.',
+        tags: ['Hotel Lobbies', 'Palaces', 'Civic Projects', 'Royal Residences', 'Luxury Hospitality'],
+      },
+    ];
+
+    function MarketsPage() {
+      useEffect(() => {
+        document.title = 'Granite Export to UK, USA, UAE & East Asia | Granava India';
+        setMeta('Granava supplies Indian granite to UK architects, US fabricators, UAE developers & East Asian importers. Market-specific expertise for every region.');
+      }, []);
+      return (
+        <div>
+          {/* ── Editorial hero ── */}
+          <div className="coll-hero">
+            <div className="container">
+              <FadeUp>
+                <span className="eyebrow">Where We Export</span>
+                <h1 className="coll-hero-title">Markets We Serve</h1>
+                <p className="coll-hero-sub">
+                  Granava exports premium Indian granite to architects, fabricators, and
+                  developers across four key regions — each with dedicated quality protocols,
+                  documentation, and logistics support.
+                </p>
+                <div className="coll-hero-meta">
+                  <div><b>4</b><span>Key Regions</span></div>
+                  <div><b>25+</b><span>Countries Served</span></div>
+                  <div><b>100%</b><span>Export Documentation</span></div>
+                </div>
+              </FadeUp>
+            </div>
+          </div>
+
+          {/* ── Grid of market cards (each links to its detail page) ── */}
+          <section className="section">
+            <div className="container">
+              <div className="coll-grid">
+                {MARKETS.map((m, i) => (
+                  <FadeUp key={m.name} delay={i * 80}>
+                    <a href={m.page} className="mkt-card">
+                      <div className="mkt-card-top">
+                        <span className="mkt-card-flag">{m.flag}</span>
+                        <div>
+                          <h2 className="mkt-card-name">{m.name}</h2>
+                          <span className="mkt-card-code">{m.code}</span>
+                        </div>
+                      </div>
+                      <p className="mkt-card-tag">{m.tagline}</p>
+                      <p className="mkt-card-desc">{m.p1}</p>
+                      <div className="mkt-card-tags">
+                        {m.tags.slice(0, 4).map(t => (
+                          <span key={t} className="finish-badge">{t}</span>
+                        ))}
+                      </div>
+                      <div className="mkt-card-foot">
+                        <span className="mkt-card-link">View Market Details</span>
+                        <span className="mkt-card-arrow">→</span>
+                      </div>
+                    </a>
+                  </FadeUp>
+                ))}
+              </div>
+
+              {/* ── CTA strip ── */}
+              <FadeUp>
+                <div className="coll-cta">
+                  <div>
+                    <h3>Exporting to a region not listed here?</h3>
+                    <p>We ship worldwide with full customs documentation. Tell us your destination.</p>
+                  </div>
+                  <a href="/contact" className="btn-gold">Contact Our Export Team →</a>
+                </div>
+              </FadeUp>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    // ── ABOUT PAGE ─────────────────────────────────────────────────────────
+    const VALUES = [
+      { n: '01', t: 'Uncompromised Quality', d: 'Every consignment is hand-inspected at source. We reject any slab that does not meet our visual and structural grade standards before it is packed for export.' },
+      { n: '02', t: 'Trust & Transparency', d: 'Honest pricing, accurate lead times, and clear communication throughout every order. We build long-term partnerships, not one-time transactions.' },
+      { n: '03', t: 'On-Time Delivery', d: 'Our quarry relationships and freight partnerships allow us to commit to delivery windows that keep your project on schedule — and we honour them.' },
+      { n: '04', t: 'Responsible Sourcing', d: 'We partner with quarries holding valid environmental clearances and Indian mining compliance, ensuring a responsible supply chain from ground to global.' },
+    ];
+
+    function AboutPage() {
+      useEffect(() => {
+        document.title = 'About Granava | Granite Exporter from Andhra Pradesh, India';
+        setMeta('Granava is a premium granite exporter based in Ongole, Andhra Pradesh. Sourcing directly from Nellore quarries to supply Black Galaxy & premium granites globally.');
+      }, []);
+      return (
+        <div>
+          <div className="page-hero">
+            <div className="page-hero-grid" />
+            <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+              <FadeUp>
+                <span className="eyebrow">Our Story</span>
+                <h1 className="display-lg" style={{ marginTop: 10, maxWidth: 560 }}>
+                  Sourced at the Origin,<br />Trusted Worldwide
+                </h1>
+              </FadeUp>
+            </div>
+          </div>
+
+          <section className="section">
+            <div className="container">
+              <div className="story-grid">
+                <FadeUp>
+                  <span className="eyebrow">Our Foundation</span>
+                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', marginTop: 10, marginBottom: 24 }}>
+                    Born in the heartland<br />of Black Galaxy
+                  </h2>
+                  <p style={{ color: 'var(--muted)', fontSize: 14.5, lineHeight: 1.82, marginBottom: 18 }}>
+                    Granava was founded in Andhra Pradesh — the single region on earth where true Black Galaxy granite
+                    is quarried. Our proximity to the source is not incidental. It is the foundation of everything we offer:
+                    first selection rights at the quarry face, direct pricing, and the ability to personally verify the
+                    quality of every consignment before it leaves India.
+                  </p>
+                  <p style={{ color: 'var(--muted)', fontSize: 14.5, lineHeight: 1.82 }}>
+                    From this position, we expanded to supply Black Pearl from Karnataka and Steel Gray from Tamil Nadu —
+                    building a portfolio of India's three most internationally respected dark granites, all under one
+                    reliably sourced roof.
+                  </p>
+                </FadeUp>
+                <FadeUp delay={150}>
+                  <span className="eyebrow">Our Process</span>
+                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', marginTop: 10, marginBottom: 24 }}>
+                    From quarry face<br />to your project site
+                  </h2>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+                    {[
+                      ['Quarry Selection', 'We partner exclusively with quarries holding valid environmental and mining clearances — no exceptions.'],
+                      ['Slab Inspection', 'Every slab is assessed for colour consistency, surface finish quality, and structural integrity before acceptance.'],
+                      ['Precision Cutting', 'Orders are cut to customer specification in our Ongole processing facility using CNC water-jet and bridge saw equipment.'],
+                      ['Export Documentation', 'Full GSTIN invoicing, phytosanitary certificates, and country-specific compliance documentation issued for every consignment.'],
+                    ].map(([title, desc]) => (
+                      <div key={title} style={{ display: 'flex', gap: 14 }}>
+                        <span style={{ color: 'var(--gold)', fontSize: 16, flexShrink: 0, marginTop: 3 }}>◈</span>
+                        <div>
+                          <div style={{ fontSize: 13.5, fontWeight: 500, marginBottom: 4 }}>{title}</div>
+                          <div style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.68 }}>{desc}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </FadeUp>
+              </div>
+            </div>
+          </section>
+
+          <section className="section" style={{ background: 'var(--surface)' }}>
+            <div className="container">
+              <FadeUp style={{ textAlign: 'center', marginBottom: 52 }}>
+                <span className="eyebrow">Our Values</span>
+                <h2 className="display-md" style={{ marginTop: 10 }}>What We Stand For</h2>
+              </FadeUp>
+              <div className="values-grid">
+                {VALUES.map((v, i) => (
+                  <FadeUp key={v.t} delay={i * 80}>
+                    <div className="value-card">
+                      <div className="value-num">{v.n}</div>
+                      <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.15rem', marginBottom: 12 }}>{v.t}</h3>
+                      <p style={{ fontSize: 13.5, color: 'var(--muted)', lineHeight: 1.72 }}>{v.d}</p>
+                    </div>
+                  </FadeUp>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="section-sm">
+            <div className="container">
+              <FadeUp>
+                <span className="eyebrow">Certifications & Compliance</span>
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', marginTop: 10, marginBottom: 36 }}>Export-Ready Documentation</h2>
+                <div className="cert-grid">
+                  {[
+                    ['📋', 'ISO 9001:2015', 'Quality Management', 'Certification in progress'],
+                    ['📄', 'GSTIN Registered', 'Indian Tax Compliance', 'Active exporter status'],
+                    ['🌿', 'Phytosanitary', 'Export Certificates', 'Issued per consignment'],
+                    ['✅', 'Country Compliance', 'CE / UKCA / Others', 'Available on request'],
+                  ].map(([icon, t, s, st]) => (
+                    <div key={t} className="cert-card">
+                      <div style={{ fontSize: '1.6rem', marginBottom: 10 }}>{icon}</div>
+                      <div style={{ fontSize: 13.5, fontWeight: 500, color: 'var(--text)', marginBottom: 4 }}>{t}</div>
+                      <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 10 }}>{s}</div>
+                      <div style={{ fontSize: 10, color: 'var(--gold)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>{st}</div>
+                    </div>
+                  ))}
+                </div>
+              </FadeUp>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    // ── CONTACT PAGE ───────────────────────────────────────────────────────
+    // Replace with your EmailJS credentials:
+    // const SERVICE_ID = "your_service_id";
+    // const TEMPLATE_ID = "your_template_id";
+    // const PUBLIC_KEY = "your_public_key";
+    const SERVICE_ID = 'YOUR_SERVICE_ID';          // e.g. service_abc123
+    const TEMPLATE_ID = 'YOUR_TEMPLATE_ID';        // Notification template ID
+    const REPLY_TEMPLATE_ID = 'YOUR_REPLY_TEMPLATE_ID'; // Auto-reply template ID
+    const PUBLIC_KEY = 'YOUR_PUBLIC_KEY';           // EmailJS public key
+
+    const PHONE_CODES = [
+      { l: 'UK +44', v: '+44' }, { l: 'USA +1', v: '+1' },
+      { l: 'UAE +971', v: '+971' }, { l: 'SG +65', v: '+65' },
+      { l: 'JP +81', v: '+81' }, { l: 'KR +82', v: '+82' },
+      { l: 'CN +86', v: '+86' }, { l: 'IN +91', v: '+91' },
+    ];
+
+    function InquiryForm() {
+      const [form, setForm] = useState({
+        fullName: '', company: '', email: '',
+        phoneCode: '+44', phone: '',
+        products: [], appType: '',
+        quantity: '', deliveryCountry: '', message: '',
+      });
+      const [errs, setErrs] = useState({});
+      const [status, setStatus] = useState('idle');
+
+      function upd(k, v) {
+        setForm(p => ({ ...p, [k]: v }));
+        if (errs[k]) setErrs(p => ({ ...p, [k]: '' }));
+      }
+
+      function toggleProd(prod) {
+        setForm(p => {
+          if (prod === 'All Products') {
+            return { ...p, products: p.products.includes('All Products') ? [] : ['All Products'] };
+          }
+          const base = p.products.filter(x => x !== 'All Products');
+          return { ...p, products: base.includes(prod) ? base.filter(x => x !== prod) : [...base, prod] };
+        });
+      }
+
+      function validate() {
+        const e = {};
+        const trimmed = { ...form, fullName: form.fullName.trim(), email: form.email.trim(), phone: form.phone.trim() };
+        if (!trimmed.fullName) e.fullName = 'Full name is required';
+        if (!form.email.trim()) e.email = 'Email address is required';
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Enter a valid email address';
+        if (form.products.length === 0) e.products = 'Please select at least one product';
+        setErrs(e);
+        return Object.keys(e).length === 0;
+      }
+
+      async function handleSubmit(e) {
+        e.preventDefault();
+        if (!validate()) return;
+        setStatus('sending');
+        const tp = {
+          from_name: form.fullName,
+          company_name: form.company || 'Not provided',
+          reply_to: form.email,
+          to_email: 'info@granava.in',
+          phone: `${form.phoneCode} ${form.phone}`,
+          products_interest: form.products.join(', '),
+          application_type: form.appType || 'Not specified',
+          quantity: form.quantity || 'Not specified',
+          delivery_country: form.deliveryCountry || 'Not specified',
+          message: form.message || 'No additional message.',
+          subject: `New Granite Inquiry — ${form.products.join(', ')} — ${form.fullName}`,
+          submission_date: new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' }),
+          website_url: 'https://www.granava.in',
+        };
+        try {
+          if (window.emailjs && SERVICE_ID !== 'YOUR_SERVICE_ID') {
+            await window.emailjs.send(SERVICE_ID, TEMPLATE_ID, tp, PUBLIC_KEY);
+          } else {
+            await new Promise(r => setTimeout(r, 1600));
+          }
+          setStatus('success');
+        } catch (err) {
+          console.error('EmailJS error:', err);
+          setStatus('error');
+        }
+      }
+
+      if (status === 'success') return (
+        <div className="form-success-box">
+          <div style={{ fontSize: '2rem', marginBottom: 14, color: 'var(--gold)' }}>✓</div>
+          <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.6rem', marginBottom: 12 }}>
+            Inquiry Received
+          </h3>
+          <p style={{ color: 'var(--muted)', fontSize: 15 }}>
+            Thank you, {form.fullName}. We will respond to your inquiry within 24 hours.
+          </p>
+        </div>
+      );
+
+      return (
+        <form onSubmit={handleSubmit} noValidate>
+          <div className="form-grid">
+            <div className="f-group">
+              <label className="f-label">Full Name <span className="req">*</span></label>
+              <input className="f-input" value={form.fullName} onChange={e => upd('fullName', e.target.value)} placeholder="Your full name" />
+              {errs.fullName && <span className="f-err">{errs.fullName}</span>}
+            </div>
+            <div className="f-group">
+              <label className="f-label">Company Name</label>
+              <input className="f-input" value={form.company} onChange={e => upd('company', e.target.value)} placeholder="Company (optional)" />
+            </div>
+            <div className="f-group">
+              <label className="f-label">Email Address <span className="req">*</span></label>
+              <input className="f-input" type="email" value={form.email} onChange={e => upd('email', e.target.value)} placeholder="your@email.com" />
+              {errs.email && <span className="f-err">{errs.email}</span>}
+            </div>
+            <div className="f-group">
+              <label className="f-label">Phone Number</label>
+              <div className="phone-wrap">
+                <select className="f-select phone-code" value={form.phoneCode} onChange={e => upd('phoneCode', e.target.value)} style={{ borderRight: 'none', width: 108 }}>
+                  {PHONE_CODES.map(c => <option key={c.v} value={c.v}>{c.l}</option>)}
+                </select>
+                <input className="f-input phone-num" value={form.phone} onChange={e => upd('phone', e.target.value)} placeholder="Phone number" style={{ borderLeft: 'none' }} />
+              </div>
+            </div>
+            <div className="f-group full">
+              <label className="f-label">Product Interest <span className="req">*</span></label>
+              <div className="cb-grid">
+                {['Black Galaxy Granite', 'Black Pearl Granite', 'Steel Gray Granite', 'All Products'].map(p => (
+                  <label key={p} className="cb-item">
+                    <input type="checkbox" checked={form.products.includes(p)} onChange={() => toggleProd(p)} />
+                    <span>{p}</span>
+                  </label>
+                ))}
+              </div>
+              {errs.products && <span className="f-err">{errs.products}</span>}
+            </div>
+            <div className="f-group">
+              <label className="f-label">Application Type</label>
+              <select className="f-select" value={form.appType} onChange={e => upd('appType', e.target.value)}>
+                <option value="">Select application</option>
+                <option>Countertops</option>
+                <option>Flooring</option>
+                <option>Wall Cladding</option>
+                <option>Monuments</option>
+                <option>Facade</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div className="f-group">
+              <label className="f-label">Quantity Required</label>
+              <input className="f-input" value={form.quantity} onChange={e => upd('quantity', e.target.value)} placeholder="e.g. 500 sq ft or 50 sq metres" />
+            </div>
+            <div className="f-group full">
+              <label className="f-label">Delivery Country</label>
+              <input className="f-input" value={form.deliveryCountry} onChange={e => upd('deliveryCountry', e.target.value)} placeholder="Country for delivery" />
+            </div>
+            <div className="f-group full">
+              <label className="f-label">Message / Special Requirements</label>
+              <textarea className="f-textarea" value={form.message} onChange={e => upd('message', e.target.value)} placeholder="Specific requirements, sizes, finish preferences, or questions..." rows={5} />
+            </div>
+            <div className="f-group full">
+              {status === 'error' && (
+                <div className="form-error-box">
+                  <p style={{ fontSize: 13.5, color: '#e05050' }}>
+                    Something went wrong. Please try again or email us directly at info@granava.in
+                  </p>
+                </div>
+              )}
+              <button type="submit" className="btn-gold" style={{ width: '100%', justifyContent: 'center', padding: 16 }} disabled={status === 'sending'}>
+                {status === 'sending' ? 'Sending Inquiry...' : 'Submit Inquiry →'}
+              </button>
+              <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 12, textAlign: 'center', lineHeight: 1.6 }}>
+                We respond to all inquiries within 24 business hours (Mon–Sat, IST).
+              </p>
+            </div>
+          </div>
+        </form>
+      );
+    }
+
+    function ContactPage() {
+      useEffect(() => {
+        document.title = 'Contact Granava | Granite Export Inquiry & Quotation | India';
+        setMeta('Submit a granite sourcing inquiry to Granava. Get pricing, specs & sample availability within 24 hours. Serving UK, USA, UAE & East Asia exporters.');
+      }, []);
+      return (
+        <div>
+          <div className="page-hero">
+            <div className="page-hero-grid" />
+            <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+              <FadeUp>
+                <span className="eyebrow">Get in Touch</span>
+                <h1 className="display-lg" style={{ marginTop: 10 }}>Start Your Inquiry</h1>
+                <p style={{ color: 'var(--muted)', marginTop: 16, maxWidth: 480 }}>
+                  Tell us your project requirements. We'll respond with pricing, specifications,
+                  and sample availability within 24 hours.
+                </p>
+              </FadeUp>
+            </div>
+          </div>
+
+          <section className="section">
+            <div className="container">
+              <div className="contact-layout">
+                <FadeUp>
+                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', marginBottom: 32 }}>Inquiry Form</h2>
+                  <InquiryForm />
+                </FadeUp>
+                <FadeUp delay={150}>
+                  <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', marginBottom: 20 }}>
+                    Contact Details
+                  </h2>
+                  <div className="contact-card">
+                    <div className="contact-row">
+                      <span style={{ fontSize: '1.4rem', flexShrink: 0 }}>📍</span>
+                      <div>
+                        <div style={{ fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 7 }}>Address</div>
+                        <p style={{ fontSize: 13.5, color: 'var(--muted)', lineHeight: 1.7 }}>
+                          Granava Exports<br />
+                          Ongole, Andhra Pradesh<br />
+                          India — 523 001
+                        </p>
+                      </div>
+                    </div>
+                    <div className="contact-row">
+                      <span style={{ fontSize: '1.4rem', flexShrink: 0 }}>📧</span>
+                      <div>
+                        <div style={{ fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 7 }}>Email</div>
+                        <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>info@granava.in</p>
+                        <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>export@granava.in</p>
+                      </div>
+                    </div>
+                    <div className="contact-row">
+                      <span style={{ fontSize: '1.4rem', flexShrink: 0 }}>📞</span>
+                      <div>
+                        <div style={{ fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 7 }}>Phone</div>
+                        <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>+91 00000 00000</p>
+                        <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>WhatsApp available</p>
+                      </div>
+                    </div>
+                    <div className="contact-row">
+                      <span style={{ fontSize: '1.4rem', flexShrink: 0 }}>🕐</span>
+                      <div>
+                        <div style={{ fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 7 }}>Business Hours (IST)</div>
+                        <p style={{ fontSize: 13, color: 'var(--muted)' }}>Monday – Friday: 9:00 AM – 6:00 PM</p>
+                        <p style={{ fontSize: 13, color: 'var(--muted)' }}>Saturday: 9:00 AM – 2:00 PM</p>
+                        <p style={{ fontSize: 13, color: 'var(--muted)' }}>Sunday: Closed</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="map-ph">
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: '2rem', marginBottom: 8 }}>🗺️</div>
+                      <p style={{ fontSize: 13, color: 'var(--muted)' }}>Ongole, Andhra Pradesh, India</p>
+                      <p style={{ fontSize: 11, color: 'var(--border)', marginTop: 6 }}>Replace with Google Maps embed URL</p>
+                    </div>
+                  </div>
+                </FadeUp>
+              </div>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
+    // ── 404 ────────────────────────────────────────────────────────────────
+    function NotFoundPage() {
+      return (
+        <div style={{ minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingTop: 72 }}>
+          <div style={{ textAlign: 'center' }}>
+            <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '4rem', color: 'rgba(184,158,124,0.3)' }}>404</h1>
+            <p style={{ color: 'var(--muted)', marginTop: 12, marginBottom: 28 }}>Page not found</p>
+            <a href="/" className="btn-outline">← Back to Home</a>
           </div>
         </div>
-        <div className="hero-ctas">
-          <a className="btn btn-gold" href="mailto:info@granava.in?subject=Granite Enquiry">Email info@granava.in</a>
+      );
+    }
+
+    // ── Meta helper ────────────────────────────────────────────────────────
+    function setMeta(desc) {
+      let el = document.querySelector('meta[name="description"]');
+      if (!el) { el = document.createElement('meta'); el.name = 'description'; document.head.appendChild(el); }
+      el.content = desc;
+      // Update OG tags dynamically
+      ['og:description','twitter:description'].forEach(prop => {
+        let tag = document.querySelector(`meta[property="${prop}"], meta[name="${prop}"]`);
+        if (tag) tag.content = desc;
+      });
+    }
+    function setCanonical(path) {
+      let el = document.querySelector('link[rel="canonical"]');
+      if (!el) { el = document.createElement('link'); el.rel = 'canonical'; document.head.appendChild(el); }
+      el.href = 'https://www.granava.in/' + (path || '');
+    }
+
+    // ── App ────────────────────────────────────────────────────────────────
+    const PAGE_MAP = {
+      '/': HomePage,
+      '/products': ProductsPage,
+      '/markets': MarketsPage,
+      '/about': AboutPage,
+      '/contact': ContactPage,
+    };
+
+    function App() {
+      const route = useRoute();
+      // Sub-route support: /products/:slug → ProductsPage
+      const Page = PAGE_MAP[route]
+                || (route.startsWith('/products/') ? PAGE_MAP['/products'] : null)
+                || (route.startsWith('/markets/') ? PAGE_MAP['/markets'] : null)
+                || NotFoundPage;
+
+      // Remove loading screen on first render
+      useEffect(() => {
+        // The plain-JS fallback above already handles hiding.
+        // This is a belt-and-suspenders cleanup once React is definitely mounted.
+        const el = document.getElementById('ps-loading');
+        if (el) {
+          el.style.opacity = '0';
+          setTimeout(() => { if (el && el.parentNode) el.parentNode.removeChild(el); }, 600);
+        }
+      }, []);
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(var(--vh, 1vh) * 100)' }}>
+          <Navbar route={route} />
+          <main>
+            <Page />
+          </main>
+          <Footer />
         </div>
-      </div>
-    </article>
-  )
-}
+      );
+    }
 
-function NotFound() {
-  useEffect(() => { document.title = 'Page Not Found — Granava' }, [])
-  return (
-    <div className="notfound">
-      <div className="notfound-code">404</div>
-      <h1>Page not found</h1>
-      <p>The page you're looking for doesn't exist or may have moved.</p>
-      <div className="hero-ctas">
-        <Link to="/" className="btn btn-gold">← Back to Home</Link>
-        <Link to="/products" className="btn btn-outline">View Collection</Link>
-      </div>
-    </div>
-  )
-}
 
-export default function App() {
-  return (
-    <>
-      <ScrollTop />
-      <Header />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Collection />} />
-          <Route path="/products/:slug" element={<ProductDetail />} />
-          <Route path="/markets" element={<Markets />} />
-          <Route path="/markets/:slug" element={<MarketDetail />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </main>
-      <Footer />
-    </>
-  )
-}
+export default App
