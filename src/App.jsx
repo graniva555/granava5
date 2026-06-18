@@ -1186,13 +1186,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
     // ── CONTACT PAGE ───────────────────────────────────────────────────────
     // Replace with your EmailJS credentials:
-    // const SERVICE_ID = "your_service_id";
-    // const TEMPLATE_ID = "your_template_id";
-    // const PUBLIC_KEY = "your_public_key";
-    const SERVICE_ID = 'YOUR_SERVICE_ID';          // e.g. service_abc123
-    const TEMPLATE_ID = 'YOUR_TEMPLATE_ID';        // Notification template ID
-    const REPLY_TEMPLATE_ID = 'YOUR_REPLY_TEMPLATE_ID'; // Auto-reply template ID
-    const PUBLIC_KEY = 'YOUR_PUBLIC_KEY';           // EmailJS public key
+    const FORMSPREE_URL = 'https://formspree.io/f/YOUR_FORM_ID'; // ← Replace YOUR_FORM_ID with your Formspree form ID
 
     const PHONE_CODES = [
       { l: 'UK +44', v: '+44' }, { l: 'USA +1', v: '+1' },
@@ -1241,30 +1235,33 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         e.preventDefault();
         if (!validate()) return;
         setStatus('sending');
-        const tp = {
-          from_name: form.fullName,
-          company_name: form.company || 'Not provided',
-          reply_to: form.email,
-          to_email: 'info@granava.in',
+        const data = {
+          name: form.fullName,
+          _replyto: form.email,
+          email: form.email,
+          company: form.company || 'Not provided',
           phone: `${form.phoneCode} ${form.phone}`,
-          products_interest: form.products.join(', '),
-          application_type: form.appType || 'Not specified',
+          products: form.products.join(', '),
+          application: form.appType || 'Not specified',
           quantity: form.quantity || 'Not specified',
           delivery_country: form.deliveryCountry || 'Not specified',
           message: form.message || 'No additional message.',
-          subject: `New Granite Inquiry — ${form.products.join(', ')} — ${form.fullName}`,
-          submission_date: new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' }),
-          website_url: 'https://www.granava.in',
+          _subject: `New Granite Inquiry — ${form.products.join(', ')} — ${form.fullName}`,
         };
         try {
-          if (window.emailjs && SERVICE_ID !== 'YOUR_SERVICE_ID') {
-            await window.emailjs.send(SERVICE_ID, TEMPLATE_ID, tp, PUBLIC_KEY);
+          const res = await fetch(FORMSPREE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(data),
+          });
+          if (res.ok) {
+            setStatus('success');
           } else {
-            await new Promise(r => setTimeout(r, 1600));
+            console.error('Formspree error:', await res.text());
+            setStatus('error');
           }
-          setStatus('success');
         } catch (err) {
-          console.error('EmailJS error:', err);
+          console.error('Form submission error:', err);
           setStatus('error');
         }
       }
