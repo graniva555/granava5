@@ -1,30 +1,13 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom'
 
 
     const { useState, useEffect, useRef, useCallback } = React;
 
     // ── Routing ────────────────────────────────────────────────────────────
     function getRoute() {
-      // Path-based routing (real URLs, SEO-friendly). Each page sets window.__ROUTE__.
-      if (window.__ROUTE__) return window.__ROUTE__;
-      let path = window.location.pathname;
-      // Strip trailing index.html and .html, normalize
-      path = path.replace(/index\.html$/, '/').replace(/\.html$/, '');
-      if (path === '' || path === '/') return '/';
-      // Normalize: strip trailing slash (but keep leading)
-      const seg = path.replace(/\/+$/, '') || '/';
-      // Sub-routes: /products/:slug and /markets/:slug return the FULL path
-      if (seg.startsWith('/products/') || seg.startsWith('/markets/')) return seg;
-      // Top-level routes
-      const map = { '/products': '/products', '/markets': '/markets', '/about': '/about', '/contact': '/contact', '/': '/' };
-      if (map[seg]) return map[seg];
-      const last = '/' + seg.split('/').filter(Boolean).pop();
-      if (map[last]) return map[last];
-      // hash fallback for backward compatibility
-      const h = window.location.hash;
-      if (h && h !== '#') return h.slice(1);
-      return '/';
+      let p = (typeof window !== 'undefined' ? window.location.pathname : '/').replace(/\/+$/, '') || '/';
+      return p;
     }
 
     /**
@@ -49,56 +32,10 @@ import ReactDOM from 'react-dom/client'
     }
 
     function useRoute() {
-      const [route, setRoute] = useState(getRoute);
-      useEffect(() => {
-        const apply = (next) => {
-          window.__ROUTE__ = next;
-          setRoute(next);
-          if (!next.startsWith('/products/')) window.scrollTo(0, 0);
-        };
-        // Resolve any clicked anchor to an internal SPA path (or null)
-        const resolvePath = (href) => {
-          if (!href) return null;
-          // Ignore external, mail, tel, hash-only, and new-tab handled elsewhere
-          if (/^(https?:)?\/\//.test(href) || href.startsWith('mailto:') || href.startsWith('tel:')) return null;
-          // Normalise to a leading-slash path without trailing slash
-          let p = href.split('#')[0].split('?')[0];
-          if (!p.startsWith('/')) return null;
-          p = p.replace(/\/+$/, '') || '/';
-          const top = ['/', '/products', '/markets', '/about', '/contact'];
-          if (top.includes(p)) return p;
-          if (p.startsWith('/products/') || p.startsWith('/markets/')) return p;
-          return null;
-        };
-        const clickHandler = (e) => {
-          // respect modifier keys / new-tab / non-left-click
-          if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-          const a = e.target.closest('a');
-          if (!a) return;
-          if (a.target && a.target !== '_self') return;
-          const path = resolvePath(a.getAttribute('href'));
-          if (path === null) return;
-          e.preventDefault();
-          try {
-            window.history.pushState({ route: path }, '', path);
-            apply(path);
-          } catch (err) {
-            // pushState blocked (e.g. sandboxed) → hard navigate so links still work
-            window.location.href = path;
-          }
-        };
-        const popHandler = () => { window.__ROUTE__ = null; apply(getRoute()); };
-        const hashHandler = () => { window.__ROUTE__ = null; apply(getRoute()); };
-        document.addEventListener('click', clickHandler);
-        window.addEventListener('popstate', popHandler);
-        window.addEventListener('hashchange', hashHandler);
-        return () => {
-          document.removeEventListener('click', clickHandler);
-          window.removeEventListener('popstate', popHandler);
-          window.removeEventListener('hashchange', hashHandler);
-        };
-      }, []);
-      return route;
+      // React Router drives the path now — no custom click handling needed.
+      const location = useLocation();
+      let p = location.pathname.replace(/\/+$/, '') || '/';
+      return p;
     }
 
     // ── FadeUp wrapper (scroll-triggered) ──────────────────────────────────
@@ -263,7 +200,7 @@ import ReactDOM from 'react-dom/client'
             <div className="navbar-inner">
 
               {/* Logo */}
-              <a href="/" className="navbar-logo" aria-label="Granava — Home">
+              <Link to="/" className="navbar-logo" aria-label="Granava — Home">
                 <svg className="navbar-logo-mark"
                   viewBox="0 0 480 80" xmlns="http://www.w3.org/2000/svg"
                   role="img" aria-hidden="true" focusable="false">
@@ -275,19 +212,19 @@ import ReactDOM from 'react-dom/client'
                     stroke="#c9a96e" strokeWidth="0.9"/>
                 </svg>
                 <span className="navbar-tagline" aria-hidden="true">NATURAL GRANITE</span>
-              </a>
+              </Link>
 
               {/* Desktop links */}
               <ul className="navbar-links" role="list">
                 {NAV.map(n => (
                   <li key={n.p}>
-                    <a href={n.f} className={route === n.p ? 'active' : ''}>{n.l}</a>
+                    <Link to={n.f} className={route === n.p ? 'active' : ''}>{n.l}</Link>
                   </li>
                 ))}
               </ul>
 
               {/* Desktop CTA */}
-              <a href="/contact" className="btn-gold navbar-cta">Get a Quote</a>
+              <Link to="/contact" className="btn-gold navbar-cta">Get a Quote</Link>
 
               {/* Hamburger — mobile only */}
               <button
@@ -322,9 +259,9 @@ import ReactDOM from 'react-dom/client'
             {/* Staggered nav links */}
             <nav className="nav-ov-links" aria-label="Site pages">
               {NAV.map((n, i) => (
-                <a
+                <Link
                   key={n.p}
-                  href={n.f}
+                  to={n.f}
                   className={`nav-ov-link${route === n.p ? ' is-active' : ''}`}
                   onClick={close}
                   tabIndex={open ? 0 : -1}
@@ -334,16 +271,16 @@ import ReactDOM from 'react-dom/client'
                   </span>
                   <span className="nav-ov-label">{n.l}</span>
                   <span className="nav-ov-arrow" aria-hidden="true">→</span>
-                </a>
+                </Link>
               ))}
             </nav>
 
             {/* Bottom: CTA + contact */}
             <div className="nav-ov-bottom">
-              <a href="/contact" className="nav-ov-cta" onClick={close}
+              <Link to="/contact" className="nav-ov-cta" onClick={close}
                  tabIndex={open ? 0 : -1}>
                 Get a Quote →
-              </a>
+              </Link>
               <div className="nav-ov-contact">
                 <a href="mailto:info@granava.in" tabIndex={open ? 0 : -1}>
                   info@granava.in
@@ -391,22 +328,22 @@ import ReactDOM from 'react-dom/client'
                   architects and developers worldwide.
                 </p>
                 <div style={{ marginTop: 24, display: 'flex', gap: 12 }}>
-                  <a href="/contact" className="btn-gold" style={{ fontSize: 11, padding: '9px 18px' }}>Contact Us</a>
+                  <Link to="/contact" className="btn-gold" style={{ fontSize: 11, padding: '9px 18px' }}>Contact Us</Link>
                 </div>
               </div>
               <div className="footer-col">
                 <h4>Quick Links</h4>
-                <ul>{NAV.map(n => <li key={n.p}><a href={n.f}>{n.l}</a></li>)}</ul>
+                <ul>{NAV.map(n => <li key={n.p}><Link to={n.f}>{n.l}</Link></li>)}</ul>
               </div>
               <div className="footer-col">
                 <h4>Products</h4>
                 <ul>
-                  <li><a href="/products">Black Galaxy Granite</a></li>
-                  <li><a href="/products">Black Pearl Granite</a></li>
-                  <li><a href="/products">Steel Gray Granite</a></li>
-                  <li><a href="/products">Jet Black Granite</a></li>
-                  <li><a href="/contact">Request Sample</a></li>
-                  <li><a href="/contact">Get Pricing</a></li>
+                  <li><Link to="/products">Black Galaxy Granite</Link></li>
+                  <li><Link to="/products">Black Pearl Granite</Link></li>
+                  <li><Link to="/products">Steel Gray Granite</Link></li>
+                  <li><Link to="/products">Jet Black Granite</Link></li>
+                  <li><Link to="/contact">Request Sample</Link></li>
+                  <li><Link to="/contact">Get Pricing</Link></li>
                 </ul>
               </div>
               <div className="footer-col">
@@ -433,7 +370,7 @@ import ReactDOM from 'react-dom/client'
                 <span className="fm-brand-name">GRANAVA</span>
                 <span className="fm-brand-tag">Natural Granite</span>
                 <p>Premium granite exported directly from India's finest quarries to the world.</p>
-                <a href="/contact" className="btn-gold">Get a Quote →</a>
+                <Link to="/contact" className="btn-gold">Get a Quote →</Link>
               </div>
 
               {/* Contact strip */}
@@ -458,18 +395,18 @@ import ReactDOM from 'react-dom/client'
                   <summary>Quick Links</summary>
                   <ul>
                     {NAV.map(n => (
-                      <li key={n.p}><a href={n.f}>{n.l}</a></li>
+                      <li key={n.p}><Link to={n.f}>{n.l}</Link></li>
                     ))}
                   </ul>
                 </details>
                 <details>
                   <summary>Our Products</summary>
                   <ul>
-                    <li><a href="/products">Black Galaxy Granite</a></li>
-                    <li><a href="/products">Black Pearl Granite</a></li>
-                    <li><a href="/products">Steel Gray Granite</a></li>
-                    <li><a href="/products">Jet Black Granite</a></li>
-                    <li><a href="/contact">Request a Sample</a></li>
+                    <li><Link to="/products">Black Galaxy Granite</Link></li>
+                    <li><Link to="/products">Black Pearl Granite</Link></li>
+                    <li><Link to="/products">Steel Gray Granite</Link></li>
+                    <li><Link to="/products">Jet Black Granite</Link></li>
+                    <li><Link to="/contact">Request a Sample</Link></li>
                   </ul>
                 </details>
               </div>
@@ -583,8 +520,8 @@ import ReactDOM from 'react-dom/client'
                   across the UK, USA, UAE and East Asia.
                 </p>
                 <div className="h-fade d4 hero-cta-row">
-                  <a href="/products" className="btn-gold">Explore Collection →</a>
-                  <a href="/contact" className="btn-outline">Request a Quote</a>
+                  <Link to="/products" className="btn-gold">Explore Collection →</Link>
+                  <Link to="/contact" className="btn-outline">Request a Quote</Link>
                 </div>
                 <div className="hero-stats h-fade d5">
                   <div className="hero-stat">
@@ -626,13 +563,13 @@ import ReactDOM from 'react-dom/client'
                     <h2 className="display-md" style={{ marginTop:10, marginBottom:0 }}>Three Stones.</h2>
                     <h2 className="display-md" style={{ color:'var(--gold)', marginBottom:0, fontStyle:'italic' }}>Infinite Possibilities.</h2>
                   </div>
-                  <a href="/products" className="catalogue-link" style={{
+                  <Link to="/products" className="catalogue-link" style={{
                     fontFamily:'var(--font-sans)', fontSize:11, fontWeight:600,
                     letterSpacing:'0.14em', textTransform:'uppercase',
                     color:'var(--muted)', borderBottom:'1px solid var(--border)',
                     paddingBottom:2, whiteSpace:'nowrap',
                     transition:'color 0.2s, border-color 0.2s',
-                  }}>View Full Catalogue →</a>
+                  }}>View Full Catalogue →</Link>
                 </div>
               </FadeUp>
             </div>
@@ -641,9 +578,9 @@ import ReactDOM from 'react-dom/client'
             <FadeUp delay={100}>
               <div className="stone-grid">
                 {HOME_PRODS.map((p, i) => (
-                  <a
+                  <Link
                     key={p.slug}
-                    href={`/products/${p.slug}/`}
+                    to={`/products/${p.slug}/`}
                     className="stone-card"
                     data-product-id={p.slug}
                   >
@@ -676,7 +613,7 @@ import ReactDOM from 'react-dom/client'
                         View Specifications <span className="stone-cta-arrow">→</span>
                       </span>
                     </div>
-                  </a>
+                  </Link>
                 ))}
               </div>
             </FadeUp>
@@ -715,13 +652,13 @@ import ReactDOM from 'react-dom/client'
                       <em style={{ fontStyle:'italic', color:'var(--gold)' }}>Local Understanding.</em>
                     </h2>
                   </div>
-                  <a href="/markets" style={{
+                  <Link to="/markets" style={{
                     fontFamily:'var(--font-sans)', fontSize:11, fontWeight:600,
                     letterSpacing:'0.14em', textTransform:'uppercase',
                     color:'var(--muted)', borderBottom:'1px solid var(--border)',
                     paddingBottom:2, whiteSpace:'nowrap',
                     transition:'color 0.2s, border-color 0.2s',
-                  }}>All Markets →</a>
+                  }}>All Markets →</Link>
                 </div>
               </FadeUp>
 
@@ -729,7 +666,7 @@ import ReactDOM from 'react-dom/client'
               <div className="mkt-list">
                 {HOME_MARKETS.map((m, i) => (
                   <FadeUp key={m.country} delay={i * 70}>
-                    <a href={m.page} className="mkt-row">
+                    <Link to={m.page} className="mkt-row">
                       {/* 01 number */}
                       <span className="mkt-num">{m.num}</span>
 
@@ -751,7 +688,7 @@ import ReactDOM from 'react-dom/client'
 
                       {/* Arrow */}
                       <span className="mkt-arrow">→</span>
-                    </a>
+                    </Link>
                   </FadeUp>
                 ))}
               </div>
@@ -792,7 +729,7 @@ import ReactDOM from 'react-dom/client'
                     Tell us your project requirements and receive a detailed price sheet with
                     sample availability by the next business day.
                   </p>
-                  <a href="/contact" className="btn-gold">Submit an Inquiry →</a>
+                  <Link to="/contact" className="btn-gold">Submit an Inquiry →</Link>
                 </div>
               </FadeUp>
             </div>
@@ -949,8 +886,8 @@ import ReactDOM from 'react-dom/client'
               <div className="coll-grid">
                 {PRODS.map((p, i) => (
                   <FadeUp key={p.slug} delay={i * 80}>
-                    <a
-                      href={`/products/${p.slug}/`}
+                    <Link
+                      to={`/products/${p.slug}/`}
                       className="coll-card"
                       id={`product-${p.slug}`}
                       data-product-id={p.slug}
@@ -978,7 +915,7 @@ import ReactDOM from 'react-dom/client'
                           <span className="coll-card-arrow">→</span>
                         </div>
                       </div>
-                    </a>
+                    </Link>
                   </FadeUp>
                 ))}
               </div>
@@ -990,7 +927,7 @@ import ReactDOM from 'react-dom/client'
                     <h3>Not sure which granite suits your project?</h3>
                     <p>Our export team will help you choose the right stone, finish, and specification.</p>
                   </div>
-                  <a href="/contact" className="btn-gold">Talk to Our Team →</a>
+                  <Link to="/contact" className="btn-gold">Talk to Our Team →</Link>
                 </div>
               </FadeUp>
             </div>
@@ -1064,7 +1001,7 @@ import ReactDOM from 'react-dom/client'
               <div className="coll-grid">
                 {MARKETS.map((m, i) => (
                   <FadeUp key={m.name} delay={i * 80}>
-                    <a href={m.page} className="mkt-card">
+                    <Link to={m.page} className="mkt-card">
                       <div className="mkt-card-top">
                         <span className="mkt-card-flag">{m.flag}</span>
                         <div>
@@ -1083,7 +1020,7 @@ import ReactDOM from 'react-dom/client'
                         <span className="mkt-card-link">View Market Details</span>
                         <span className="mkt-card-arrow">→</span>
                       </div>
-                    </a>
+                    </Link>
                   </FadeUp>
                 ))}
               </div>
@@ -1095,7 +1032,7 @@ import ReactDOM from 'react-dom/client'
                     <h3>Exporting to a region not listed here?</h3>
                     <p>We ship worldwide with full customs documentation. Tell us your destination.</p>
                   </div>
-                  <a href="/contact" className="btn-gold">Contact Our Export Team →</a>
+                  <Link to="/contact" className="btn-gold">Contact Our Export Team →</Link>
                 </div>
               </FadeUp>
             </div>
@@ -1495,7 +1432,7 @@ import ReactDOM from 'react-dom/client'
           <div style={{ textAlign: 'center' }}>
             <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '4rem', color: 'rgba(184,158,124,0.3)' }}>404</h1>
             <p style={{ color: 'var(--muted)', marginTop: 12, marginBottom: 28 }}>Page not found</p>
-            <a href="/" className="btn-outline">← Back to Home</a>
+            <Link to="/" className="btn-outline">← Back to Home</Link>
           </div>
         </div>
       );
@@ -1527,35 +1464,48 @@ import ReactDOM from 'react-dom/client'
       '/contact': ContactPage,
     };
 
-    function App() {
-      const route = useRoute();
-      // Sub-route support: /products/:slug → ProductsPage
-      const Page = PAGE_MAP[route]
-                || (route.startsWith('/products/') ? PAGE_MAP['/products'] : null)
-                || (route.startsWith('/markets/') ? PAGE_MAP['/markets'] : null)
-                || NotFoundPage;
-
-      // Remove loading screen on first render
+    function ScrollManager() {
+      // scroll to top on top-level route change (product sub-routes handle their own scroll)
+      const location = useLocation();
       useEffect(() => {
-        // The plain-JS fallback above already handles hiding.
-        // This is a belt-and-suspenders cleanup once React is definitely mounted.
-        const el = document.getElementById('ps-loading');
-        if (el) {
-          el.style.opacity = '0';
-          setTimeout(() => { if (el && el.parentNode) el.parentNode.removeChild(el); }, 600);
-        }
-      }, []);
+        if (!location.pathname.startsWith('/products/')) window.scrollTo(0, 0);
+      }, [location.pathname]);
+      return null;
+    }
 
+    function Layout({ children }) {
+      const route = useRoute();
+      useEffect(() => {
+        const el = document.getElementById('ps-loading');
+        if (el) { el.style.opacity = '0'; setTimeout(() => { if (el && el.parentNode) el.parentNode.removeChild(el); }, 600); }
+      }, []);
       return (
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(var(--vh, 1vh) * 100)' }}>
           <Navbar route={route} />
-          <main>
-            <Page />
-          </main>
+          <main>{children}</main>
           <Footer />
         </div>
       );
     }
 
+    function App() {
+      return (
+        <BrowserRouter>
+          <ScrollManager />
+          <Layout>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/products" element={<ProductsPage />} />
+              <Route path="/products/:slug" element={<ProductsPage />} />
+              <Route path="/markets" element={<MarketsPage />} />
+              <Route path="/markets/:slug" element={<MarketsPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Layout>
+        </BrowserRouter>
+      );
+    }
 
 export default App
