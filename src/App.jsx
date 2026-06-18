@@ -51,30 +51,44 @@ import ReactDOM from 'react-dom/client'
     function useRoute() {
       const [route, setRoute] = useState(getRoute);
       useEffect(() => {
-        const SPA_ROUTES = ['/', '/products', '/markets', '/about', '/contact'];
-        const go = (next, push, file) => {
+        const apply = (next) => {
           window.__ROUTE__ = next;
-          if (push) window.history.pushState({ route: next }, '', file || (next === '/' ? '/' : next));
           setRoute(next);
           if (!next.startsWith('/products/')) window.scrollTo(0, 0);
         };
-        // Intercept clicks on internal links → smooth SPA nav (no full reload)
+        // Resolve any clicked anchor to an internal SPA path (or null)
+        const resolvePath = (href) => {
+          if (!href) return null;
+          // Ignore external, mail, tel, hash-only, and new-tab handled elsewhere
+          if (/^(https?:)?\/\//.test(href) || href.startsWith('mailto:') || href.startsWith('tel:')) return null;
+          // Normalise to a leading-slash path without trailing slash
+          let p = href.split('#')[0].split('?')[0];
+          if (!p.startsWith('/')) return null;
+          p = p.replace(/\/+$/, '') || '/';
+          const top = ['/', '/products', '/markets', '/about', '/contact'];
+          if (top.includes(p)) return p;
+          if (p.startsWith('/products/') || p.startsWith('/markets/')) return p;
+          return null;
+        };
         const clickHandler = (e) => {
+          // respect modifier keys / new-tab / non-left-click
+          if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
           const a = e.target.closest('a');
           if (!a) return;
-          const href = a.getAttribute('href');
-          if (!href) return;
-          // only intercept same-site SPA routes; let detail-page .html links reload normally
-          const FILE_TO_ROUTE = { '/': '/', '/products': '/products', '/markets': '/markets', '/about': '/about', '/contact': '/contact' };
-          if (FILE_TO_ROUTE[href] !== undefined) {
-            e.preventDefault();
-            go(FILE_TO_ROUTE[href], true, href);
+          if (a.target && a.target !== '_self') return;
+          const path = resolvePath(a.getAttribute('href'));
+          if (path === null) return;
+          e.preventDefault();
+          try {
+            window.history.pushState({ route: path }, '', path);
+            apply(path);
+          } catch (err) {
+            // pushState blocked (e.g. sandboxed) → hard navigate so links still work
+            window.location.href = path;
           }
         };
-        // Browser back/forward
-        const popHandler = () => { window.__ROUTE__ = null; go(getRoute(), false); };
-        // Legacy hash support
-        const hashHandler = () => { window.__ROUTE__ = null; go(getRoute(), false); };
+        const popHandler = () => { window.__ROUTE__ = null; apply(getRoute()); };
+        const hashHandler = () => { window.__ROUTE__ = null; apply(getRoute()); };
         document.addEventListener('click', clickHandler);
         window.addEventListener('popstate', popHandler);
         window.addEventListener('hashchange', hashHandler);
