@@ -465,25 +465,25 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
     const HOME_MARKETS = [
       {
-        num: '01', country: 'United Kingdom', region: 'Europe', slug: 'united-kingdom', page: '/markets/united-kingdom/',
+        num: '01', country: 'United Kingdom', region: 'Europe', slug: 'united-kingdom', page: '/markets/united-kingdom/', slug: 'united-kingdom',
         highlight: false,
         desc: 'Heritage restoration specialists and luxury residential developers across England, Scotland, and Wales.',
         buyers: ['Architects', 'Heritage Specialists', 'Stone Fabricators', 'Luxury Developers'],
       },
       {
-        num: '02', country: 'United States', region: 'North America', slug: 'united-states', page: '/markets/united-states/',
+        num: '02', country: 'United States', region: 'North America', slug: 'united-states', page: '/markets/united-states/', slug: 'united-states',
         highlight: false,
         desc: 'Kitchen and bathroom fabricators, commercial flooring contractors, and luxury hotel developers coast to coast.',
         buyers: ['Kitchen Fabricators', 'Hotel Developers', 'Commercial Contractors'],
       },
       {
-        num: '03', country: 'UAE & Middle East', region: 'Gulf Region', slug: 'uae-middle-east', page: '/markets/uae-middle-east/',
+        num: '03', country: 'UAE & Middle East', region: 'Gulf Region', slug: 'uae-middle-east', page: '/markets/uae-middle-east/', slug: 'uae-middle-east',
         highlight: false,
         desc: 'Palace contractors, five-star hospitality groups, and grand civic development projects across the region.',
         buyers: ['Palace Contractors', 'Hospitality Groups', 'Civic Developers'],
       },
       {
-        num: '04', country: 'East Asia', region: 'Japan · Korea · Singapore', slug: 'east-asia', page: '/markets/east-asia/',
+        num: '04', country: 'East Asia', region: 'Japan · Korea · Singapore', slug: 'east-asia', page: '/markets/east-asia/', slug: 'east-asia',
         highlight: false,
         desc: 'Memorial craftsmen, luxury interior designers, and civic construction across Japan, South Korea, China, and Singapore.',
         buyers: ['Memorial Craftsmen', 'Interior Designers', 'Civic Construction'],
@@ -753,6 +753,9 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         moq: '100 sq. metres',
         rev: false,
         img: null,   // ← replace with '/images/black-galaxy.jpg' when ready
+        specs: [{ k: 'Origin', v: 'Andhra Pradesh, India' }, { k: 'Density', v: '3.0–3.1 g/cm³' }, { k: 'Water Absorption', v: '0.04%' }, { k: 'Compressive Strength', v: '190–210 MPa' }, { k: 'Flexural Strength', v: '15–18 MPa' }, { k: 'Mohs Hardness', v: '6–7' }, { k: 'Frost Resistance', v: 'Excellent' }, { k: 'Available Finishes', v: '4 options' }],
+        care: [{ title: 'Daily Cleaning', text: `Wipe with a soft cloth and warm water. Use a pH-neutral stone cleaner — never acidic or abrasive cleaners.` }, { title: 'Sealing', text: `Very low porosity, but seal every 12–18 months for kitchen worktops to guard against oil staining.` }, { title: 'Stain Removal', text: `Blot spills immediately. For oil stains, apply a baking-soda poultice for 24 hours, then rinse.` }, { title: 'What to Avoid', text: `Use trivets for hot cookware. Avoid standing water on honed finishes.` }],
+        faqs: [{ q: `What causes the golden flecks in Black Galaxy granite?`, a: `The golden-bronze flecks are bronzite, a naturally occurring magnesium-iron silicate mineral. Premium-grade Black Galaxy has fine, evenly distributed flecks.` }, { q: `Is Black Galaxy suitable for kitchen countertops?`, a: `Yes — with 0.04% water absorption and high heat resistance it is one of the best granites for worktops. A polished finish is recommended.` }, { q: `What finishes are available?`, a: `Polished, Honed, Flamed and Leathered.` }, { q: `What is the minimum order quantity?`, a: `100 square metres, with full export documentation provided.` }],
       },
       {
         name: 'Black Pearl Granite',  slug: 'black-pearl',
@@ -767,6 +770,9 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         moq: '80 sq. metres',
         rev: true,
         img: null,   // ← replace with '/images/black-pearl.jpg' when ready
+        specs: [{ k: 'Origin', v: 'Karnataka, India' }, { k: 'Density', v: '2.9–3.0 g/cm³' }, { k: 'Water Absorption', v: '0.05%' }, { k: 'Compressive Strength', v: '180–200 MPa' }, { k: 'Flexural Strength', v: '14–17 MPa' }, { k: 'Mohs Hardness', v: '6–7' }, { k: 'Frost Resistance', v: 'Excellent' }, { k: 'Available Finishes', v: '3 options' }],
+        care: [{ title: 'Daily Cleaning', text: `Use a microfibre cloth with warm water and pH-neutral soap. Buff dry to remove fingerprints from the high-polish surface.` }, { title: 'Sealing', text: `Apply an impregnating sealer every 12 months to maintain reflective depth.` }, { title: 'Stain Removal', text: `Blot spills immediately. Use a stone-specific poultice rather than scrubbing.` }, { title: 'What to Avoid', text: `Never use acidic or ammonia-based cleaners — they dull the pearl sheen.` }],
+        faqs: [{ q: `What gives Black Pearl its shimmer?`, a: `Labradorite and feldspar crystals create a shifting metallic lustre — most pronounced on the high-polish finish.` }, { q: `Is Black Pearl the same as Black Galaxy?`, a: `No. Black Galaxy has golden flecks; Black Pearl has a uniform pearl sheen without large flecks.` }, { q: `Which finish best shows the pearl effect?`, a: `The High Polish finish maximises the pearl shimmer.` }, { q: `What is the minimum order quantity?`, a: `80 square metres.` }],
       },
       {
         name: 'Steel Gray Granite',   slug: 'steel-gray',
@@ -781,6 +787,9 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         moq: '120 sq. metres',
         rev: false,
         img: null,   // ← replace with '/images/steel-gray.jpg' when ready
+        specs: [{ k: 'Origin', v: 'Tamil Nadu, India' }, { k: 'Density', v: '2.6–2.8 g/cm³' }, { k: 'Water Absorption', v: '0.08%' }, { k: 'Compressive Strength', v: '170–190 MPa' }, { k: 'Flexural Strength', v: '12–15 MPa' }, { k: 'Mohs Hardness', v: '6' }, { k: 'Frost Resistance', v: 'Excellent' }, { k: 'Available Finishes', v: '5 options' }],
+        care: [{ title: 'Daily Cleaning', text: `Wipe with warm water and a pH-neutral cleaner. Hides watermarks and fingerprints well.` }, { title: 'Sealing', text: `Seal every 12–18 months, especially for exterior and high-traffic applications.` }, { title: 'Stain Removal', text: `Treat oil and rust marks with a stone poultice.` }, { title: 'What to Avoid', text: `Avoid de-icing salts on exterior paving in winter. Avoid acidic cleaners.` }],
+        faqs: [{ q: `Is Steel Gray good for outdoor use?`, a: `Yes — excellent frost resistance, and flamed or sandblasted finishes give good slip resistance for paving and cladding.` }, { q: `What colour is Steel Gray exactly?`, a: `Deep charcoal to steel-blue grey with fine white and silver veining — cooler and more uniform than warmer greys.` }, { q: `How many finishes are available?`, a: `Five — the widest range in our collection.` }, { q: `What is the minimum order quantity?`, a: `120 square metres.` }],
       },
       {
         name: 'Jet Black Granite',    slug: 'jet-black',
@@ -795,6 +804,9 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         moq: '100 sq. metres',
         rev: true,
         img: null,   // ← replace with '/images/jet-black.jpg' when ready
+        specs: [{ k: 'Origin', v: 'Telangana, India' }, { k: 'Density', v: '3.0–3.2 g/cm³' }, { k: 'Water Absorption', v: '0.03%' }, { k: 'Compressive Strength', v: '200–220 MPa' }, { k: 'Flexural Strength', v: '16–19 MPa' }, { k: 'Mohs Hardness', v: '6–7' }, { k: 'Frost Resistance', v: 'Excellent' }, { k: 'Available Finishes', v: '4 options' }],
+        care: [{ title: 'Daily Cleaning', text: `Clean with a microfibre cloth and pH-neutral cleaner, then buff dry — the mirror finish shows every mark.` }, { title: 'Sealing', text: `Seal annually to protect the pristine surface despite very low porosity.` }, { title: 'Stain Removal', text: `Blot any spill instantly — even water can mark the mirror finish.` }, { title: 'What to Avoid', text: `Never use abrasive cleaners or scouring pads — they permanently dull the mirror polish.` }],
+        faqs: [{ q: `What makes Jet Black different from other black granites?`, a: `Zero visible veining, flecks or inclusions — a completely uniform pure black, ideal where total uniformity is required.` }, { q: `Is Jet Black truly 100% black?`, a: `Among the most uniform black granites available; mirror-polished it reaches a depth engineered stones cannot match.` }, { q: `What is the best finish for Jet Black?`, a: `Mirror Polish for maximum depth; Honed for contemporary matte; Flamed and Leathered for texture.` }, { q: `Why is Jet Black popular for memorials?`, a: `Its flawless surface takes engraving beautifully; Japanese craftsmen value its consistency.` }],
       },
     ];
 
@@ -939,28 +951,28 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
     // ── MARKETS PAGE ───────────────────────────────────────────────────────
     const MARKETS = [
       {
-        flag: '🇬🇧', name: 'United Kingdom', code: 'UK', page: '/markets/united-kingdom/',
+        flag: '🇬🇧', name: 'United Kingdom', code: 'UK', page: '/markets/united-kingdom/', slug: 'united-kingdom',
         tagline: 'Architectural heritage meets contemporary ambition.',
         p1: 'Granava supplies granite to some of the UK\'s most demanding architectural projects — from RIBA-shortlisted commercial developments to Grade II heritage building restorations in London, Edinburgh, and beyond.',
         p2: 'UK clients value our consistent batch colouration, compliance with British Standards, and our ability to match exact specifications for sensitive heritage stone replacement work.',
         tags: ['Flooring', 'Wall Cladding', 'Heritage Restoration', 'Countertops', 'External Paving'],
       },
       {
-        flag: '🇺🇸', name: 'United States', code: 'USA', page: '/markets/united-states/',
+        flag: '🇺🇸', name: 'United States', code: 'USA', page: '/markets/united-states/', slug: 'united-states',
         tagline: 'Where kitchen design meets natural luxury.',
         p1: 'The American market sets the global benchmark for granite countertop quality expectations. Granava serves fabricators, kitchen designers, general contractors, and luxury hotel developers from New York to Los Angeles.',
         p2: 'We provide material certifications for food-contact surfaces and work with US import partners to streamline customs processing and warehouse delivery timelines across all 50 states.',
         tags: ['Countertops', 'Commercial Flooring', 'Hotel Lobbies', 'Bathroom Vanities', 'Residential'],
       },
       {
-        flag: '🌏', name: 'East Asia', code: 'Japan · South Korea · China · Singapore', page: '/markets/east-asia/',
+        flag: '🌏', name: 'East Asia', code: 'Japan · South Korea · China · Singapore', page: '/markets/east-asia/', slug: 'east-asia',
         tagline: 'Precision, permanence, and prestige.',
         p1: 'East Asian markets demand the highest level of surface consistency and finishing precision. From Japanese memorial stone workshops requiring perfect grain uniformity to Singapore\'s ultra-luxury residential developments, Granava meets the region\'s exacting standards.',
         p2: 'We maintain dedicated quality protocols for East Asian orders, including enhanced visual grading, reinforced packaging, and detailed inspection documentation in Japanese, Korean, and Chinese on request.',
         tags: ['Memorials', 'Monuments', 'Luxury Interiors', 'Civic Projects', 'Commercial Flooring'],
       },
       {
-        flag: '🇦🇪', name: 'UAE & Middle East', code: 'UAE · Saudi Arabia · Qatar · Kuwait', page: '/markets/uae-middle-east/',
+        flag: '🇦🇪', name: 'UAE & Middle East', code: 'UAE · Saudi Arabia · Qatar · Kuwait', page: '/markets/uae-middle-east/', slug: 'uae-middle-east',
         tagline: 'Stone worthy of the region\'s grandest ambitions.',
         p1: 'The Gulf market demands materials that project power and permanence. Palace lobbies, royal residences, five-star hotel atriums, and landmark civic developments rely on Granava for granite that commands respect at any scale.',
         p2: 'We have established relationships with Dubai and Abu Dhabi stone distributors and can coordinate delivery to project sites across Saudi Arabia, Qatar, Kuwait, and Bahrain with full customs documentation.',
@@ -1488,6 +1500,268 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       );
     }
 
+    
+    // ─── Standalone Product Detail Page ───
+    function ProductDetailPage() {
+      const route = useRoute();
+      const slug = normalizeSlug(route.slice('/products/'.length));
+      const product = PRODS.find((p) => p.slug === slug);
+      const [activeFinish, setActiveFinish] = useState(0);
+      const [openFaq, setOpenFaq] = useState(null);
+
+      useEffect(() => {
+        if (product) {
+          document.title = `${product.name} | Granava`;
+          setMeta(product.desc.slice(0, 155));
+          window.scrollTo(0, 0);
+        }
+      }, [slug, product]);
+
+      if (!product) return <NotFoundPage />;
+
+      const related = PRODS.filter((p) => p.slug !== slug);
+
+      return (
+        <div className="pd">
+          <div className="container">
+            <nav className="pd-breadcrumb">
+              <Link to="/">Home</Link> <span>›</span> <Link to="/products">Collection</Link> <span>›</span> <span className="pd-crumb-current">{product.name}</span>
+            </nav>
+          </div>
+
+          {/* Hero: visual + intro */}
+          <div className="container">
+            <div className="pd-hero">
+              <div className="pd-hero-visual">
+                <div className={`pd-vis ${product.cls}`}>
+                  {product.img && <img src={product.img} alt={`${product.name} slab`} loading="eager" />}
+                </div>
+              </div>
+              <div className="pd-hero-body">
+                <FadeUp>
+                  <span className="pd-eyebrow">{product.origin}</span>
+                  <h1 className="pd-title">{product.name}</h1>
+                  <p className="pd-tagline">{product.tagline}</p>
+                  <p className="pd-desc">{product.desc}</p>
+
+                  <div className="pd-finishes">
+                    <span className="pd-label">Available Finishes</span>
+                    <div className="pd-finish-row">
+                      {product.finishes.map((f, i) => (
+                        <button
+                          key={f}
+                          type="button"
+                          className={`pd-finish-btn ${i === activeFinish ? 'active' : ''}`}
+                          onClick={() => setActiveFinish(i)}
+                        >{f}</button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pd-quick">
+                    <div><span>Sizes</span><b>{product.sizes}</b></div>
+                    <div><span>Thickness</span><b>{product.thickness}</b></div>
+                    <div><span>Minimum Order</span><b>{product.moq}</b></div>
+                  </div>
+
+                  <div className="pd-cta-row">
+                    <a className="btn-gold" href={`mailto:info@granava.in?subject=Sample Request: ${product.name}`}>Request a Sample</a>
+                    <a className="btn-outline" href={`mailto:info@granava.in?subject=Pricing Enquiry: ${product.name}`}>Get Pricing</a>
+                  </div>
+                </FadeUp>
+              </div>
+            </div>
+          </div>
+
+          {/* Specs */}
+          <div className="container">
+            <section className="pd-section">
+              <h2 className="pd-h2"><span className="pd-num">01</span> Technical Specifications</h2>
+              <div className="pd-specs">
+                {product.specs.map((s) => (
+                  <div key={s.k} className="pd-spec-row"><span>{s.k}</span><b>{s.v}</b></div>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          {/* Applications */}
+          <div className="container">
+            <section className="pd-section">
+              <h2 className="pd-h2"><span className="pd-num">02</span> Common Applications</h2>
+              <div className="pd-uses">
+                {product.uses.map((u) => <span key={u} className="pd-use">{u}</span>)}
+              </div>
+            </section>
+          </div>
+
+          {/* Care */}
+          <div className="container">
+            <section className="pd-section">
+              <h2 className="pd-h2"><span className="pd-num">03</span> Care &amp; Maintenance</h2>
+              <div className="pd-care">
+                {product.care.map((c, i) => (
+                  <div key={c.title} className="pd-care-item">
+                    <div className="pd-care-num">{String(i + 1).padStart(2, '0')}</div>
+                    <div><h3>{c.title}</h3><p>{c.text}</p></div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          {/* FAQ */}
+          <div className="container">
+            <section className="pd-section">
+              <h2 className="pd-h2"><span className="pd-num">04</span> Frequently Asked Questions</h2>
+              <div className="pd-faqs">
+                {product.faqs.map((f, i) => (
+                  <div key={i} className={`pd-faq ${openFaq === i ? 'open' : ''}`}>
+                    <button type="button" className="pd-faq-q" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                      <span>{f.q}</span><span className="pd-faq-icon">{openFaq === i ? '−' : '+'}</span>
+                    </button>
+                    {openFaq === i && <p className="pd-faq-a">{f.a}</p>}
+                  </div>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          {/* Related */}
+          <div className="container">
+            <section className="pd-section pd-related">
+              <h2 className="pd-h2"><span className="pd-num">05</span> Also in Our Collection</h2>
+              <div className="pd-related-grid">
+                {related.map((p) => (
+                  <Link key={p.slug} to={`/products/${p.slug}/`} className="pd-related-card">
+                    <div className={`pd-related-vis ${p.cls}`}>{p.img && <img src={p.img} alt={p.name} loading="lazy" />}</div>
+                    <div className="pd-related-body">
+                      <h3>{p.name}</h3>
+                      <span>{p.tagline}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          {/* CTA */}
+          <div className="container">
+            <div className="pd-final-cta">
+              <h2>Ready to Order {product.short || product.name}?</h2>
+              <p>Request samples, pricing, or a shipping quote to your destination.</p>
+              <div className="pd-cta-row">
+                <a className="btn-gold" href={`mailto:info@granava.in?subject=Order Enquiry: ${product.name}`}>Contact Our Export Team</a>
+                <Link className="btn-outline" to="/products">View Full Collection</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    
+    // ─── Standalone Market Detail Page ───
+    function MarketDetailPage() {
+      const route = useRoute();
+      const slug = normalizeSlug(route.slice('/markets/'.length));
+      const market = MARKETS.find((m) => m.slug === slug);
+
+      useEffect(() => {
+        if (market) {
+          document.title = `Granite Export to ${market.name} | Granava`;
+          setMeta(`Granava exports premium Indian granite to ${market.name}. ${market.tagline}`);
+          window.scrollTo(0, 0);
+        }
+      }, [slug, market]);
+
+      if (!market) return <NotFoundPage />;
+
+      const others = MARKETS.filter((m) => m.slug !== slug);
+
+      return (
+        <div className="md">
+          <div className="container">
+            <nav className="pd-breadcrumb">
+              <Link to="/">Home</Link> <span>›</span> <Link to="/markets">Markets</Link> <span>›</span> <span className="pd-crumb-current">{market.name}</span>
+            </nav>
+          </div>
+
+          <div className="container">
+            <div className="md-hero">
+              <FadeUp>
+                <span className="md-flag">{market.flag}</span>
+                <span className="pd-eyebrow">{market.code}</span>
+                <h1 className="pd-title">Granite Export to {market.name}</h1>
+                <p className="pd-tagline">{market.tagline}</p>
+                <p className="pd-desc">{market.p1}</p>
+                <p className="pd-desc">{market.p2}</p>
+                <div className="pd-cta-row">
+                  <a className="btn-gold" href={`mailto:info@granava.in?subject=Enquiry from ${market.name}`}>Email Our Export Team</a>
+                  <Link className="btn-outline" to="/products">View Collection</Link>
+                </div>
+              </FadeUp>
+            </div>
+          </div>
+
+          <div className="container">
+            <section className="pd-section">
+              <h2 className="pd-h2"><span className="pd-num">01</span> Common Applications</h2>
+              <div className="pd-uses">
+                {market.tags.map((t) => <span key={t} className="pd-use">{t}</span>)}
+              </div>
+            </section>
+          </div>
+
+          <div className="container">
+            <section className="pd-section">
+              <h2 className="pd-h2"><span className="pd-num">02</span> Our Granite Collection</h2>
+              <div className="pd-related-grid">
+                {PRODS.map((p) => (
+                  <Link key={p.slug} to={`/products/${p.slug}/`} className="pd-related-card">
+                    <div className={`pd-related-vis ${p.cls}`}>{p.img && <img src={p.img} alt={p.name} loading="lazy" />}</div>
+                    <div className="pd-related-body">
+                      <h3>{p.name}</h3>
+                      <span>{p.tagline}</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          <div className="container">
+            <section className="pd-section">
+              <h2 className="pd-h2"><span className="pd-num">03</span> Other Markets We Serve</h2>
+              <div className="md-others">
+                {others.map((m) => (
+                  <Link key={m.slug} to={m.page} className="md-other-card">
+                    <span className="md-other-flag">{m.flag}</span>
+                    <div>
+                      <h3>{m.name}</h3>
+                      <span>{m.tagline}</span>
+                    </div>
+                    <span className="md-other-arrow">→</span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          <div className="container">
+            <div className="pd-final-cta">
+              <h2>Exporting to {market.name}?</h2>
+              <p>Request samples, pricing, or a shipping quote to your destination.</p>
+              <div className="pd-cta-row">
+                <a className="btn-gold" href={`mailto:info@granava.in?subject=Order Enquiry: ${market.name}`}>Contact Our Export Team</a>
+                <Link className="btn-outline" to="/markets">All Markets</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     function App() {
       return (
         <BrowserRouter>
@@ -1496,9 +1770,9 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/products" element={<ProductsPage />} />
-              <Route path="/products/:slug" element={<ProductsPage />} />
+              <Route path="/products/:slug" element={<ProductDetailPage />} />
               <Route path="/markets" element={<MarketsPage />} />
-              <Route path="/markets/:slug" element={<MarketsPage />} />
+              <Route path="/markets/:slug" element={<MarketDetailPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="*" element={<NotFoundPage />} />
