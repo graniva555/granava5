@@ -1904,7 +1904,7 @@
 
   
 /* ════ Standalone Product Detail Page ════ */
-.pd{padding:24px 0 80px;}
+.pd{padding:calc(var(--nav-h) + 24px) 0 80px;}
 .pd-breadcrumb{font-size:12px;color:var(--muted,#6b7f96);padding:8px 0 28px;}
 .pd-breadcrumb a{color:var(--muted,#6b7f96);text-decoration:none;}
 .pd-breadcrumb a:hover{color:var(--gold,#c9a96e);}
@@ -1970,7 +1970,7 @@
 @media(max-width:900px){.pd-hero{grid-template-columns:1fr;gap:28px;}.pd-hero-visual{position:static;}.pd-specs,.pd-care,.pd-related-grid{grid-template-columns:1fr;}.pd-quick{grid-template-columns:1fr;}}
 
 /* ════ Market Detail Page ════ */
-.md{padding:24px 0 80px;}
+.md{padding:calc(var(--nav-h) + 24px) 0 80px;}
 .md-hero{max-width:820px;padding:8px 0 20px;}
 .md-flag{font-size:3.2rem;display:block;margin-bottom:18px;line-height:1;}
 .md-others{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
