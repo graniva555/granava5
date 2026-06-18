@@ -2001,3 +2001,22 @@
 .fin-brushed{filter:brightness(.95) saturate(.85);}
 .fin-sandblasted{filter:brightness(.78) contrast(.95);}
 .fin-high-polish,.fin-mirror-polish{filter:brightness(1.25) contrast(1.15);}
+
+/* ════ Finish reflects on the product visual (clickable, visible change) ════ */
+.pd-vis{transition:filter .35s ease;}
+.pd-vis-finish-tag{position:absolute;top:14px;left:14px;background:rgba(7,16,30,.82);backdrop-filter:blur(6px);color:var(--gold-light,#d8ba82);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:7px 13px;border-radius:30px;border:1px solid rgba(201,169,110,.4);}
+.pd-vis-caption{font-size:12.5px;color:var(--muted,#6b7f96);line-height:1.6;margin-top:14px;text-align:center;}
+.pd-vis-caption b{color:var(--gold,#c9a96e);}
+
+/* Distinct, clearly-different finish treatments on the visual */
+.pd-vis.fin-polished,.pd-vis.fin-high-polish,.pd-vis.fin-mirror-polish{filter:brightness(1.28) contrast(1.22) saturate(1.1);}
+.pd-vis.fin-honed{filter:brightness(.78) contrast(.92) saturate(.8);}
+.pd-vis.fin-flamed{filter:brightness(.62) contrast(1.4) saturate(.85) sepia(.12);}
+.pd-vis.fin-leathered{filter:brightness(.88) contrast(1.12) saturate(.95) sepia(.06);}
+.pd-vis.fin-brushed{filter:brightness(.95) contrast(.9) saturate(.78);}
+.pd-vis.fin-sandblasted{filter:brightness(.72) contrast(.85) saturate(.7);}
+
+/* Active finish button — stronger, clearer selected state */
+.pd-finish-btn{position:relative;}
+.pd-finish-btn.active{border-color:var(--gold,#c9a96e);color:#07101e;background:var(--gold,#c9a96e);font-weight:700;}
+.pd-finish-btn.active::after{content:'✓';margin-left:7px;font-weight:700;}

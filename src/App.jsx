@@ -739,6 +739,17 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
     }
 
     // ── PRODUCTS PAGE ──────────────────────────────────────────────────────
+    const FINISH_DESC = {
+      'Polished': 'a glossy, reflective surface that deepens the colour and reveals full detail.',
+      'High Polish': 'a mirror-bright, highly reflective surface with maximum depth and shine.',
+      'Mirror Polish': 'the most reflective treatment — a flawless, glass-like mirror surface.',
+      'Honed': 'a smooth matte finish with a soft, understated, contemporary look.',
+      'Flamed': 'a textured, rugged surface created by intense heat — ideal for grip and exteriors.',
+      'Leathered': 'a soft-sheen textured finish that hides smudges while keeping rich colour.',
+      'Brushed': 'a subtly textured antique-style surface with a gentle worn feel.',
+      'Sandblasted': 'a fine matte-textured non-slip surface, excellent for flooring and steps.',
+    };
+
     const PRODS = [
       {
         name: 'Black Galaxy Granite', slug: 'black-galaxy',
@@ -1533,9 +1544,11 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
           <div className="container">
             <div className="pd-hero">
               <div className="pd-hero-visual">
-                <div className={`pd-vis ${product.cls}`}>
-                  {product.img && <img src={product.img} alt={`${product.name} slab`} loading="eager" />}
+                <div className={`pd-vis ${product.cls} fin-${product.finishes[activeFinish].toLowerCase().replace(/ /g, '-')}`}>
+                  {product.img && <img src={product.img} alt={`${product.name} ${product.finishes[activeFinish]} finish`} loading="eager" />}
+                  <span className="pd-vis-finish-tag">{product.finishes[activeFinish]} Finish</span>
                 </div>
+                <p className="pd-vis-caption">Showing: <b>{product.finishes[activeFinish]}</b> finish — {FINISH_DESC[product.finishes[activeFinish]] || 'a distinctive surface treatment.'}</p>
               </div>
               <div className="pd-hero-body">
                 <FadeUp>
