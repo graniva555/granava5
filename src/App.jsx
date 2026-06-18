@@ -1544,20 +1544,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                   <p className="pd-tagline">{product.tagline}</p>
                   <p className="pd-desc">{product.desc}</p>
 
-                  <div className="pd-finishes">
-                    <span className="pd-label">Available Finishes</span>
-                    <div className="pd-finish-row">
-                      {product.finishes.map((f, i) => (
-                        <button
-                          key={f}
-                          type="button"
-                          className={`pd-finish-btn ${i === activeFinish ? 'active' : ''}`}
-                          onClick={() => setActiveFinish(i)}
-                        >{f}</button>
-                      ))}
-                    </div>
-                  </div>
-
                   <div className="pd-quick">
                     <div><span>Sizes</span><b>{product.sizes}</b></div>
                     <div><span>Thickness</span><b>{product.thickness}</b></div>
@@ -1598,7 +1584,28 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
           {/* Care */}
           <div className="container">
             <section className="pd-section">
-              <h2 className="pd-h2"><span className="pd-num">03</span> Care &amp; Maintenance</h2>
+              <h2 className="pd-h2"><span className="pd-num">03</span> Available Finishes</h2>
+              <p className="pd-finish-intro">Select a finish to see how it transforms the surface. Each finish suits different applications and aesthetics.</p>
+              <div className="pd-finish-grid">
+                {product.finishes.map((f, i) => (
+                  <button
+                    key={f}
+                    type="button"
+                    className={`pd-finish-card ${i === activeFinish ? 'active' : ''}`}
+                    onClick={() => setActiveFinish(i)}
+                  >
+                    <span className={`pd-finish-swatch ${product.cls} fin-${f.toLowerCase().replace(/ /g, '-')}`} />
+                    <span className="pd-finish-name">{f}</span>
+                    {i === activeFinish && <span className="pd-finish-check">✓ Selected</span>}
+                  </button>
+                ))}
+              </div>
+            </section>
+          </div>
+
+          <div className="container">
+            <section className="pd-section">
+              <h2 className="pd-h2"><span className="pd-num">04</span> Care &amp; Maintenance</h2>
               <div className="pd-care">
                 {product.care.map((c, i) => (
                   <div key={c.title} className="pd-care-item">
@@ -1613,7 +1620,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
           {/* FAQ */}
           <div className="container">
             <section className="pd-section">
-              <h2 className="pd-h2"><span className="pd-num">04</span> Frequently Asked Questions</h2>
+              <h2 className="pd-h2"><span className="pd-num">05</span> Frequently Asked Questions</h2>
               <div className="pd-faqs">
                 {product.faqs.map((f, i) => (
                   <div key={i} className={`pd-faq ${openFaq === i ? 'open' : ''}`}>
@@ -1630,7 +1637,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
           {/* Related */}
           <div className="container">
             <section className="pd-section pd-related">
-              <h2 className="pd-h2"><span className="pd-num">05</span> Also in Our Collection</h2>
+              <h2 className="pd-h2"><span className="pd-num">06</span> Also in Our Collection</h2>
               <div className="pd-related-grid">
                 {related.map((p) => (
                   <Link key={p.slug} to={`/products/${p.slug}/`} className="pd-related-card">
