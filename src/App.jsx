@@ -262,17 +262,11 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
               {/* Logo */}
               <Link to="/" className="navbar-logo" aria-label="Granava — Home">
-                <svg className="navbar-logo-mark"
-                  viewBox="0 0 480 80" xmlns="http://www.w3.org/2000/svg"
-                  role="img" aria-hidden="true" focusable="false">
-                  <text x="240" y="55" textAnchor="middle"
-                    fontFamily="'Josefin Sans','Century Gothic',Arial,sans-serif"
-                    fontSize="54" fontWeight="300" fill="#c9a96e"
-                    letterSpacing="20" shapeRendering="geometricPrecision">GRANAVA</text>
-                  <line x1="18" y1="73" x2="462" y2="73"
-                    stroke="#c9a96e" strokeWidth="0.9"/>
+                <svg className="navbar-logo-mark" viewBox="0 0 480 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" focusable="false">
+                  <text x="240" y="55" textAnchor="middle" fontFamily="'Josefin Sans','Century Gothic',Arial,sans-serif" fontSize="54" fontWeight="300" fill="#c9a96e" letterSpacing="20" shapeRendering="geometricPrecision">GRANAVA</text>
+                  <line x1="18" y1="73" x2="462" y2="73" stroke="#c9a96e" strokeWidth="0.9"/>
                 </svg>
-                <span className="navbar-tagline" aria-hidden="true">NATURAL GRANITE</span>
+                <span className="navbar-logo-tagline">NATURAL GRANITE</span>
               </Link>
 
               {/* Desktop links */}
@@ -608,10 +602,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
               </div>
             </div>
             <div className="hero-bottom-line" />
-            <div className="scroll-indicator">
-              <div className="scroll-line" />
-              <span>Scroll</span>
-            </div>
           </section>
 
           <TrustMarquee />
