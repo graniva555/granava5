@@ -266,7 +266,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                   <text x="240" y="55" textAnchor="middle" fontFamily="'Josefin Sans','Century Gothic',Arial,sans-serif" fontSize="54" fontWeight="300" fill="#c9a96e" letterSpacing="20" shapeRendering="geometricPrecision">GRANAVA</text>
                   <line x1="18" y1="73" x2="462" y2="73" stroke="#c9a96e" strokeWidth="0.9"/>
                 </svg>
-                <span className="navbar-logo-tagline">NATURAL GRANITE</span>
+                <span className="navbar-tagline">NATURAL GRANITE</span>
               </Link>
 
               {/* Desktop links */}

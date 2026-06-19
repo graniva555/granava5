@@ -96,7 +96,8 @@
       transition: opacity 0.25s;
     }
     .navbar-logo:hover         { opacity: 0.78; }
-    .navbar-logo:focus-visible { outline: 2px solid var(--gold); outline-offset: 6px; border-radius: 2px; }
+    .navbar-logo:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+    .navbar-logo:focus:not(:focus-visible) { outline: none; }
 
     /* Wordmark SVG mark — GRANAVA + rule */
     .navbar-logo-mark { display: block; width: 148px; height: auto; line-height: 0; }
