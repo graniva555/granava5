@@ -2020,3 +2020,46 @@
 .pd-finish-btn{position:relative;}
 .pd-finish-btn.active{border-color:var(--gold,#c9a96e);color:#07101e;background:var(--gold,#c9a96e);font-weight:700;}
 .pd-finish-btn.active::after{content:'✓';margin-left:7px;font-weight:700;}
+
+/* ════════ MODERN ENHANCEMENTS ════════ */
+
+/* Scroll progress bar (thin gold line, top of viewport) */
+.scroll-progress{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold,#c9a96e),var(--gold-light,#d8ba82));transform-origin:0 50%;transform:scaleX(0);z-index:1100;transition:transform .1s linear;will-change:transform;}
+
+/* Gradient text on major headings (subtle gold sweep) */
+.hero-content h1,.section-head h2,.coll-hero-title,.pd-title,.pd-final-cta h2{background:linear-gradient(120deg,var(--text,#edf2f8) 0%,var(--text,#edf2f8) 55%,var(--gold-light,#d8ba82) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+/* keep the italic/em gold accents fully gold */
+.hero-content h1 em,.section-head h2 em,.pd-title em{-webkit-text-fill-color:var(--gold,#c9a96e);background:none;}
+
+/* Trust marquee strip */
+.trust-marquee{overflow:hidden;border-top:1px solid var(--border,#162538);border-bottom:1px solid var(--border,#162538);background:rgba(13,26,46,.5);padding:18px 0;white-space:nowrap;}
+.trust-track{display:inline-flex;align-items:center;gap:0;animation:trustScroll 32s linear infinite;}
+.trust-item{display:inline-flex;align-items:center;font-family:var(--font-serif,'Playfair Display',serif);font-size:1.05rem;font-style:italic;color:var(--text-2,#b4c8de);padding:0 4px;}
+.trust-dot{color:var(--gold,#c9a96e);font-size:.6rem;margin:0 28px;font-style:normal;}
+@keyframes trustScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.trust-marquee:hover .trust-track{animation-play-state:paused;}
+
+/* Hover polish — nav link gold underline grow */
+.navbar-links a{position:relative;}
+.navbar-links a::after{content:'';position:absolute;left:0;bottom:-4px;height:1.5px;width:100%;background:var(--gold,#c9a96e);transform:scaleX(0);transform-origin:left;transition:transform .28s cubic-bezier(.4,0,.2,1);}
+.navbar-links a:hover::after{transform:scaleX(1);}
+
+/* Image/visual zoom on card hover */
+.coll-card-overlay,.pd-related-vis,.card-vis{overflow:hidden;}
+.coll-card-overlay,.pd-related-vis{transition:transform .5s cubic-bezier(.2,.6,.2,1);}
+.coll-card:hover .coll-card-overlay,.pd-related-card:hover .pd-related-vis{transform:scale(1.06);}
+
+/* CTA buttons — subtle sheen on hover */
+.btn-gold{position:relative;overflow:hidden;}
+.btn-gold::before{content:'';position:absolute;top:0;left:-75%;width:50%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:left .6s;}
+.btn-gold:hover::before{left:125%;}
+
+/* Count-up numbers get a gentle pop */
+.hero-stat-num{display:inline-block;}
+
+/* Respect reduced motion */
+@media(prefers-reduced-motion:reduce){
+  .trust-track{animation:none;}
+  .scroll-progress{transition:none;}
+  .btn-gold::before{display:none;}
+}

@@ -72,6 +72,67 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
     }
 
     // ── Particle Canvas ────────────────────────────────────────────────────
+    // ── CountUp: animates a number from 0 when scrolled into view ──
+    function CountUp({ end, suffix = '', duration = 1400 }) {
+      const ref = useRef(null);
+      const [val, setVal] = useState(prefersReducedMotion ? end : 0);
+      useEffect(() => {
+        if (prefersReducedMotion) { setVal(end); return; }
+        const el = ref.current;
+        if (!el) return;
+        let raf, started = false;
+        const obs = new IntersectionObserver(([e]) => {
+          if (e.isIntersecting && !started) {
+            started = true;
+            const t0 = performance.now();
+            const tick = (now) => {
+              const p = Math.min((now - t0) / duration, 1);
+              const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+              setVal(Math.round(eased * end));
+              if (p < 1) raf = requestAnimationFrame(tick);
+            };
+            raf = requestAnimationFrame(tick);
+            obs.unobserve(el);
+          }
+        }, { threshold: 0.3 });
+        obs.observe(el);
+        return () => { obs.disconnect(); if (raf) cancelAnimationFrame(raf); };
+      }, [end, duration]);
+      return <span ref={ref}>{val}{suffix}</span>;
+    }
+
+    // ── ScrollProgress: thin gold bar showing page scroll progress ──
+    function ScrollProgress() {
+      const [pct, setPct] = useState(0);
+      useEffect(() => {
+        const onScroll = () => {
+          const h = document.documentElement;
+          const max = h.scrollHeight - h.clientHeight;
+          setPct(max > 0 ? (h.scrollTop / max) * 100 : 0);
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+        return () => window.removeEventListener('scroll', onScroll);
+      }, []);
+      return <div className="scroll-progress" style={{ transform: `scaleX(${pct / 100})` }} aria-hidden="true" />;
+    }
+
+    // ── TrustMarquee: slow-scrolling premium trust strip ──
+    function TrustMarquee() {
+      const items = ['Direct Quarry Sourcing', 'Export-Grade Selection', 'Full Customs Documentation', 'Worldwide Shipping', 'Consistent Quality Control', '25+ Countries Served'];
+      const doubled = [...items, ...items];
+      return (
+        <div className="trust-marquee" aria-hidden="true">
+          <div className="trust-track">
+            {doubled.map((t, i) => (
+              <span key={i} className="trust-item">{t}<span className="trust-dot">◆</span></span>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+
     function ParticleCanvas() {
       const ref = useRef(null);
       useEffect(() => {
@@ -525,17 +586,17 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                 </div>
                 <div className="hero-stats h-fade d5">
                   <div className="hero-stat">
-                    <span className="hero-stat-num">4</span>
+                    <span className="hero-stat-num"><CountUp end={4} /></span>
                     <span className="hero-stat-label">Continents</span>
                   </div>
                   <div className="hero-stat-div"/>
                   <div className="hero-stat">
-                    <span className="hero-stat-num">4</span>
+                    <span className="hero-stat-num"><CountUp end={4} /></span>
                     <span className="hero-stat-label">Granite Varieties</span>
                   </div>
                   <div className="hero-stat-div"/>
                   <div className="hero-stat">
-                    <span className="hero-stat-num">20+</span>
+                    <span className="hero-stat-num"><CountUp end={20} suffix="+" /></span>
                     <span className="hero-stat-label">Years of Export</span>
                   </div>
                   <div className="hero-stat-div"/>
@@ -552,6 +613,9 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
               <span>Scroll</span>
             </div>
           </section>
+
+          <TrustMarquee />
+
 
           {/* Our Collection — editorial stone gallery */}
           <section className="section-sm" style={{ background: 'var(--bg)', paddingBottom: 0 }}>
@@ -1186,7 +1250,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
     // ── CONTACT PAGE ───────────────────────────────────────────────────────
     // Replace with your EmailJS credentials:
-    const FORMSPREE_URL = 'https://formspree.io/f/xgobjlvl'; // ← Replace YOUR_FORM_ID with your Formspree form ID
+    const FORMSPREE_URL = 'https://formspree.io/f/YOUR_FORM_ID'; // ← Replace YOUR_FORM_ID with your Formspree form ID
 
     const PHONE_CODES = [
       { l: 'UK +44', v: '+44' }, { l: 'USA +1', v: '+1' },
@@ -1501,6 +1565,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       }, []);
       return (
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(var(--vh, 1vh) * 100)' }}>
+          <ScrollProgress />
           <Navbar route={route} />
           <main>{children}</main>
           <Footer />
