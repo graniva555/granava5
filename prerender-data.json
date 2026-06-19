@@ -1,0 +1,46 @@
+{
+  "products": [
+    {
+      "slug": "black-galaxy",
+      "name": "Black Galaxy Granite",
+      "desc": "Quarried exclusively from the Nellore district of Andhra Pradesh, Black Galaxy is among the world's most recognised premium granites. Its near-black base i"
+    },
+    {
+      "slug": "black-pearl",
+      "name": "Black Pearl Granite",
+      "desc": "Black Pearl originates from Karnataka and delivers a pure, mirror-deep black surface with a distinctive pearl-like metallic shimmer across the face. When h"
+    },
+    {
+      "slug": "steel-gray",
+      "name": "Steel Gray Granite",
+      "desc": "From Tamil Nadu's Krishnagiri district, Steel Gray is defined by its restrained, sophisticated palette \u2014 deep charcoal and steel-blue tones threaded with f"
+    },
+    {
+      "slug": "jet-black",
+      "name": "Jet Black Granite",
+      "desc": "Jet Black is the purest expression of natural granite \u2014 quarried from the ancient formations of Karimnagar, Telangana, it presents an almost void-like unif"
+    }
+  ],
+  "markets": [
+    {
+      "slug": "united-kingdom",
+      "name": "United Kingdom",
+      "tagline": "Architectural heritage meets contemporary ambition."
+    },
+    {
+      "slug": "united-states",
+      "name": "United States",
+      "tagline": "Where kitchen design meets natural luxury."
+    },
+    {
+      "slug": "east-asia",
+      "name": "East Asia",
+      "tagline": "Precision, permanence, and prestige."
+    },
+    {
+      "slug": "uae-middle-east",
+      "name": "UAE & Middle East",
+      "tagline": "Stone worthy of the region\\"
+    }
+  ]
+}
