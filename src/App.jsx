@@ -262,11 +262,10 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
               {/* Logo */}
               <Link to="/" className="navbar-logo" aria-label="Granava — Home">
-                <svg className="navbar-logo-mark" viewBox="0 0 480 80" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" focusable="false">
-                  <text x="240" y="55" textAnchor="middle" fontFamily="'Josefin Sans','Century Gothic',Arial,sans-serif" fontSize="54" fontWeight="300" fill="#c9a96e" letterSpacing="20" shapeRendering="geometricPrecision">GRANAVA</text>
-                  <line x1="18" y1="73" x2="462" y2="73" stroke="#c9a96e" strokeWidth="0.9"/>
+                <svg className="navbar-logo-mark" viewBox="0 0 716 90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GRANAVA" focusable="false">
+                  <g transform="translate(6,0)"><path d="M79 27 A 43 43 0 1 0 79 66.6" fill="none" stroke="currentColor" strokeWidth="9"/><line x1="79" y1="66.6" x2="79" y2="49.5" stroke="currentColor" strokeWidth="9"/><line x1="83.5" y1="49.5" x2="48.7" y2="49.5" stroke="currentColor" strokeWidth="9"/></g><g transform="translate(112,0)"><line x1="5.5" y1="4.5" x2="5.5" y2="90" stroke="currentColor" strokeWidth="9"/><path d="M5.5 4.5 H41.6 A27.9 27.9 0 0 1 41.6 56.7 H5.5" fill="none" stroke="currentColor" strokeWidth="9"/><line x1="40" y1="52.65" x2="74.5" y2="90" stroke="currentColor" strokeWidth="9"/></g><g transform="translate(214,0)"><path d="M5.5 90 L41 4.5 L76.5 90" fill="none" stroke="currentColor" strokeWidth="9" strokeLinejoin="miter"/></g><g transform="translate(318,0)"><line x1="5.5" y1="90" x2="5.5" y2="4.5" stroke="currentColor" strokeWidth="9"/><line x1="5.5" y1="3.6" x2="74.5" y2="86.4" stroke="currentColor" strokeWidth="9"/><line x1="74.5" y1="90" x2="74.5" y2="4.5" stroke="currentColor" strokeWidth="9"/></g><g transform="translate(420,0)"><path d="M5.5 90 L41 4.5 L76.5 90" fill="none" stroke="currentColor" strokeWidth="9" strokeLinejoin="miter"/></g><g transform="translate(524,0)"><path d="M5.5 4.5 L41 90 L76.5 4.5" fill="none" stroke="currentColor" strokeWidth="9" strokeLinejoin="miter"/></g><g transform="translate(628,0)"><path d="M5.5 90 L41 4.5 L76.5 90" fill="none" stroke="currentColor" strokeWidth="9" strokeLinejoin="miter"/></g>
                 </svg>
-                <span className="navbar-tagline">NATURAL GRANITE</span>
+                <span className="navbar-tagline">NATURAL STONE</span>
               </Link>
 
               {/* Desktop links */}
@@ -363,20 +362,10 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
             <div className="footer-grid">
               <div className="footer-col">
                 <div style={{ marginBottom:20 }}>
-                  <svg viewBox="0 0 480 112" width="160" height="37"
-                    xmlns="http://www.w3.org/2000/svg" role="img"
-                    aria-label="Granava" focusable="false">
-                    <text x="240" y="57" textAnchor="middle"
-                      fontFamily="'Josefin Sans','Century Gothic',Arial,sans-serif"
-                      fontSize="54" fontWeight="300" fill="#c9a96e"
-                      letterSpacing="20" shapeRendering="geometricPrecision">GRANAVA</text>
-                    <line x1="18" y1="74" x2="462" y2="74"
-                      stroke="#c9a96e" strokeWidth="0.9" opacity="0.6"/>
-                    <text x="240" y="98" textAnchor="middle"
-                      fontFamily="'Josefin Sans','Century Gothic',Arial,sans-serif"
-                      fontSize="11.5" fontWeight="300" fill="rgba(255,255,255,0.85)"
-                      letterSpacing="7.5" shapeRendering="geometricPrecision">NATURAL GRANITE</text>
+                  <svg viewBox="0 0 716 90" width="170" height="21" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Granava" focusable="false" style={{ color: 'var(--gold)' }}>
+                    <g transform="translate(6,0)"><path d="M79 27 A 43 43 0 1 0 79 66.6" fill="none" stroke="currentColor" strokeWidth="9"/><line x1="79" y1="66.6" x2="79" y2="49.5" stroke="currentColor" strokeWidth="9"/><line x1="83.5" y1="49.5" x2="48.7" y2="49.5" stroke="currentColor" strokeWidth="9"/></g><g transform="translate(112,0)"><line x1="5.5" y1="4.5" x2="5.5" y2="90" stroke="currentColor" strokeWidth="9"/><path d="M5.5 4.5 H41.6 A27.9 27.9 0 0 1 41.6 56.7 H5.5" fill="none" stroke="currentColor" strokeWidth="9"/><line x1="40" y1="52.65" x2="74.5" y2="90" stroke="currentColor" strokeWidth="9"/></g><g transform="translate(214,0)"><path d="M5.5 90 L41 4.5 L76.5 90" fill="none" stroke="currentColor" strokeWidth="9" strokeLinejoin="miter"/></g><g transform="translate(318,0)"><line x1="5.5" y1="90" x2="5.5" y2="4.5" stroke="currentColor" strokeWidth="9"/><line x1="5.5" y1="3.6" x2="74.5" y2="86.4" stroke="currentColor" strokeWidth="9"/><line x1="74.5" y1="90" x2="74.5" y2="4.5" stroke="currentColor" strokeWidth="9"/></g><g transform="translate(420,0)"><path d="M5.5 90 L41 4.5 L76.5 90" fill="none" stroke="currentColor" strokeWidth="9" strokeLinejoin="miter"/></g><g transform="translate(524,0)"><path d="M5.5 4.5 L41 90 L76.5 4.5" fill="none" stroke="currentColor" strokeWidth="9" strokeLinejoin="miter"/></g><g transform="translate(628,0)"><path d="M5.5 90 L41 4.5 L76.5 90" fill="none" stroke="currentColor" strokeWidth="9" strokeLinejoin="miter"/></g>
                   </svg>
+                  <span style={{ display:'block', fontFamily:"'Josefin Sans',sans-serif", fontSize:'10px', letterSpacing:'0.34em', color:'var(--gold)', textTransform:'uppercase', marginTop:'6px', paddingLeft:'3px' }}>Natural Stone</span>
                 </div>
                 <p style={{ maxWidth: 260 }}>
                   Premium natural granite sourced directly from India's finest quarries, exported to

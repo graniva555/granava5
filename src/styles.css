@@ -74,6 +74,9 @@
     .navbar {
       position: fixed; top: 0; left: 0; right: 0;
       height: var(--nav-h); z-index: 1000;
+      background: rgba(7,16,30,0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       transition: background 0.3s, box-shadow 0.3s;
       isolation: isolate;
     }
@@ -100,22 +103,15 @@
     .navbar-logo:focus:not(:focus-visible) { outline: none; }
 
     /* Wordmark SVG mark — GRANAVA + rule */
-    .navbar-logo-mark { display: block; width: 148px; height: auto; line-height: 0; }
+    .navbar-logo-mark { display: block; width: 150px; height: auto; line-height: 0; color: var(--gold); }
 
     /* Tagline span — width MUST equal .navbar-logo-mark at every breakpoint */
-    .navbar-tagline {
-      font-family: var(--font-logo);
-      font-size: 7.5px; font-weight: 300;
-      letter-spacing: 0.36em; text-transform: uppercase;
-      color: rgba(255,255,255,0.82); line-height: 1;
-      display: block; width: 148px; text-align: center;
-      user-select: none;
-    }
+    .navbar-tagline { display:block; font-family:var(--font-logo,'Josefin Sans',sans-serif); font-size:10px; letter-spacing:0.34em; color:var(--gold); text-transform:uppercase; margin-top:5px; padding-left:3px; opacity:0.92; }
     /* Always update BOTH mark and tagline together */
-    @media (max-width: 900px) { .navbar-logo-mark { width: 134px; } .navbar-tagline { width: 134px; } }
-    @media (max-width: 600px) { .navbar-logo-mark { width: 118px; } .navbar-tagline { width: 118px; font-size: 7px; letter-spacing: 0.28em; } }
-    @media (max-width: 380px) { .navbar-logo-mark { width: 104px; } .navbar-tagline { width: 104px; font-size: 6.5px; letter-spacing: 0.24em; } }
-    @media (max-width: 360px) { .navbar-logo-mark { width: 96px !important; } .navbar-tagline { width: 96px !important; font-size: 6px; letter-spacing: 0.22em; } }
+    @media (max-width: 900px) { .navbar-logo-mark { width: 134px; } .navbar-tagline { display:block; font-family:var(--font-logo,'Josefin Sans',sans-serif); font-size:10px; letter-spacing:0.34em; color:var(--gold); text-transform:uppercase; margin-top:5px; padding-left:3px; opacity:0.92; } }
+    @media (max-width: 600px) { .navbar-logo-mark { width: 118px; } .navbar-tagline { display:block; font-family:var(--font-logo,'Josefin Sans',sans-serif); font-size:10px; letter-spacing:0.34em; color:var(--gold); text-transform:uppercase; margin-top:5px; padding-left:3px; opacity:0.92; } }
+    @media (max-width: 380px) { .navbar-logo-mark { width: 104px; } .navbar-tagline { display:block; font-family:var(--font-logo,'Josefin Sans',sans-serif); font-size:10px; letter-spacing:0.34em; color:var(--gold); text-transform:uppercase; margin-top:5px; padding-left:3px; opacity:0.92; } }
+    @media (max-width: 360px) { .navbar-logo-mark { width: 96px !important; } .navbar-tagline { display:block; font-family:var(--font-logo,'Josefin Sans',sans-serif); font-size:10px; letter-spacing:0.34em; color:var(--gold); text-transform:uppercase; margin-top:5px; padding-left:3px; opacity:0.92; } }
 
     .navbar-links { display: flex; align-items: center; gap: 28px; list-style: none; }
     .navbar-links a {
@@ -1121,7 +1117,7 @@
       .stone-vis-name    { font-size: 1.3rem; }
       .stone-body        { padding: 16px 18px 20px; }
       .navbar-logo-mark  { width: 118px; }
-      .navbar-tagline    { width: 118px; font-size: 7px; letter-spacing: 0.28em; }
+      .navbar-tagline { display:block; font-family:var(--font-logo,'Josefin Sans',sans-serif); font-size:10px; letter-spacing:0.34em; color:var(--gold); text-transform:uppercase; margin-top:5px; padding-left:3px; opacity:0.92; }
     }
 
     /* ── 480px: small mobile ── */
@@ -1178,7 +1174,7 @@
     /* ── 380px: compact phones (SE, Galaxy S) ── */
     @media (max-width: 380px) {
       .navbar-logo-mark  { width: 104px; }
-      .navbar-tagline    { width: 104px; font-size: 6.5px; letter-spacing: 0.24em; }
+      .navbar-tagline { display:block; font-family:var(--font-logo,'Josefin Sans',sans-serif); font-size:10px; letter-spacing:0.34em; color:var(--gold); text-transform:uppercase; margin-top:5px; padding-left:3px; opacity:0.92; }
     }
 
     /* ── 360px: smallest common Android ── */
@@ -1186,7 +1182,7 @@
       .container         { padding: 0 14px; }
       .navbar-inner      { padding: 0 14px; }
       .navbar-logo-mark  { width: 100px; }
-      .navbar-tagline    { width: 100px; font-size: 6.2px; }
+      .navbar-tagline { display:block; font-family:var(--font-logo,'Josefin Sans',sans-serif); font-size:10px; letter-spacing:0.34em; color:var(--gold); text-transform:uppercase; margin-top:5px; padding-left:3px; opacity:0.92; }
       .display-xl        { font-size: 1.78rem !important; }
       .btn-gold, .btn-outline { padding: 11px 16px; font-size: 11px; }
       .stone-vis         { height: 180px; }
@@ -1323,7 +1319,7 @@
 
       /* ── 2. Hide SVG mark + tagline — they carry internal whitespace ── */
       .navbar-logo-mark,
-      .navbar-tagline { display: none !important; }
+      .navbar-tagline { display:block; font-family:var(--font-logo,'Josefin Sans',sans-serif); font-size:10px; letter-spacing:0.34em; color:var(--gold); text-transform:uppercase; margin-top:5px; padding-left:3px; opacity:0.92; }
 
       /* ── 3. CSS wordmark replaces SVG on mobile — zero internal gap ── */
       .navbar-logo {
