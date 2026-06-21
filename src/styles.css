@@ -1317,29 +1317,22 @@
         align-items: center;
       }
 
-      /* ── 2. Hide SVG mark + tagline — they carry internal whitespace ── */
-      .navbar-logo-mark,
-      .navbar-tagline { display:block; font-family:var(--font-logo,'Josefin Sans',sans-serif); font-size:10px; letter-spacing:0.38em; color:var(--text-2); text-transform:uppercase; margin-top:1px; text-align:center; opacity:0.85; }
-
-      /* ── 3. CSS wordmark replaces SVG on mobile — zero internal gap ── */
+      /* ── Mobile logo: same stacked SVG + tagline, just smaller ── */
       .navbar-logo {
-        flex-direction: row;   /* single-row, no column stacking */
-        align-items: center;
-        gap: 0;
-        height: 100%;          /* fills full navbar height */
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
       }
-      .navbar-logo::before {
-        content: 'GRANAVA';
-        font-family: var(--font-logo);
-        font-size: 16px;
-        font-weight: 300;
-        color: #c9a96e;
-        letter-spacing: 0.34em;
-        line-height: 1;
-        /* No margin, no padding — pure zero-gap alignment */
+      .navbar-logo::before { content: none; }
+      .navbar-logo-mark { display: block; width: 124px; height: auto; color: var(--gold); }
+      .navbar-tagline {
+        display: block; width: 124px; text-align: center;
+        font-family: var(--font-logo,'Josefin Sans',sans-serif);
+        font-size: 8px; letter-spacing: 0.30em; color: var(--text-2);
+        text-transform: uppercase; margin-top: 1px; opacity: 0.85;
       }
 
-      /* ── 4. Hamburger: perfectly vertically centered ── */
+      /* ── Hamburger: perfectly vertically centered ── */
         }
 
     /* ── Extra-small screens ── */
