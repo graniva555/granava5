@@ -25,6 +25,10 @@ routes.push(['/markets',
   'Export Markets — UK, USA, UAE & East Asia | Granava Granite',
   'Granava exports premium Indian granite to the UK, USA, UAE & Middle East, and East Asia, with full documentation and worldwide logistics support.'])
 
+routes.push(['/gallery',
+  'Project Gallery | Granava Granite in Real Spaces',
+  'See Granava premium Indian granite installed in real projects worldwide — Black Galaxy, Steel Gray, Jet Black and Black Pearl in kitchens, facades and floors.'])
+
 routes.push(['/about',
   'About Granava — Premium Indian Granite Exporter',
   'Granava is a premium natural granite exporter in Ongole, Andhra Pradesh, supplying Black Galaxy and other Indian granites worldwide.'])

@@ -209,9 +209,24 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
     }
 
     // ── Navbar ─────────────────────────────────────────────────────────────
+
+    // Inspiration gallery — real project photos go in public/images/gallery/
+    // Set img to the filename; until then an elegant stone-texture placeholder shows.
+    const GALLERY = [
+      { id: 'g1',  title: 'Black Galaxy Kitchen Island', product: 'Black Galaxy', application: 'Countertops', location: 'London, UK', cls: 'granite-galaxy', img: null },
+      { id: 'g2',  title: 'Steel Gray Facade Cladding', product: 'Steel Gray', application: 'Facades', location: 'Dubai, UAE', cls: 'granite-steel', img: null },
+      { id: 'g3',  title: 'Jet Black Flooring', product: 'Jet Black', application: 'Flooring', location: 'New York, USA', cls: 'granite-jet', img: null },
+      { id: 'g4',  title: 'Black Pearl Feature Wall', product: 'Black Pearl', application: 'Wall Cladding', location: 'Singapore', cls: 'granite-pearl', img: null },
+      { id: 'g5',  title: 'Black Galaxy Bathroom Vanity', product: 'Black Galaxy', application: 'Countertops', location: 'Manchester, UK', cls: 'granite-galaxy', img: null },
+      { id: 'g6',  title: 'Steel Gray Staircase', product: 'Steel Gray', application: 'Flooring', location: 'Abu Dhabi, UAE', cls: 'granite-steel', img: null },
+      { id: 'g7',  title: 'Jet Black Commercial Lobby', product: 'Jet Black', application: 'Flooring', location: 'Tokyo, Japan', cls: 'granite-jet', img: null },
+      { id: 'g8',  title: 'Black Pearl Kitchen Worktop', product: 'Black Pearl', application: 'Countertops', location: 'Los Angeles, USA', cls: 'granite-pearl', img: null },
+      { id: 'g9',  title: 'Black Galaxy Hotel Reception', product: 'Black Galaxy', application: 'Facades', location: 'Dubai, UAE', cls: 'granite-galaxy', img: null },
+    ];
+
     const NAV = [
       { l: 'Home', p: '/', f: '/' }, { l: 'Products', p: '/products', f: '/products' },
-      { l: 'Markets', p: '/markets', f: '/markets' }, { l: 'About', p: '/about', f: '/about' },
+      { l: 'Markets', p: '/markets', f: '/markets' }, { l: 'Gallery', p: '/gallery', f: '/gallery' }, { l: 'About', p: '/about', f: '/about' },
       { l: 'Contact', p: '/contact', f: '/contact' },
     ];
 
@@ -1527,6 +1542,95 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       '/contact': ContactPage,
     };
 
+
+    function GalleryPage() {
+      const [filter, setFilter] = useState('All');
+      const [lightbox, setLightbox] = useState(null);
+      useEffect(() => {
+        document.title = 'Project Gallery | Granava Granite in Real Spaces';
+        setMeta('See Granava premium Indian granite installed in real projects worldwide — Black Galaxy, Steel Gray, Jet Black and Black Pearl in kitchens, facades and floors.');
+      }, []);
+
+      const applications = ['All', ...Array.from(new Set(GALLERY.map(g => g.application)))];
+      const items = filter === 'All' ? GALLERY : GALLERY.filter(g => g.application === filter);
+
+      useEffect(() => {
+        function onKey(e) { if (e.key === 'Escape') setLightbox(null); }
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+      }, []);
+
+      return (
+        <div>
+          <div className="page-hero">
+            <div className="page-hero-grid" />
+            <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+              <FadeUp>
+                <span className="eyebrow">Inspiration</span>
+                <h1 className="display-lg" style={{ marginTop: 10, maxWidth: 640 }}>
+                  Our Granite, <em style={{ color: 'var(--gold)', fontStyle: 'italic' }}>In Place</em>
+                </h1>
+                <p style={{ fontSize: 17, color: 'var(--muted)', maxWidth: 600, marginTop: 18, lineHeight: 1.7 }}>
+                  Premium Indian granite installed in kitchens, facades and floors across the UK,
+                  USA, UAE and East Asia. See how Granava stone transforms real spaces.
+                </p>
+              </FadeUp>
+            </div>
+          </div>
+
+          <section className="section" style={{ paddingTop: 48 }}>
+            <div className="container">
+              <div className="gallery-filters">
+                {applications.map(a => (
+                  <button
+                    key={a}
+                    className={`gallery-filter${filter === a ? ' active' : ''}`}
+                    onClick={() => setFilter(a)}
+                  >{a}</button>
+                ))}
+              </div>
+
+              <div className="gallery-grid">
+                {items.map((g, i) => (
+                  <FadeUp key={g.id} delay={i * 0.05}>
+                    <button className="gallery-card" onClick={() => setLightbox(g)} aria-label={`View ${g.title}`}>
+                      <div className={`gallery-vis ${g.cls}`}>
+                        {g.img && <img src={g.img} alt={g.title} loading="lazy" />}
+                        <span className="gallery-app-tag">{g.application}</span>
+                      </div>
+                      <div className="gallery-card-body">
+                        <h3>{g.title}</h3>
+                        <span className="gallery-meta">{g.product} · {g.location}</span>
+                      </div>
+                    </button>
+                  </FadeUp>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {lightbox && (
+            <div className="gallery-lightbox" onClick={() => setLightbox(null)} role="dialog" aria-modal="true">
+              <button className="gallery-lightbox-close" onClick={() => setLightbox(null)} aria-label="Close">×</button>
+              <div className="gallery-lightbox-inner" onClick={e => e.stopPropagation()}>
+                <div className={`gallery-lightbox-vis ${lightbox.cls}`}>
+                  {lightbox.img && <img src={lightbox.img} alt={lightbox.title} />}
+                </div>
+                <div className="gallery-lightbox-caption">
+                  <span className="eyebrow">{lightbox.application}</span>
+                  <h3>{lightbox.title}</h3>
+                  <p>{lightbox.product} · {lightbox.location}</p>
+                  <Link to={`/products/${lightbox.product.toLowerCase().replace(/ /g,'-')}/`} className="btn-outline" style={{ marginTop: 16 }}>
+                    View {lightbox.product} →
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
     function ScrollManager() {
       // scroll to top on top-level route change (product sub-routes handle their own scroll)
       const location = useLocation();
@@ -1829,6 +1933,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
               <Route path="/products/:slug" element={<ProductDetailPage />} />
               <Route path="/markets" element={<MarketsPage />} />
               <Route path="/markets/:slug" element={<MarketDetailPage />} />
+              <Route path="/gallery" element={<GalleryPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="*" element={<NotFoundPage />} />
