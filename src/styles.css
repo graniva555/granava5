@@ -106,7 +106,7 @@
     .navbar-logo-mark { display: block; width: 150px; height: auto; line-height: 0; color: var(--gold); }
 
     /* Tagline span — width MUST equal .navbar-logo-mark at every breakpoint */
-    .navbar-tagline { display:block; width:100%; font-family:var(--font-logo,'Josefin Sans',sans-serif); font-size:10px; letter-spacing:0.34em; color:var(--text-2); text-transform:uppercase; margin-top:3px; text-align:center; opacity:0.85; box-sizing:border-box; padding-left:0.34em; }
+    .navbar-tagline { display:block; width:100%; font-family:var(--font-logo,'Josefin Sans',sans-serif); font-size:10px; letter-spacing:0.34em; color:var(--text-2); text-transform:uppercase; margin-top:-4px; text-align:center; opacity:0.85; box-sizing:border-box; padding-left:0.34em; }
     /* Always update BOTH mark and tagline together */
     @media (max-width: 900px) { .navbar-logo-mark { width: 134px; } .navbar-tagline { display:block; width:100%; font-family:var(--font-logo,'Josefin Sans',sans-serif); font-size:10px; letter-spacing:0.34em; color:var(--text-2); text-transform:uppercase; margin-top:3px; text-align:center; opacity:0.85; box-sizing:border-box; padding-left:0.34em; } }
     @media (max-width: 600px) { .navbar-logo-mark { width: 118px; } .navbar-tagline { display:block; width:100%; font-family:var(--font-logo,'Josefin Sans',sans-serif); font-size:10px; letter-spacing:0.34em; color:var(--text-2); text-transform:uppercase; margin-top:3px; text-align:center; opacity:0.85; box-sizing:border-box; padding-left:0.34em; } }
