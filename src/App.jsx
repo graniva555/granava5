@@ -319,12 +319,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
             aria-label="Mobile navigation"
             aria-hidden={!open}
           >
-            {/* Brand in overlay */}
-            <div className="nav-ov-brand">
-              <span className="nav-ov-wordmark">GRANAVA</span>
-              <span className="nav-ov-tagline">Natural Granite</span>
-            </div>
-
             {/* Staggered nav links */}
             <nav className="nav-ov-links" aria-label="Site pages">
               {NAV.map((n, i) => (

@@ -1620,29 +1620,6 @@
     }
 
     /* ── Logo in overlay ──────────────────────────────────────────── */
-    .nav-ov-brand {
-      padding-bottom: 28px;
-      margin-bottom: 28px;
-      border-bottom: 1px solid rgba(201,169,110,0.12);
-      flex-shrink: 0;
-    }
-    .nav-ov-wordmark {
-      display: block;
-      font-family: var(--font-logo);
-      font-size: 20px; font-weight: 300;
-      color: #c9a96e;
-      letter-spacing: 0.38em;
-      margin-bottom: 4px;
-    }
-    .nav-ov-tagline {
-      display: block;
-      font-family: var(--font-logo);
-      font-size: 7px; font-weight: 300;
-      color: rgba(255,255,255,0.45);
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-    }
-
     /* ── Nav links ────────────────────────────────────────────────── */
     .nav-ov-links {
       display: flex; flex-direction: column;
