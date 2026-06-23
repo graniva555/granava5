@@ -524,25 +524,25 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
     const HOME_MARKETS = [
       {
-        num: '01', country: 'United Kingdom', region: 'Europe', slug: 'united-kingdom', page: '/markets/united-kingdom/', slug: 'united-kingdom',
+        num: '01', country: 'United Kingdom', region: 'Europe', slug: 'united-kingdom', page: '/markets/united-kingdom/',
         highlight: false,
         desc: 'Heritage restoration specialists and luxury residential developers across England, Scotland, and Wales.',
         buyers: ['Architects', 'Heritage Specialists', 'Stone Fabricators', 'Luxury Developers'],
       },
       {
-        num: '02', country: 'United States', region: 'North America', slug: 'united-states', page: '/markets/united-states/', slug: 'united-states',
+        num: '02', country: 'United States', region: 'North America', slug: 'united-states', page: '/markets/united-states/',
         highlight: false,
         desc: 'Kitchen and bathroom fabricators, commercial flooring contractors, and luxury hotel developers coast to coast.',
         buyers: ['Kitchen Fabricators', 'Hotel Developers', 'Commercial Contractors'],
       },
       {
-        num: '03', country: 'UAE & Middle East', region: 'Gulf Region', slug: 'uae-middle-east', page: '/markets/uae-middle-east/', slug: 'uae-middle-east',
+        num: '03', country: 'UAE & Middle East', region: 'Gulf Region', slug: 'uae-middle-east', page: '/markets/uae-middle-east/',
         highlight: false,
         desc: 'Palace contractors, five-star hospitality groups, and grand civic development projects across the region.',
         buyers: ['Palace Contractors', 'Hospitality Groups', 'Civic Developers'],
       },
       {
-        num: '04', country: 'East Asia', region: 'Japan · Korea · Singapore', slug: 'east-asia', page: '/markets/east-asia/', slug: 'east-asia',
+        num: '04', country: 'East Asia', region: 'Japan · Korea · Singapore', slug: 'east-asia', page: '/markets/east-asia/',
         highlight: false,
         desc: 'Memorial craftsmen, luxury interior designers, and civic construction across Japan, South Korea, China, and Singapore.',
         buyers: ['Memorial Craftsmen', 'Interior Designers', 'Civic Construction'],
@@ -891,8 +891,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       useEffect(() => {
         if (!targetSlug) return;
 
-        console.log('[Granava] targetSlug resolved to:', targetSlug);
-
         /**
          * Retry loop — rAF fires once per frame, but products 3 & 4
          * (Steel Gray, Jet Black) are below-fold; React may not have
@@ -905,8 +903,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         function tryScroll() {
           attempts += 1;
           const el = document.getElementById(`product-${targetSlug}`);
-
-          console.log(`[Granava] scroll attempt ${attempts}: element=`, el);
 
           if (!el) {
             if (attempts < MAX_ATTEMPTS) {
@@ -922,7 +918,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
           ) || 80;
           const top = el.getBoundingClientRect().top + window.scrollY - navH - 24;
 
-          console.log('[Granava] scrolling to top:', top, 'navH:', navH);
           window.scrollTo({ top, behavior: 'smooth' });
 
           el.classList.add('product-detail--highlight');
@@ -1696,7 +1691,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                 <p className="pd-vis-caption">Showing: <b>{product.finishes[activeFinish]}</b> finish — {FINISH_DESC[product.finishes[activeFinish]] || 'a distinctive surface treatment.'}</p>
               </div>
               <div className="pd-hero-body">
-                <FadeUp>
+                <FadeUp className="pd-body-inner">
                   <span className="pd-eyebrow">{product.origin}</span>
                   <h1 className="pd-title">{product.name}</h1>
                   <p className="pd-tagline">{product.tagline}</p>
