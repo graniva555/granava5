@@ -950,7 +950,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         document.title = 'Black Galaxy, Black Pearl, Steel Gray & Jet Black Granite Export | Granava India';
         // Breadcrumb schema
         const bc = document.getElementById('ld-breadcrumb');
-        if (bc) bc.textContent = JSON.stringify({"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.granava.in/"},{"@type":"ListItem","position":2,"name":"Products","item":"https://www.granava.in/#/products"}]});
+        if (bc) bc.textContent = JSON.stringify({"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.granava.in/"},{"@type":"ListItem","position":2,"name":"Products","item":"https://www.granava.in/products"}]});
         setMeta('Technical specifications for Black Galaxy, Jet Black, Black Pearl & Steel Gray granite for export. Available in polished, honed, flamed & leathered finishes. Request samples.');
       }, []);
       return (
@@ -1378,7 +1378,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
             <div className="f-group full">
               <label className="f-label">Product Interest <span className="req">*</span></label>
               <div className="cb-grid">
-                {['Black Galaxy Granite', 'Black Pearl Granite', 'Steel Gray Granite', 'All Products'].map(p => (
+                {['Black Galaxy Granite', 'Black Pearl Granite', 'Steel Gray Granite', 'Jet Black Granite', 'All Products'].map(p => (
                   <label key={p} className="cb-item">
                     <input type="checkbox" checked={form.products.includes(p)} onChange={() => toggleProd(p)} />
                     <span>{p}</span>
