@@ -16,6 +16,14 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       ? `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MSG)}`
       : '';
 
+    /* Why granite beats tile — shown on every product page */
+    const WHY_GRANITE = [
+      { title: 'Solid natural stone', text: 'Full-body granite, not a printed clay tile. The colour and structure run right through the slab — what you see is the stone itself.' },
+      { title: 'Built to last decades', text: 'A granite surface lasts for decades with minimal upkeep, where tile is far more prone to chips, cracked grout and lippage over time.' },
+      { title: 'Heat & scratch resistant', text: 'Mohs 6–7 hardness and near-zero water absorption shrug off the heat, scratching and staining that wear down glazed tile.' },
+      { title: 'Repairable in place', text: 'Granite can be re-polished and renewed in place after years of use. Cracked tiles must be cut out and replaced, often with a no-longer-matching batch.' },
+    ];
+
     // ── Routing ────────────────────────────────────────────────────────────
     function getRoute() {
       let p = (typeof window !== 'undefined' ? window.location.pathname : '/').replace(/\/+$/, '') || '/';
@@ -1788,15 +1796,18 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
           <div className="container">
             <section className="pd-section">
-              <h2 className="pd-h2"><span className="pd-num">03</span> Care &amp; Maintenance</h2>
+              <h2 className="pd-h2"><span className="pd-num">03</span> Why Granite Over Tile</h2>
               <div className="pd-care">
-                {product.care.map((c, i) => (
+                {(product.whyTile || WHY_GRANITE).map((c, i) => (
                   <div key={c.title} className="pd-care-item">
                     <div className="pd-care-num">{String(i + 1).padStart(2, '0')}</div>
                     <div><h3>{c.title}</h3><p>{c.text}</p></div>
                   </div>
                 ))}
               </div>
+              <Link to="/granite-vs-tiles" style={{ display: 'inline-block', marginTop: 24, color: 'var(--gold)', fontSize: 14, fontWeight: 600, textDecoration: 'none', letterSpacing: '.02em' }}>
+                See the full granite vs tile comparison →
+              </Link>
             </section>
           </div>
 
@@ -2164,24 +2175,38 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
       return (
         <div>
-          <div className="page-hero">
+          <div className="page-hero exp-hero">
             <div className="page-hero-grid" />
             <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-              <FadeUp>
-                <span className="eyebrow">Export &amp; Logistics</span>
-                <h1 className="display-lg" style={{ marginTop: 10, maxWidth: 640 }}>
-                  Granite export,<br />handled end to end
-                </h1>
-                <p style={{ color: 'var(--text-2)', fontSize: 16, lineHeight: 1.8, maxWidth: 580, marginTop: 20 }}>
-                  From quarry-face selection to documented delivery at your port — how Granava ships premium
-                  Indian granite to the UK, USA, UAE &amp; Middle East and East Asia.
-                </p>
-              </FadeUp>
+              <div className="exp-hero-grid">
+                <FadeUp>
+                  <span className="eyebrow">Export &amp; Logistics</span>
+                  <h1 className="display-lg" style={{ marginTop: 10 }}>
+                    Granite export,<br />handled end to end
+                  </h1>
+                  <p style={{ color: 'var(--text-2)', fontSize: 16, lineHeight: 1.8, maxWidth: 520, marginTop: 20 }}>
+                    From quarry-face selection to documented delivery at your port — how Granava ships premium
+                    Indian granite to the UK, USA, UAE &amp; Middle East and East Asia.
+                  </p>
+                </FadeUp>
+                <FadeUp delay={120}>
+                  <aside className="exp-glance">
+                    <div className="exp-glance-head">At a Glance</div>
+                    <dl>
+                      <div className="exp-glance-row"><dt>Markets</dt><dd>UK · USA · UAE &amp; Middle East · East Asia</dd></div>
+                      <div className="exp-glance-row"><dt>Incoterms</dt><dd>EXW · FOB · CFR · CIF</dd></div>
+                      <div className="exp-glance-row"><dt>Loading Ports</dt><dd>Krishnapatnam · Chennai</dd></div>
+                      <div className="exp-glance-row"><dt>Granites</dt><dd>Black Galaxy · Black Pearl · Steel Gray · Jet Black</dd></div>
+                      <div className="exp-glance-row"><dt>Documentation</dt><dd>Full export set provided</dd></div>
+                    </dl>
+                  </aside>
+                </FadeUp>
+              </div>
             </div>
           </div>
 
           {/* Intro */}
-          <section className="section">
+          <section className="section exp-intro">
             <div className="container">
               <FadeUp>
                 <span className="eyebrow">Built for Export</span>

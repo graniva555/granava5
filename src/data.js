@@ -24,6 +24,12 @@ export const PRODUCTS = [
       { label: 'Available Finishes', value: '4 options' }
     ],
     applications: ['Kitchen countertops', 'Feature walls', 'Flooring', 'Bathroom vanities', 'Exterior facades', 'Monuments'],
+    whyTile: [
+      { title: 'Real bronzite, not a print', text: "The golden-bronze flecks are real bronzite crystals running through the slab. A galaxy-look tile only prints that sparkle onto a glaze that wears away." },
+      { title: 'Worktop-grade durability', text: 'At 0.04% water absorption and Mohs 6–7, Black Galaxy shrugs off daily kitchen heat and knife marks where a glazed tile would scratch and craze.' },
+      { title: 'Seamless dark runs', text: 'Large-format slabs give near-seamless black worktops and islands; tile breaks the same surface into grout lines that trap grime.' },
+      { title: 'Renews in place', text: 'Polished, honed, flamed or leathered, the finish can be re-polished after years of use — a chipped galaxy tile is simply replaced, rarely matching.' },
+    ],
     care: [
       { title: 'Daily Cleaning', text: 'Wipe with a soft cloth and warm water. Use a pH-neutral stone cleaner — never acidic or abrasive cleaners.' },
       { title: 'Sealing', text: 'Very low porosity, but seal every 12–18 months for kitchen worktops to guard against oil staining.' },
@@ -58,6 +64,12 @@ export const PRODUCTS = [
       { label: 'Available Finishes', value: '3 options' }
     ],
     applications: ['Wall cladding', 'Countertops', 'Premium flooring', 'Lift interiors', 'Retail fixtures', 'Hotel lobbies'],
+    whyTile: [
+      { title: 'Mirror depth no glaze matches', text: "Black Pearl's reflective, pearl-like shimmer comes from the stone's own mica. Printed black-gloss tile reads flat and lifeless beside it." },
+      { title: 'Full-body black', text: 'The black runs through the entire slab, so a knocked edge still reads black — not the pale clay body that shows through a damaged tile.' },
+      { title: 'Statement cladding without joints', text: 'Ideal for feature walls and hotel lobbies as large panels; tile cladding fragments the same wall into dozens of grout lines.' },
+      { title: 'Lasting lustre', text: 'The high polish can be restored in place years later; glazed tile gloss dulls and scratches with no way to bring it back.' },
+    ],
     care: [
       { title: 'Daily Cleaning', text: 'Use a microfibre cloth with warm water and pH-neutral soap. Buff dry to remove fingerprints from the high-polish surface.' },
       { title: 'Sealing', text: 'Apply an impregnating sealer every 12 months to maintain reflective depth.' },
@@ -92,6 +104,12 @@ export const PRODUCTS = [
       { label: 'Available Finishes', value: '5 options' }
     ],
     applications: ['Architectural facades', 'Commercial flooring', 'Countertops', 'Heritage restoration', 'Memorial stones', 'Landscape paving'],
+    whyTile: [
+      { title: 'Veining that is real, not printed', text: 'The white-silver veining is the stone\'s own structure, unique to every slab. Tile repeats the same printed pattern across a whole floor.' },
+      { title: 'Built for the outdoors', text: 'Excellent frost resistance, plus flamed and sandblasted finishes for real slip resistance on facades and paving — where exterior tile cracks and lifts.' },
+      { title: 'Commercial-grade wear', text: 'Mohs 6–7 hardness handles high-traffic commercial flooring that would steadily wear through a tile glaze.' },
+      { title: 'Repairable, not replaced', text: 'A scratched area is refinished in place; swapping one cracked floor tile years later rarely matches the original batch.' },
+    ],
     care: [
       { title: 'Daily Cleaning', text: 'Wipe with warm water and a pH-neutral cleaner. Hides watermarks and fingerprints well.' },
       { title: 'Sealing', text: 'Seal every 12–18 months, especially for exterior and high-traffic applications.' },
@@ -126,6 +144,12 @@ export const PRODUCTS = [
       { label: 'Available Finishes', value: '4 options' }
     ],
     applications: ['Feature walls', 'Kitchen countertops', 'Bathroom floors', 'Commercial lobbies', 'Luxury retail', 'Memorials'],
+    whyTile: [
+      { title: 'Flawless uniform black', text: "Jet Black's near-void uniformity has zero visible inclusions — a depth that printed black tile, with its repeating pattern, simply cannot fake." },
+      { title: 'Mirror polish, real depth', text: 'Mirror-polished natural stone reflects with a depth no manufactured glaze reaches; tile gloss sits on the surface and scratches off.' },
+      { title: 'Solid through and through', text: 'Damage anywhere still shows pure black stone, not the lighter body hiding beneath a tile\'s printed face.' },
+      { title: 'Luxury that lasts', text: 'For feature walls and luxury retail, the finish renews in place for decades; a chipped tile means a visible, mismatched swap.' },
+    ],
     care: [
       { title: 'Daily Cleaning', text: 'Clean with a microfibre cloth and pH-neutral cleaner, then buff dry — the mirror finish shows every mark.' },
       { title: 'Sealing', text: 'Seal annually to protect the pristine surface despite very low porosity.' },
