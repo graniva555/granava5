@@ -2049,3 +2049,19 @@ a.contact-card:hover{border-color:var(--gold);}
   .gvt-cell.gvt-tile::before{content:"Porcelain / Ceramic Tile";display:block;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
   .gvt-sustain-grid{grid-template-columns:1fr;}
 }
+
+/* ── Floating WhatsApp button ─────────────────────────────────── */
+.wa-fab{
+  position:fixed; right:22px; bottom:22px; z-index:940;
+  width:56px; height:56px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--gold); color:#07101e;
+  box-shadow:0 8px 24px rgba(7,16,30,.45), 0 0 0 1px rgba(201,169,110,.4);
+  transition:transform .2s ease, background .2s ease, box-shadow .2s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.wa-fab:hover{ background:var(--gold-light); transform:translateY(-3px); box-shadow:0 12px 30px rgba(7,16,30,.5), 0 0 0 1px rgba(201,169,110,.6); }
+.wa-fab:focus-visible{ outline:2px solid var(--gold); outline-offset:4px; }
+@media(max-width:600px){ .wa-fab{ right:16px; bottom:16px; width:52px; height:52px; } }
+@media(prefers-reduced-motion:reduce){ .wa-fab{ transition:none; } .wa-fab:hover{ transform:none; } }
+@media print{ .wa-fab{ display:none !important; } }

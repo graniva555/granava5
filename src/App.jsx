@@ -4,6 +4,18 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
     const { useState, useEffect, useRef, useCallback } = React;
 
+    /* ── WhatsApp config ──────────────────────────────────────────────
+       Set WHATSAPP_NUMBER to your number in INTERNATIONAL format, digits
+       only (country code + number, no +, spaces or dashes).
+       e.g. India 98765 43210  →  '919876543210'
+       The floating button and the Contact-page WhatsApp link appear
+       automatically once a number is set; leave '' to hide them.        */
+    const WHATSAPP_NUMBER = '910000000000'; // ← REPLACE with your real number (or '' to hide)
+    const WHATSAPP_MSG = 'Hello Granava, I am interested in your natural granite for export. Could you share more details?';
+    const waLink = WHATSAPP_NUMBER
+      ? `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MSG)}`
+      : '';
+
     // ── Routing ────────────────────────────────────────────────────────────
     function getRoute() {
       let p = (typeof window !== 'undefined' ? window.location.pathname : '/').replace(/\/+$/, '') || '/';
@@ -396,6 +408,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                   <li><Link to="/products">Steel Gray Granite</Link></li>
                   <li><Link to="/products">Jet Black Granite</Link></li>
                   <li><Link to="/granite-vs-tiles">Granite vs Tile</Link></li>
+                  <li><Link to="/export">Export & Logistics</Link></li>
                   <li><Link to="/contact">Request Sample</Link></li>
                   <li><Link to="/contact">Get Pricing</Link></li>
                 </ul>
@@ -461,6 +474,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                     <li><Link to="/products">Steel Gray Granite</Link></li>
                     <li><Link to="/products">Jet Black Granite</Link></li>
                     <li><Link to="/granite-vs-tiles">Granite vs Tile</Link></li>
+                    <li><Link to="/export">Export & Logistics</Link></li>
                     <li><Link to="/contact">Request a Sample</Link></li>
                   </ul>
                 </details>
@@ -1466,7 +1480,14 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                       <div>
                         <div style={{ fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 7 }}>Phone</div>
                         <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>+91 00000 00000</p>
-                        <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 4 }}>WhatsApp available</p>
+                        {waLink && (
+                          <p style={{ fontSize: 12, marginTop: 4 }}>
+                            <a href={waLink} target="_blank" rel="noopener noreferrer"
+                               style={{ color: 'var(--gold)', textDecoration: 'none' }}>
+                              Chat on WhatsApp →
+                            </a>
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="contact-row">
@@ -1631,6 +1652,23 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       return null;
     }
 
+    function WhatsAppFab() {
+      if (!waLink) return null;
+      return (
+        <a
+          className="wa-fab"
+          href={waLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat with Granava on WhatsApp"
+        >
+          <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M16.04 4C9.93 4 4.97 8.96 4.97 15.06c0 2.13.6 4.13 1.64 5.84L4.5 28l7.27-2.04a11 11 0 0 0 4.27.86h.01c6.11 0 11.07-4.96 11.07-11.06C27.12 8.96 22.16 4 16.04 4Zm0 20.2h-.01a9.1 9.1 0 0 1-4.64-1.27l-.33-.2-3.84 1.08 1.02-3.74-.22-.34a9.06 9.06 0 0 1-1.39-4.83c0-5.02 4.09-9.1 9.12-9.1a9.06 9.06 0 0 1 9.1 9.11c0 5.02-4.08 9.1-9.1 9.1Zm5.01-6.82c-.27-.14-1.62-.8-1.87-.89-.25-.09-.43-.14-.61.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.59.07-.27-.14-1.16-.43-2.2-1.36-.81-.72-1.36-1.62-1.52-1.89-.16-.27-.02-.42.12-.55.12-.12.27-.32.41-.48.14-.16.18-.27.27-.46.09-.18.05-.34-.02-.48-.07-.14-.61-1.47-.84-2.01-.22-.53-.45-.46-.61-.47l-.52-.01c-.18 0-.48.07-.73.34-.25.27-.96.94-.96 2.29s.98 2.66 1.12 2.84c.14.18 1.93 2.95 4.68 4.13.65.28 1.16.45 1.56.58.66.21 1.25.18 1.72.11.53-.08 1.62-.66 1.85-1.3.23-.64.23-1.18.16-1.3-.07-.12-.25-.18-.52-.32Z"/>
+          </svg>
+        </a>
+      );
+    }
+
     function Layout({ children }) {
       const route = useRoute();
       useEffect(() => {
@@ -1643,6 +1681,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
           <Navbar route={route} />
           <main>{children}</main>
           <Footer />
+          <WhatsAppFab />
         </div>
       );
     }
@@ -2080,6 +2119,231 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       );
     }
 
+    function ExportLogisticsPage() {
+      useEffect(() => {
+        document.title = 'Granite Export & Logistics | Granava';
+        setMeta('How Granava exports premium Indian granite worldwide — Incoterms, the order process, ports and transit times, seaworthy packing, quality control and full export documentation for the UK, USA, UAE and East Asia.');
+      }, []);
+
+      const INCOTERMS = [
+        ['EXW — Ex Works', 'Goods made ready for collection at our facility. Buyer arranges export clearance, inland haulage, sea freight and insurance.', 'Buyers with their own India logistics'],
+        ['FOB — Free On Board', 'We deliver export-cleared goods loaded onto the vessel at the origin port. Buyer covers sea freight and insurance onward.', 'Most common for experienced importers'],
+        ['CFR — Cost & Freight', 'We cover the goods plus sea freight to your destination port. Buyer arranges marine insurance and import clearance.', 'Buyers who want freight handled'],
+        ['CIF — Cost, Insurance & Freight', 'We cover goods, sea freight and marine insurance all the way to your destination port.', 'Buyers who want a delivered-to-port price'],
+      ];
+
+      const STEPS = [
+        ['Enquiry & quotation', 'Share the product, finish, quantity (m² or ft²) and destination. You receive a detailed quote with your choice of Incoterm.'],
+        ['Samples & approval', 'Physical samples are dispatched so you can approve colour, finish and grade before any production begins.'],
+        ['Order & block selection', 'On confirmation and advance, we select blocks at the quarry face and cut to your sizes and tolerances.'],
+        ['Quality inspection', 'Every slab and tile is checked for colour consistency, calibration, thickness tolerance and finish before packing.'],
+        ['Export packing', 'Seaworthy wooden crates and A-frame bundles, ISPM-15 heat-treated, with edge protection and steel strapping.'],
+        ['Loading & dispatch', 'Containers are professionally stuffed, full documentation is prepared and the bill of lading issued — with tracking to your port.'],
+      ];
+
+      const TRANSIT = [
+        ['United Kingdom & Europe', 'Krishnapatnam / Chennai', '~25–35 days'],
+        ['United States', 'Krishnapatnam / Chennai', '~30–40 days'],
+        ['UAE & Middle East', 'Krishnapatnam / Chennai', '~10–18 days'],
+        ['East Asia (Japan · Korea · Singapore)', 'Krishnapatnam / Chennai', '~12–25 days'],
+      ];
+
+      const ASSURANCE = [
+        ['Seaworthy packing', 'Wooden crates and A-frame bundles built for long-haul sea transit — ISPM-15 heat-treated timber, edge protection, polythene wrap and steel strapping.'],
+        ['Container loading', 'Professionally stuffed 20ft and 40ft containers, weight-balanced and secured so material cannot shift at sea.'],
+        ['Quality assurance', 'Pre-shipment inspection for colour match, calibration and thickness tolerance. Project photos available before dispatch on request.'],
+        ['Full documentation', 'Commercial invoice, packing list, bill of lading, certificate of origin, fumigation certificate and material/test certificates — plus marine insurance on CIF orders.'],
+      ];
+
+      const FAQS = [
+        ['What is your minimum order quantity?', 'It varies by product — typically 80–120 m² as noted on each product page. Mixed-product container loads can be discussed for the right project.'],
+        ['Which Incoterms do you offer?', 'EXW, FOB, CFR and CIF from Indian east-coast ports. FOB and CIF are the most common for our export customers.'],
+        ['How long does an order take?', 'Production is typically 3–5 weeks after sample approval and advance, plus sea transit to your destination port (see the table above). Timelines vary with order size and season.'],
+        ['What documents do you provide?', 'A complete export set: commercial invoice, packing list, bill of lading, certificate of origin, fumigation certificate and material/test certificates, plus any destination-specific paperwork.'],
+      ];
+
+      return (
+        <div>
+          <div className="page-hero">
+            <div className="page-hero-grid" />
+            <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+              <FadeUp>
+                <span className="eyebrow">Export &amp; Logistics</span>
+                <h1 className="display-lg" style={{ marginTop: 10, maxWidth: 640 }}>
+                  Granite export,<br />handled end to end
+                </h1>
+                <p style={{ color: 'var(--text-2)', fontSize: 16, lineHeight: 1.8, maxWidth: 580, marginTop: 20 }}>
+                  From quarry-face selection to documented delivery at your port — how Granava ships premium
+                  Indian granite to the UK, USA, UAE &amp; Middle East and East Asia.
+                </p>
+              </FadeUp>
+            </div>
+          </div>
+
+          {/* Intro */}
+          <section className="section">
+            <div className="container">
+              <FadeUp>
+                <span className="eyebrow">Built for Export</span>
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', marginTop: 10, marginBottom: 20, maxWidth: 640 }}>
+                  A single point of contact,<br />from block to bill of lading
+                </h2>
+                <p style={{ color: 'var(--muted)', fontSize: 15, lineHeight: 1.85, maxWidth: 690 }}>
+                  Importing natural stone across continents only works when the supply chain is predictable.
+                  Granava manages quarry selection, cutting, finishing, quality control, seaworthy packing and the
+                  full documentation set in-house — so architects, fabricators and developers deal with one team
+                  and one clear price, whichever Incoterm suits the project.
+                </p>
+              </FadeUp>
+            </div>
+          </section>
+
+          {/* Incoterms */}
+          <section className="section-sm">
+            <div className="container">
+              <FadeUp>
+                <span className="eyebrow">Pricing Terms</span>
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', marginTop: 10, marginBottom: 32 }}>
+                  Incoterms we work with
+                </h2>
+                <div className="gvt-table">
+                  <div className="gvt-row gvt-head">
+                    <div className="gvt-cell gvt-attr">Incoterm</div>
+                    <div className="gvt-cell gvt-granite">What it includes</div>
+                    <div className="gvt-cell gvt-tile">Typical use</div>
+                  </div>
+                  {INCOTERMS.map(([term, inc, use]) => (
+                    <div className="gvt-row" key={term}>
+                      <div className="gvt-cell gvt-attr">{term}</div>
+                      <div className="gvt-cell gvt-granite">{inc}</div>
+                      <div className="gvt-cell gvt-tile">{use}</div>
+                    </div>
+                  ))}
+                </div>
+              </FadeUp>
+            </div>
+          </section>
+
+          {/* Process */}
+          <section className="section">
+            <div className="container">
+              <FadeUp style={{ marginBottom: 40 }}>
+                <span className="eyebrow">How an Order Works</span>
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', marginTop: 10, marginBottom: 18, maxWidth: 640 }}>
+                  Six steps from enquiry to dispatch
+                </h2>
+                <p style={{ color: 'var(--muted)', fontSize: 15, lineHeight: 1.85, maxWidth: 690 }}>
+                  Every order follows the same transparent path, with approval points before production and
+                  before shipping.
+                </p>
+              </FadeUp>
+              <div className="gvt-sustain-grid">
+                {STEPS.map(([t, d], i) => (
+                  <FadeUp key={t} delay={i * 80}>
+                    <div className="gvt-sustain-card">
+                      <div className="value-num">{String(i + 1).padStart(2, '0')}</div>
+                      <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.15rem', margin: '8px 0 12px' }}>{t}</h3>
+                      <p style={{ fontSize: 13.5, color: 'var(--muted)', lineHeight: 1.72 }}>{d}</p>
+                    </div>
+                  </FadeUp>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Ports & transit */}
+          <section className="section-sm">
+            <div className="container">
+              <FadeUp>
+                <span className="eyebrow">Ports &amp; Transit</span>
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', marginTop: 10, marginBottom: 32 }}>
+                  Indicative sea-freight times
+                </h2>
+                <div className="gvt-table">
+                  <div className="gvt-row gvt-head">
+                    <div className="gvt-cell gvt-attr">Destination market</div>
+                    <div className="gvt-cell gvt-granite">Loading port</div>
+                    <div className="gvt-cell gvt-tile">Indicative transit</div>
+                  </div>
+                  {TRANSIT.map(([dest, port, time]) => (
+                    <div className="gvt-row" key={dest}>
+                      <div className="gvt-cell gvt-attr">{dest}</div>
+                      <div className="gvt-cell gvt-granite">{port}</div>
+                      <div className="gvt-cell gvt-tile">{time}</div>
+                    </div>
+                  ))}
+                </div>
+                <p className="gvt-note">
+                  Transit times are indicative sea-freight estimates and vary with carrier, routing, season and
+                  port congestion. We confirm a current schedule with your quote.
+                </p>
+              </FadeUp>
+            </div>
+          </section>
+
+          {/* Packing & documentation */}
+          <section className="section">
+            <div className="container">
+              <FadeUp style={{ marginBottom: 40 }}>
+                <span className="eyebrow">Packing, QC &amp; Paperwork</span>
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', marginTop: 10, marginBottom: 18, maxWidth: 640 }}>
+                  It arrives intact, and fully documented
+                </h2>
+              </FadeUp>
+              <div className="gvt-sustain-grid">
+                {ASSURANCE.map(([t, d], i) => (
+                  <FadeUp key={t} delay={i * 80}>
+                    <div className="gvt-sustain-card">
+                      <div className="value-num">{String(i + 1).padStart(2, '0')}</div>
+                      <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.15rem', margin: '8px 0 12px' }}>{t}</h3>
+                      <p style={{ fontSize: 13.5, color: 'var(--muted)', lineHeight: 1.72 }}>{d}</p>
+                    </div>
+                  </FadeUp>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* FAQ */}
+          <section className="section-sm">
+            <div className="container">
+              <FadeUp>
+                <span className="eyebrow">Common Questions</span>
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', marginTop: 10, marginBottom: 28 }}>Export, answered</h2>
+                <div className="gvt-faq">
+                  {FAQS.map(([q, a]) => (
+                    <div className="gvt-faq-item" key={q}>
+                      <h3 className="gvt-faq-q">{q}</h3>
+                      <p className="gvt-faq-a">{a}</p>
+                    </div>
+                  ))}
+                </div>
+              </FadeUp>
+            </div>
+          </section>
+
+          {/* CTA */}
+          <section className="section-sm">
+            <div className="container">
+              <FadeUp>
+                <div className="cta-banner">
+                  <span className="eyebrow" style={{ display: 'block', marginBottom: 16 }}>Planning an Import?</span>
+                  <h2 className="display-md" style={{ marginBottom: 18 }}>
+                    Get a delivered-to-port quote —<br /><em style={{ color: 'var(--gold)' }}>FOB or CIF</em>
+                  </h2>
+                  <p style={{ color: 'var(--muted)', maxWidth: 480, margin: '0 auto 36px', fontSize: 15 }}>
+                    Tell us your product, quantity and destination, and our export team will return a clear quote
+                    with Incoterm options and a current shipping schedule.
+                  </p>
+                  <Link to="/contact" className="btn-gold">Request a Quote →</Link>
+                </div>
+              </FadeUp>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
     function App() {
       return (
         <BrowserRouter>
@@ -2093,6 +2357,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
               <Route path="/markets/:slug" element={<MarketDetailPage />} />
               <Route path="/gallery" element={<GalleryPage />} />
               <Route path="/granite-vs-tiles" element={<GraniteVsTilesPage />} />
+              <Route path="/export" element={<ExportLogisticsPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="*" element={<NotFoundPage />} />

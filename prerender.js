@@ -63,6 +63,34 @@ routes.push(['/granite-vs-tiles',
     },
   ]])
 
+routes.push(['/export',
+  'Granite Export & Logistics | Granava',
+  'How Granava exports premium Indian granite worldwide — Incoterms (EXW, FOB, CFR, CIF), the order process, ports and transit times, seaworthy packing, quality control and full export documentation for the UK, USA, UAE and East Asia.',
+  [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: 'Granite Export & Logistics',
+      author: { '@type': 'Organization', name: 'Granava' },
+      publisher: { '@type': 'Organization', name: 'Granava' },
+      mainEntityOfPage: `${BASE}/export/`,
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        { '@type': 'Question', name: 'What is your minimum order quantity?',
+          acceptedAnswer: { '@type': 'Answer', text: 'It varies by product, typically 80 to 120 square metres as noted on each product page. Mixed-product container loads can be discussed for the right project.' } },
+        { '@type': 'Question', name: 'Which Incoterms do you offer?',
+          acceptedAnswer: { '@type': 'Answer', text: 'EXW, FOB, CFR and CIF from Indian east-coast ports. FOB and CIF are the most common for export customers.' } },
+        { '@type': 'Question', name: 'How long does an order take?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Production is typically 3 to 5 weeks after sample approval and advance, plus sea transit to the destination port. Timelines vary with order size and season.' } },
+        { '@type': 'Question', name: 'What documents do you provide?',
+          acceptedAnswer: { '@type': 'Answer', text: 'A complete export set: commercial invoice, packing list, bill of lading, certificate of origin, fumigation certificate and material or test certificates, plus any destination-specific paperwork.' } },
+      ],
+    },
+  ]])
+
 // Product detail pages — with Product + Breadcrumb JSON-LD
 for (const p of data.products) {
   const ld = {
