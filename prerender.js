@@ -37,6 +37,32 @@ routes.push(['/contact',
   'Contact Granava — Request a Granite Quote or Samples',
   'Contact the Granava export team for granite samples, pricing, and shipping quotes. Premium Black Galaxy, Black Pearl, Steel Gray and Jet Black granite.'])
 
+routes.push(['/granite-vs-tiles',
+  "Natural Granite vs Tile — A Specifier's Comparison | Granava",
+  'How natural granite compares with porcelain and ceramic tile on durability, lifespan, repairability and embodied carbon — a clear guide for architects, fabricators and developers.',
+  [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: "Natural Granite vs Tile: A Specifier's Comparison",
+      author: { '@type': 'Organization', name: 'Granava' },
+      publisher: { '@type': 'Organization', name: 'Granava' },
+      mainEntityOfPage: `${BASE}/granite-vs-tiles/`,
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        { '@type': 'Question', name: 'Is natural granite better than porcelain tile?',
+          acceptedAnswer: { '@type': 'Answer', text: 'For premium, long-life surfaces, granite offers full-body natural material, superior hardness, near-seamless large formats and in-place repairability. Porcelain remains a capable, lower-cost option; the right choice depends on the project priorities.' } },
+        { '@type': 'Question', name: 'Is granite more sustainable than tile?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Granite typically carries lower embodied carbon because it needs no high-temperature firing, and its longevity and repairability extend its useful life. Transport distance and assessment method affect the totals, so figures vary by project.' } },
+        { '@type': 'Question', name: 'Can granite contribute to green-building credits?',
+          acceptedAnswer: { '@type': 'Answer', text: 'Yes. Lower embodied carbon can support a building embodied-carbon target and earn points under rating systems such as LEED and BREEAM, especially when backed by an Environmental Product Declaration.' } },
+      ],
+    },
+  ]])
+
 // Product detail pages — with Product + Breadcrumb JSON-LD
 for (const p of data.products) {
   const ld = {

@@ -395,6 +395,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                   <li><Link to="/products">Black Pearl Granite</Link></li>
                   <li><Link to="/products">Steel Gray Granite</Link></li>
                   <li><Link to="/products">Jet Black Granite</Link></li>
+                  <li><Link to="/granite-vs-tiles">Granite vs Tile</Link></li>
                   <li><Link to="/contact">Request Sample</Link></li>
                   <li><Link to="/contact">Get Pricing</Link></li>
                 </ul>
@@ -459,6 +460,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                     <li><Link to="/products">Black Pearl Granite</Link></li>
                     <li><Link to="/products">Steel Gray Granite</Link></li>
                     <li><Link to="/products">Jet Black Granite</Link></li>
+                    <li><Link to="/granite-vs-tiles">Granite vs Tile</Link></li>
                     <li><Link to="/contact">Request a Sample</Link></li>
                   </ul>
                 </details>
@@ -1911,6 +1913,173 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       );
     }
 
+    // ── GRANITE vs TILE COMPARISON PAGE ─────────────────────────────────────
+    function GraniteVsTilesPage() {
+      useEffect(() => {
+        document.title = "Natural Granite vs Tile — A Specifier's Comparison | Granava";
+        setMeta("How natural granite compares with porcelain and ceramic tile on durability, lifespan, repairability and embodied carbon — a clear comparison for architects, fabricators and developers.");
+      }, []);
+
+      const ROWS = [
+        ["Material", "Solid, single natural stone — full-body colour and pattern throughout", "Manufactured clay body with a thin printed or glazed decorative surface"],
+        ["Surface depth", "Pattern runs through the slab; wear and chips never expose a different layer", "Decoration is surface-deep; deep scratches or chips reveal the body beneath"],
+        ["Hardness & heat", "Mohs 6–7, very low water absorption; highly resistant to scratching, heat and staining", "Hard, but the glaze can craze, wear or scratch through over time"],
+        ["Joints & seams", "Large-format slabs give near-seamless worktops and cladding", "Multiple grout joints — more dirt traps and more potential failure points"],
+        ["Repairability", "Can be re-polished and repaired in place; finish renewed after years of use", "Cracked tiles are cut out and replaced, often with a no-longer-matching batch"],
+        ["Lifespan", "Decades to centuries with minimal maintenance", "Long if undamaged, but more vulnerable to chips, lippage and grout failure"],
+        ["Processing energy", "Quarried, sawn and polished — no firing", "Kiln-fired at very high temperature to vitrify — the dominant energy cost"],
+        ["End of life", "Inert and natural; reusable or crushed as aggregate", "Generally landfilled; limited recycling routes"],
+      ];
+
+      const SUSTAIN = [
+        ["No kiln firing", "Porcelain and ceramic must be fired at very high temperatures to vitrify the body and glaze — the single largest source of their embodied carbon. Granite skips this step entirely."],
+        ["Nature does the work", "As a single, all-natural material, granite's processing is largely geological. Industry Environmental Product Declarations report natural stone flooring at roughly 22 kg CO₂e per m² — well below many fired and engineered alternatives."],
+        ["Longevity counts", "A surface that lasts for decades and can be refinished in place avoids the repeated carbon cost of manufacturing, removing and replacing worn material."],
+        ["Recyclable & inert", "At end of life granite is chemically inert and can be reused or crushed into aggregate rather than sent to landfill."],
+      ];
+
+      const FAQS = [
+        ["Is natural granite better than porcelain tile?", "For premium, long-life surfaces, granite offers full-body natural material, superior hardness, near-seamless large formats and in-place repairability. Porcelain remains a capable, lower-cost option — the right choice depends on the project's priorities."],
+        ["Is granite more sustainable than tile?", "Granite typically carries lower embodied carbon because it needs no high-temperature firing, and its longevity and repairability extend its useful life. Transport distance and assessment method affect the totals, so figures vary by project."],
+        ["Can granite contribute to green-building credits?", "Yes. Lower embodied carbon can support a building's embodied-carbon targets and earn points under rating systems such as LEED and BREEAM, especially when backed by an Environmental Product Declaration."],
+      ];
+
+      return (
+        <div>
+          <div className="page-hero">
+            <div className="page-hero-grid" />
+            <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+              <FadeUp>
+                <span className="eyebrow">Material Comparison</span>
+                <h1 className="display-lg" style={{ marginTop: 10, maxWidth: 620 }}>
+                  Natural Granite<br />vs Tile
+                </h1>
+                <p style={{ color: 'var(--text-2)', fontSize: 16, lineHeight: 1.8, maxWidth: 560, marginTop: 20 }}>
+                  A clear, honest comparison for architects, fabricators and developers choosing
+                  between solid natural stone and porcelain or ceramic tile.
+                </p>
+              </FadeUp>
+            </div>
+          </div>
+
+          {/* Intro */}
+          <section className="section">
+            <div className="container">
+              <FadeUp>
+                <span className="eyebrow">Why Specifiers Choose Stone</span>
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', marginTop: 10, marginBottom: 20, maxWidth: 620 }}>
+                  The difference between real stone<br />and a picture of stone
+                </h2>
+                <p style={{ color: 'var(--muted)', fontSize: 15, lineHeight: 1.85, maxWidth: 680 }}>
+                  Most granite-look and marble-look tiles are a fired clay body with a printed image of
+                  stone on the surface. Natural granite is the stone itself — solid all the way through, with
+                  colour and structure no print can replicate. For premium kitchens, facades and floors,
+                  that authenticity is the point.
+                </p>
+              </FadeUp>
+            </div>
+          </section>
+
+          {/* Comparison table */}
+          <section className="section-sm">
+            <div className="container">
+              <FadeUp>
+                <span className="eyebrow">Side by Side</span>
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', marginTop: 10, marginBottom: 32 }}>
+                  Granite vs Porcelain / Ceramic Tile
+                </h2>
+                <div className="gvt-table">
+                  <div className="gvt-row gvt-head">
+                    <div className="gvt-cell gvt-attr">&nbsp;</div>
+                    <div className="gvt-cell gvt-granite">Natural Granite</div>
+                    <div className="gvt-cell gvt-tile">Porcelain / Ceramic Tile</div>
+                  </div>
+                  {ROWS.map(([attr, g, t]) => (
+                    <div className="gvt-row" key={attr}>
+                      <div className="gvt-cell gvt-attr">{attr}</div>
+                      <div className="gvt-cell gvt-granite">{g}</div>
+                      <div className="gvt-cell gvt-tile">{t}</div>
+                    </div>
+                  ))}
+                </div>
+              </FadeUp>
+            </div>
+          </section>
+
+          {/* Sustainability */}
+          <section className="section">
+            <div className="container">
+              <FadeUp style={{ marginBottom: 40 }}>
+                <span className="eyebrow">Sustainability & Carbon</span>
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', marginTop: 10, marginBottom: 18, maxWidth: 620 }}>
+                  A lower-carbon surface,<br />for the right reasons
+                </h2>
+                <p style={{ color: 'var(--muted)', fontSize: 15, lineHeight: 1.85, maxWidth: 680 }}>
+                  The defensible case for granite is the process, not a slogan. Here is where the
+                  carbon difference actually comes from.
+                </p>
+              </FadeUp>
+              <div className="gvt-sustain-grid">
+                {SUSTAIN.map(([t, d], i) => (
+                  <FadeUp key={t} delay={i * 80}>
+                    <div className="gvt-sustain-card">
+                      <div className="value-num">{String(i + 1).padStart(2, '0')}</div>
+                      <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.15rem', margin: '8px 0 12px' }}>{t}</h3>
+                      <p style={{ fontSize: 13.5, color: 'var(--muted)', lineHeight: 1.72 }}>{d}</p>
+                    </div>
+                  </FadeUp>
+                ))}
+              </div>
+              <FadeUp>
+                <p className="gvt-note">
+                  Embodied-carbon figures vary with quarry, processing, shipping distance and assessment
+                  method. Granava provides project-specific documentation on request, and we recommend
+                  specifying with an Environmental Product Declaration where one is required.
+                </p>
+              </FadeUp>
+            </div>
+          </section>
+
+          {/* FAQ */}
+          <section className="section-sm">
+            <div className="container">
+              <FadeUp>
+                <span className="eyebrow">Common Questions</span>
+                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', marginTop: 10, marginBottom: 28 }}>Granite vs Tile, Answered</h2>
+                <div className="gvt-faq">
+                  {FAQS.map(([q, a]) => (
+                    <div className="gvt-faq-item" key={q}>
+                      <h3 className="gvt-faq-q">{q}</h3>
+                      <p className="gvt-faq-a">{a}</p>
+                    </div>
+                  ))}
+                </div>
+              </FadeUp>
+            </div>
+          </section>
+
+          {/* CTA */}
+          <section className="section-sm">
+            <div className="container">
+              <FadeUp>
+                <div className="cta-banner">
+                  <span className="eyebrow" style={{ display: 'block', marginBottom: 16 }}>Specifying Stone?</span>
+                  <h2 className="display-md" style={{ marginBottom: 18 }}>
+                    Compare our granites —<br /><em style={{ color: 'var(--gold)' }}>samples on request</em>
+                  </h2>
+                  <p style={{ color: 'var(--muted)', maxWidth: 460, margin: '0 auto 36px', fontSize: 15 }}>
+                    Tell us your application and destination market, and our export team will recommend the
+                    right stone and finish with full specifications.
+                  </p>
+                  <Link to="/contact" className="btn-gold">Request a Quote →</Link>
+                </div>
+              </FadeUp>
+            </div>
+          </section>
+        </div>
+      );
+    }
+
     function App() {
       return (
         <BrowserRouter>
@@ -1923,6 +2092,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
               <Route path="/markets" element={<MarketsPage />} />
               <Route path="/markets/:slug" element={<MarketDetailPage />} />
               <Route path="/gallery" element={<GalleryPage />} />
+              <Route path="/granite-vs-tiles" element={<GraniteVsTilesPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="*" element={<NotFoundPage />} />
