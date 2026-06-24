@@ -25,10 +25,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
     ];
 
     // ── Routing ────────────────────────────────────────────────────────────
-    function getRoute() {
-      let p = (typeof window !== 'undefined' ? window.location.pathname : '/').replace(/\/+$/, '') || '/';
-      return p;
-    }
 
     /**
      * Converts any raw ID/slug to the canonical lowercase-hyphen form
@@ -834,6 +830,12 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         tagline: 'The night sky, captured in stone.',
         desc: `Quarried exclusively from the Nellore district of Andhra Pradesh, Black Galaxy is among the world's most recognised premium granites. Its near-black base is scattered with golden and bronze metallic flecks — a naturally occurring crystalline effect that intensifies dramatically under light. No two slabs are identical, making each installation genuinely unique.`,
         uses: ['Feature walls', 'Kitchen countertops', 'Bathroom vanities', 'Commercial flooring', 'Monuments & memorials', 'Exterior facades'],
+        whyTile: [
+          { title: 'Real bronzite, not a print', text: "The golden-bronze flecks are real bronzite crystals running through the slab. A galaxy-look tile only prints that sparkle onto a glaze that wears away." },
+          { title: 'Worktop-grade durability', text: 'At 0.04% water absorption and Mohs 6–7, Black Galaxy shrugs off daily kitchen heat and knife marks where a glazed tile would scratch and craze.' },
+          { title: 'Seamless dark runs', text: 'Large-format slabs give near-seamless black worktops and islands; tile breaks the same surface into grout lines that trap grime.' },
+          { title: 'Renews in place', text: 'Polished, honed, flamed or leathered, the finish can be re-polished after years of use — a chipped galaxy tile is simply replaced, rarely matching.' },
+        ],
         finishes: ['Polished', 'Honed', 'Flamed', 'Leathered'],
         sizes: '30×30 · 60×60 · 60×90 · Custom slabs to 320×180 cm',
         thickness: '15mm · 18mm · 20mm · 30mm',
@@ -841,7 +843,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         rev: false,
         img: null,   // ← replace with '/images/black-galaxy.jpg' when ready
         specs: [{ k: 'Origin', v: 'Andhra Pradesh, India' }, { k: 'Density', v: '3.0–3.1 g/cm³' }, { k: 'Water Absorption', v: '0.04%' }, { k: 'Compressive Strength', v: '190–210 MPa' }, { k: 'Flexural Strength', v: '15–18 MPa' }, { k: 'Mohs Hardness', v: '6–7' }, { k: 'Frost Resistance', v: 'Excellent' }, { k: 'Available Finishes', v: '4 options' }],
-        care: [{ title: 'Daily Cleaning', text: `Wipe with a soft cloth and warm water. Use a pH-neutral stone cleaner — never acidic or abrasive cleaners.` }, { title: 'Sealing', text: `Very low porosity, but seal every 12–18 months for kitchen worktops to guard against oil staining.` }, { title: 'Stain Removal', text: `Blot spills immediately. For oil stains, apply a baking-soda poultice for 24 hours, then rinse.` }, { title: 'What to Avoid', text: `Use trivets for hot cookware. Avoid standing water on honed finishes.` }],
         faqs: [{ q: `What causes the golden flecks in Black Galaxy granite?`, a: `The golden-bronze flecks are bronzite, a naturally occurring magnesium-iron silicate mineral. Premium-grade Black Galaxy has fine, evenly distributed flecks.` }, { q: `Is Black Galaxy suitable for kitchen countertops?`, a: `Yes — with 0.04% water absorption and high heat resistance it is one of the best granites for worktops. A polished finish is recommended.` }, { q: `What finishes are available?`, a: `Polished, Honed, Flamed and Leathered.` }, { q: `What is the minimum order quantity?`, a: `100 square metres, with full export documentation provided.` }],
       },
       {
@@ -851,6 +852,12 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         tagline: 'Depth and lustre in pure black.',
         desc: `Black Pearl originates from Karnataka and delivers a pure, mirror-deep black surface with a distinctive pearl-like metallic shimmer across the face. When high-polished, it achieves a reflective quality rarely surpassed by any other natural stone — drawing the eye in any interior context.`,
         uses: ['Countertops & worktops', 'Wall cladding', 'Premium flooring', 'Lift car interiors', 'High-end retail fixtures', 'Hotel lobbies'],
+        whyTile: [
+          { title: 'Mirror depth no glaze matches', text: "Black Pearl's reflective, pearl-like shimmer comes from the stone's own mica. Printed black-gloss tile reads flat and lifeless beside it." },
+          { title: 'Full-body black', text: 'The black runs through the entire slab, so a knocked edge still reads black — not the pale clay body that shows through a damaged tile.' },
+          { title: 'Statement cladding without joints', text: 'Ideal for feature walls and hotel lobbies as large panels; tile cladding fragments the same wall into dozens of grout lines.' },
+          { title: 'Lasting lustre', text: 'The high polish can be restored in place years later; glazed tile gloss dulls and scratches with no way to bring it back.' },
+        ],
         finishes: ['High Polish', 'Honed', 'Brushed'],
         sizes: '60×60 · 60×90 · 90×180 · Full slab',
         thickness: '18mm · 20mm · 30mm',
@@ -858,7 +865,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         rev: true,
         img: null,   // ← replace with '/images/black-pearl.jpg' when ready
         specs: [{ k: 'Origin', v: 'Karnataka, India' }, { k: 'Density', v: '2.9–3.0 g/cm³' }, { k: 'Water Absorption', v: '0.05%' }, { k: 'Compressive Strength', v: '180–200 MPa' }, { k: 'Flexural Strength', v: '14–17 MPa' }, { k: 'Mohs Hardness', v: '6–7' }, { k: 'Frost Resistance', v: 'Excellent' }, { k: 'Available Finishes', v: '3 options' }],
-        care: [{ title: 'Daily Cleaning', text: `Use a microfibre cloth with warm water and pH-neutral soap. Buff dry to remove fingerprints from the high-polish surface.` }, { title: 'Sealing', text: `Apply an impregnating sealer every 12 months to maintain reflective depth.` }, { title: 'Stain Removal', text: `Blot spills immediately. Use a stone-specific poultice rather than scrubbing.` }, { title: 'What to Avoid', text: `Never use acidic or ammonia-based cleaners — they dull the pearl sheen.` }],
         faqs: [{ q: `What gives Black Pearl its shimmer?`, a: `Labradorite and feldspar crystals create a shifting metallic lustre — most pronounced on the high-polish finish.` }, { q: `Is Black Pearl the same as Black Galaxy?`, a: `No. Black Galaxy has golden flecks; Black Pearl has a uniform pearl sheen without large flecks.` }, { q: `Which finish best shows the pearl effect?`, a: `The High Polish finish maximises the pearl shimmer.` }, { q: `What is the minimum order quantity?`, a: `80 square metres.` }],
       },
       {
@@ -868,6 +874,12 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         tagline: 'Architectural sophistication in every vein.',
         desc: `From Tamil Nadu's Krishnagiri district, Steel Gray is defined by its restrained, sophisticated palette — deep charcoal and steel-blue tones threaded with fine white and silver veining. Its versatility bridges the contemporary and classical, equally at home in a minimalist Tokyo interior and a heritage stone restoration in Edinburgh.`,
         uses: ['Architectural facades', 'Commercial flooring', 'Countertops', 'Heritage restoration', 'Memorial stones', 'Landscape paving'],
+        whyTile: [
+          { title: 'Veining that is real, not printed', text: "The white-silver veining is the stone's own structure, unique to every slab. Tile repeats the same printed pattern across a whole floor." },
+          { title: 'Built for the outdoors', text: 'Excellent frost resistance, plus flamed and sandblasted finishes for real slip resistance on facades and paving — where exterior tile cracks and lifts.' },
+          { title: 'Commercial-grade wear', text: 'Mohs 6–7 hardness handles high-traffic commercial flooring that would steadily wear through a tile glaze.' },
+          { title: 'Repairable, not replaced', text: 'A scratched area is refinished in place; swapping one cracked floor tile years later rarely matches the original batch.' },
+        ],
         finishes: ['Polished', 'Honed', 'Flamed', 'Brushed', 'Sandblasted'],
         sizes: '30×30 · 60×60 · 60×90 · Custom slabs',
         thickness: '15mm · 18mm · 20mm · 30mm · 40mm',
@@ -875,7 +887,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         rev: false,
         img: null,   // ← replace with '/images/steel-gray.jpg' when ready
         specs: [{ k: 'Origin', v: 'Tamil Nadu, India' }, { k: 'Density', v: '2.6–2.8 g/cm³' }, { k: 'Water Absorption', v: '0.08%' }, { k: 'Compressive Strength', v: '170–190 MPa' }, { k: 'Flexural Strength', v: '12–15 MPa' }, { k: 'Mohs Hardness', v: '6' }, { k: 'Frost Resistance', v: 'Excellent' }, { k: 'Available Finishes', v: '5 options' }],
-        care: [{ title: 'Daily Cleaning', text: `Wipe with warm water and a pH-neutral cleaner. Hides watermarks and fingerprints well.` }, { title: 'Sealing', text: `Seal every 12–18 months, especially for exterior and high-traffic applications.` }, { title: 'Stain Removal', text: `Treat oil and rust marks with a stone poultice.` }, { title: 'What to Avoid', text: `Avoid de-icing salts on exterior paving in winter. Avoid acidic cleaners.` }],
         faqs: [{ q: `Is Steel Gray good for outdoor use?`, a: `Yes — excellent frost resistance, and flamed or sandblasted finishes give good slip resistance for paving and cladding.` }, { q: `What colour is Steel Gray exactly?`, a: `Deep charcoal to steel-blue grey with fine white and silver veining — cooler and more uniform than warmer greys.` }, { q: `How many finishes are available?`, a: `Five — the widest range in our collection.` }, { q: `What is the minimum order quantity?`, a: `120 square metres.` }],
       },
       {
@@ -885,6 +896,12 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         tagline: 'Absolute darkness. Absolute elegance.',
         desc: `Jet Black is the purest expression of natural granite — quarried from the ancient formations of Karimnagar, Telangana, it presents an almost void-like uniformity of colour with zero visible veining or inclusions. When mirror-polished, the surface achieves a depth of black that no manufactured material can replicate. Architects prize it for the way it transforms a space: walls appear to dissolve, countertops become obsidian pools, floors become a statement. An uncompromising choice for spaces that demand absolute presence.`,
         uses: ['Feature walls & statement surfaces', 'Kitchen countertops', 'Bathroom floors & vanities', 'Commercial lobbies', 'Luxury retail & hospitality', 'Memorial & monumental work'],
+        whyTile: [
+          { title: 'Flawless uniform black', text: "Jet Black's near-void uniformity has zero visible inclusions — a depth that printed black tile, with its repeating pattern, simply cannot fake." },
+          { title: 'Mirror polish, real depth', text: 'Mirror-polished natural stone reflects with a depth no manufactured glaze reaches; tile gloss sits on the surface and scratches off.' },
+          { title: 'Solid through and through', text: "Damage anywhere still shows pure black stone, not the lighter body hiding beneath a tile's printed face." },
+          { title: 'Luxury that lasts', text: 'For feature walls and luxury retail, the finish renews in place for decades; a chipped tile means a visible, mismatched swap.' },
+        ],
         finishes: ['Mirror Polish', 'Honed', 'Flamed', 'Leathered'],
         sizes: '30×30 · 60×60 · 60×90 · 90×180 · Custom slabs to 300×180 cm',
         thickness: '15mm · 18mm · 20mm · 30mm',
@@ -892,7 +909,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         rev: true,
         img: null,   // ← replace with '/images/jet-black.jpg' when ready
         specs: [{ k: 'Origin', v: 'Telangana, India' }, { k: 'Density', v: '3.0–3.2 g/cm³' }, { k: 'Water Absorption', v: '0.03%' }, { k: 'Compressive Strength', v: '200–220 MPa' }, { k: 'Flexural Strength', v: '16–19 MPa' }, { k: 'Mohs Hardness', v: '6–7' }, { k: 'Frost Resistance', v: 'Excellent' }, { k: 'Available Finishes', v: '4 options' }],
-        care: [{ title: 'Daily Cleaning', text: `Clean with a microfibre cloth and pH-neutral cleaner, then buff dry — the mirror finish shows every mark.` }, { title: 'Sealing', text: `Seal annually to protect the pristine surface despite very low porosity.` }, { title: 'Stain Removal', text: `Blot any spill instantly — even water can mark the mirror finish.` }, { title: 'What to Avoid', text: `Never use abrasive cleaners or scouring pads — they permanently dull the mirror polish.` }],
         faqs: [{ q: `What makes Jet Black different from other black granites?`, a: `Zero visible veining, flecks or inclusions — a completely uniform pure black, ideal where total uniformity is required.` }, { q: `Is Jet Black truly 100% black?`, a: `Among the most uniform black granites available; mirror-polished it reaches a depth engineered stones cannot match.` }, { q: `What is the best finish for Jet Black?`, a: `Mirror Polish for maximum depth; Honed for contemporary matte; Flamed and Leathered for texture.` }, { q: `Why is Jet Black popular for memorials?`, a: `Its flawless surface takes engraving beautifully; Japanese craftsmen value its consistency.` }],
       },
     ];
@@ -1256,7 +1272,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
     }
 
     // ── CONTACT PAGE ───────────────────────────────────────────────────────
-    // Replace with your EmailJS credentials:
+    // Set FORMSPREE_URL to your Formspree form endpoint:
     const FORMSPREE_URL = 'https://formspree.io/f/YOUR_FORM_ID'; // ← Replace YOUR_FORM_ID with your Formspree form ID
 
     const PHONE_CODES = [
@@ -1547,21 +1563,8 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         if (tag) tag.content = desc;
       });
     }
-    function setCanonical(path) {
-      let el = document.querySelector('link[rel="canonical"]');
-      if (!el) { el = document.createElement('link'); el.rel = 'canonical'; document.head.appendChild(el); }
-      el.href = 'https://www.granava.in/' + (path || '');
-    }
 
     // ── App ────────────────────────────────────────────────────────────────
-    const PAGE_MAP = {
-      '/': HomePage,
-      '/products': ProductsPage,
-      '/markets': MarketsPage,
-      '/about': AboutPage,
-      '/contact': ContactPage,
-    };
-
 
     function GalleryPage() {
       const [filter, setFilter] = useState('All');
@@ -1761,8 +1764,8 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                   </div>
 
                   <div className="pd-cta-row">
-                    <a className="btn-gold" href={`mailto:info@granava.in?subject=Sample Request: ${product.name}`}>Request a Sample</a>
-                    <a className="btn-outline" href={`mailto:info@granava.in?subject=Pricing Enquiry: ${product.name}`}>Get Pricing</a>
+                    <Link className="btn-gold" to="/contact">Request a Sample</Link>
+                    <Link className="btn-outline" to="/contact">Get Pricing</Link>
                   </div>
                 </FadeUp>
               </div>
@@ -1852,7 +1855,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
               <h2>Ready to Order {product.short || product.name}?</h2>
               <p>Request samples, pricing, or a shipping quote to your destination.</p>
               <div className="pd-cta-row">
-                <a className="btn-gold" href={`mailto:info@granava.in?subject=Order Enquiry: ${product.name}`}>Contact Our Export Team</a>
+                <Link className="btn-gold" to="/contact">Contact Our Export Team</Link>
                 <Link className="btn-outline" to="/products">View Full Collection</Link>
               </div>
             </div>
@@ -1898,7 +1901,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                 <p className="pd-desc">{market.p1}</p>
                 <p className="pd-desc">{market.p2}</p>
                 <div className="pd-cta-row">
-                  <a className="btn-gold" href={`mailto:info@granava.in?subject=Enquiry from ${market.name}`}>Email Our Export Team</a>
+                  <Link className="btn-gold" to="/contact">Contact Our Export Team</Link>
                   <Link className="btn-outline" to="/products">View Collection</Link>
                 </div>
               </FadeUp>
@@ -1954,7 +1957,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
               <h2>Exporting to {market.name}?</h2>
               <p>Request samples, pricing, or a shipping quote to your destination.</p>
               <div className="pd-cta-row">
-                <a className="btn-gold" href={`mailto:info@granava.in?subject=Order Enquiry: ${market.name}`}>Contact Our Export Team</a>
+                <Link className="btn-gold" to="/contact">Contact Our Export Team</Link>
                 <Link className="btn-outline" to="/markets">All Markets</Link>
               </div>
             </div>
