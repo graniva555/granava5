@@ -1,5 +1,9 @@
 
     :root {
+      /* Tell the browser this is a dark UI: native canvas, scrollbars and form
+         controls paint dark from the very first frame — prevents a white/black
+         flash before the stylesheet applies (notably in incognito / OS dark mode). */
+      color-scheme: dark;
       /* Palette */
       --bg: #07101e; --surface: #0d1a2e; --card: #14233c;
       --gold: #c9a96e; --gold-light: #d8ba82; --gold-dim: rgba(201,169,110,0.15);
@@ -20,7 +24,7 @@
       --sp-6:32px; --sp-7:48px; --sp-8:64px; --sp-9:96px; --sp-10:128px;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); }
+    html { background: var(--bg); scroll-behavior: smooth; scroll-padding-top: var(--nav-h); }
     body { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     h1,h2,h3,h4 { font-family: var(--font-serif); line-height: 1.22; font-weight: 500; }
     h1 { text-wrap: balance; } h2 { text-wrap: balance; }
