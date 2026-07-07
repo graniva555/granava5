@@ -571,6 +571,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       }, []);
       useEffect(() => {
         if (prefersReducedMotion) return;
+        if (window.matchMedia('(max-width: 768px)').matches) return; // no parallax on mobile — smoother scroll
         let raf = 0;
         const update = () => {
           raf = 0;
