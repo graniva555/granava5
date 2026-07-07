@@ -564,9 +564,27 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
     ];
 
     function HomePage() {
+      const heroRef = useRef(null);
       useEffect(() => {
         document.title = 'Granava | Indian Granite Exporter — Black Galaxy, Jet Black & Natural Stone';
         setMeta('Export-grade Black Galaxy, Jet Black, Black Pearl & Steel Gray granite from India. Trusted granite supplier for architects & fabricators in UK, USA, UAE & East Asia.');
+      }, []);
+      useEffect(() => {
+        if (prefersReducedMotion) return;
+        let raf = 0;
+        const update = () => {
+          raf = 0;
+          const el = heroRef.current;
+          if (!el) return;
+          const y = window.scrollY;
+          if (y < window.innerHeight * 1.2) {
+            el.style.transform = `translateY(${y * 0.18}px)`;
+            el.style.opacity = String(Math.max(1 - y / (window.innerHeight * 0.9), 0));
+          }
+        };
+        const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => { window.removeEventListener('scroll', onScroll); if (raf) cancelAnimationFrame(raf); };
       }, []);
       return (
         <div>
@@ -575,7 +593,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
             <ParticleCanvas />
             <div className="hero-grid-overlay" />
             <div className="hero-overlay" />
-            <div className="hero-content">
+            <div className="hero-content" ref={heroRef}>
               <div style={{ maxWidth: 640 }}>
                 <div className="h-fade d1" style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 32 }}>
                   <span className="eyebrow">Direct from Indian Quarries</span>
@@ -632,7 +650,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                 <div style={{ display:'flex', alignItems:'flex-end', justifyContent:'space-between', flexWrap:'wrap', gap:16 }}>
                   <div>
                     <span className="eyebrow">Our Collection</span>
-                    <h2 className="display-md" style={{ marginTop:10, marginBottom:0 }}>Three Stones.</h2>
+                    <h2 className="display-md" style={{ marginTop:10, marginBottom:0 }}>Four Stones.</h2>
                     <h2 className="display-md" style={{ color:'var(--gold)', marginBottom:0, fontStyle:'italic' }}>Infinite Possibilities.</h2>
                   </div>
                   <Link to="/products" className="catalogue-link" style={{
@@ -1193,9 +1211,9 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                     quality of every consignment before it leaves India.
                   </p>
                   <p style={{ color: 'var(--muted)', fontSize: 14.5, lineHeight: 1.82 }}>
-                    From this position, we expanded to supply Black Pearl from Karnataka and Steel Gray from Tamil Nadu —
-                    building a portfolio of India's three most internationally respected dark granites, all under one
-                    reliably sourced roof.
+                    From this position, we expanded to supply Black Pearl from Karnataka, Steel Gray from Tamil Nadu,
+                    and Jet Black from Telangana — building a portfolio of India's four most internationally respected
+                    dark granites, all under one reliably sourced roof.
                   </p>
                 </FadeUp>
                 <FadeUp delay={150}>

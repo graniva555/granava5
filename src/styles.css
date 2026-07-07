@@ -1,9 +1,5 @@
 
     :root {
-      /* Tell the browser this is a dark UI: native canvas, scrollbars and form
-         controls paint dark from the very first frame — prevents a white/black
-         flash before the stylesheet applies (notably in incognito / OS dark mode). */
-      color-scheme: dark;
       /* Palette */
       --bg: #07101e; --surface: #0d1a2e; --card: #14233c;
       --gold: #c9a96e; --gold-light: #d8ba82; --gold-dim: rgba(201,169,110,0.15);
@@ -24,7 +20,7 @@
       --sp-6:32px; --sp-7:48px; --sp-8:64px; --sp-9:96px; --sp-10:128px;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { background: var(--bg); scroll-behavior: smooth; scroll-padding-top: var(--nav-h); }
+    html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); }
     body { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     h1,h2,h3,h4 { font-family: var(--font-serif); line-height: 1.22; font-weight: 500; }
     h1 { text-wrap: balance; } h2 { text-wrap: balance; }
@@ -2088,4 +2084,49 @@ a.contact-card:hover{border-color:var(--gold);}
 @media(max-width:900px){
   .exp-hero-grid{ grid-template-columns:1fr; gap:34px; }
   .exp-intro{ padding-top:44px; }
+}
+
+/* ═══ Modernization layer: micro-interactions & motion ═══════════ */
+
+/* Gold button sheen sweep */
+.btn-gold{ position:relative; overflow:hidden; }
+.btn-gold::after{
+  content:''; position:absolute; top:0; left:-80%; width:50%; height:100%;
+  background:linear-gradient(105deg, transparent, rgba(255,255,255,.35), transparent);
+  transform:skewX(-20deg); transition:left .55s ease; pointer-events:none;
+}
+.btn-gold:hover::after{ left:130%; }
+.btn-gold:hover{ transform:translateY(-2px); box-shadow:0 10px 26px rgba(201,169,110,.28); }
+.btn-outline{ transition:border-color .25s, color .25s, background .25s, transform .2s; }
+.btn-outline:hover{ transform:translateY(-2px); }
+
+/* Card hover depth for process/why-granite/export cards */
+.gvt-sustain-card{ transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+.gvt-sustain-card:hover{ transform:translateY(-5px); border-color:rgba(201,169,110,.45); box-shadow:0 14px 34px rgba(4,10,20,.45); }
+.pd-care-item{ padding:18px 16px; border:1px solid transparent; border-radius:12px; transition:border-color .3s ease, background .3s ease, transform .3s ease; }
+.pd-care-item:hover{ border-color:rgba(201,169,110,.3); background:rgba(201,169,110,.04); transform:translateY(-3px); }
+.exp-glance{ transition:border-color .35s ease, box-shadow .35s ease; }
+.exp-glance:hover{ border-color:rgba(201,169,110,.45); box-shadow:0 16px 40px rgba(4,10,20,.4); }
+
+/* Footer & inline link slide-underline */
+.footer a{ position:relative; }
+.footer .footer-col a::after, .footer .fm-links a::after{
+  content:''; position:absolute; left:0; bottom:-2px; width:0; height:1px;
+  background:var(--gold); transition:width .28s ease;
+}
+.footer .footer-col a:hover::after, .footer .fm-links a:hover::after{ width:100%; }
+
+/* Hero parallax layers get GPU hint */
+.hero-content{ will-change:transform; }
+
+/* Gentle float for WhatsApp FAB attention (once, subtle) */
+@keyframes fabIn{ from{ opacity:0; transform:translateY(16px);} to{ opacity:1; transform:translateY(0);} }
+.wa-fab{ animation:fabIn .6s ease .8s backwards; }
+
+@media(prefers-reduced-motion:reduce){
+  .btn-gold::after{ display:none; }
+  .btn-gold:hover, .btn-outline:hover, .gvt-sustain-card:hover, .pd-care-item:hover{ transform:none; }
+  .scroll-progress{ display:none; }
+  .wa-fab{ animation:none; }
+  .hero-content{ will-change:auto; }
 }
