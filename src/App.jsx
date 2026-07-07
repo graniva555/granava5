@@ -614,6 +614,12 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                   <Link to="/products" className="btn-gold">Explore Collection →</Link>
                   <Link to="/contact" className="btn-outline">Request a Quote</Link>
                 </div>
+                <div className="hero-stones h-fade d5" aria-label="Our granites">
+                  <Link to="/products/black-galaxy" className="hero-stone"><span className="hero-stone-vis granite-galaxy" /><span className="hero-stone-name">Black Galaxy</span></Link>
+                  <Link to="/products/jet-black" className="hero-stone"><span className="hero-stone-vis granite-jet" /><span className="hero-stone-name">Jet Black</span></Link>
+                  <Link to="/products/black-pearl" className="hero-stone"><span className="hero-stone-vis granite-pearl" /><span className="hero-stone-name">Black Pearl</span></Link>
+                  <Link to="/products/steel-gray" className="hero-stone"><span className="hero-stone-vis granite-steel" /><span className="hero-stone-name">Steel Gray</span></Link>
+                </div>
                 <div className="hero-stats h-fade d5">
                   <div className="hero-stat">
                     <span className="hero-stat-num"><CountUp end={4} /></span>
