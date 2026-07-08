@@ -2062,7 +2062,7 @@ a.contact-card:hover{border-color:var(--gold);}
 }
 .wa-fab:hover{ background:var(--gold-light); transform:translateY(-3px); box-shadow:0 14px 32px rgba(25,27,32,.26), 0 0 0 1px rgba(162,128,62,.55); }
 .wa-fab:focus-visible{ outline:2px solid var(--gold); outline-offset:4px; }
-@media(max-width:600px){ .wa-fab{ right:16px; bottom:16px; width:52px; height:52px; } }
+@media(max-width:600px){ .wa-fab{ right:14px; bottom:calc(14px + env(safe-area-inset-bottom)); width:46px; height:46px; box-shadow:0 6px 18px rgba(25,27,32,.28), 0 0 0 3px rgba(246,244,239,.9); } .wa-fab svg{ width:22px; height:22px; } }
 @media(prefers-reduced-motion:reduce){ .wa-fab{ transition:none; } .wa-fab:hover{ transform:none; } }
 @media print{ .wa-fab{ display:none !important; } }
 
