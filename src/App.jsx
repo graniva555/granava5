@@ -133,22 +133,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       return <div className="scroll-progress" style={{ transform: `scaleX(${pct / 100})` }} aria-hidden="true" />;
     }
 
-    // ── TrustMarquee: slow-scrolling premium trust strip ──
-    function TrustMarquee() {
-      const items = ['Direct Quarry Sourcing', 'Export-Grade Selection', 'Full Customs Documentation', 'Worldwide Shipping', 'Consistent Quality Control', '25+ Countries Served'];
-      const doubled = [...items, ...items];
-      return (
-        <div className="trust-marquee" aria-hidden="true">
-          <div className="trust-track">
-            {doubled.map((t, i) => (
-              <span key={i} className="trust-item">{t}<span className="trust-dot">◆</span></span>
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-
     function ParticleCanvas() {
       const ref = useRef(null);
       useEffect(() => {
@@ -647,7 +631,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
             <div className="hero-bottom-line" />
           </section>
 
-          <TrustMarquee />
 
 
           {/* Our Collection — editorial stone gallery */}
