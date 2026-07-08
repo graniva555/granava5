@@ -172,7 +172,7 @@ export const MARKETS = [
     flag: '🇬🇧',
     region: 'Europe',
     tagline: 'Heritage meets contemporary design.',
-    intro: 'Granava has supplied premium Indian granite to the United Kingdom for over two decades — from heritage restoration in Edinburgh to luxury residential developments in London and contemporary commercial interiors across Manchester and Birmingham.',
+    intro: 'Granava supplies premium Indian granite across the United Kingdom — from heritage restoration in Edinburgh to luxury residential developments in London and contemporary commercial interiors across Manchester and Birmingham.',
     highlights: ['Leading UK firms specify Black Galaxy and Steel Gray for contemporary residential and commercial projects.', 'Grade I and II listed projects use our Steel Gray and Black Pearl for sympathetic stone matching.'],
   },  {
     slug: 'united-states',

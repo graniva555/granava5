@@ -119,18 +119,41 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
     // ── ScrollProgress: thin gold bar showing page scroll progress ──
     function ScrollProgress() {
-      const [pct, setPct] = useState(0);
+      const ref = useRef(null);
       useEffect(() => {
-        const onScroll = () => {
+        let raf = 0;
+        const update = () => {
+          raf = 0;
+          const el = ref.current; if (!el) return;
           const h = document.documentElement;
           const max = h.scrollHeight - h.clientHeight;
-          setPct(max > 0 ? (h.scrollTop / max) * 100 : 0);
+          el.style.transform = `scaleX(${max > 0 ? Math.min(h.scrollTop / max, 1) : 0})`;
         };
-        window.addEventListener('scroll', onScroll, { passive: true });
-        onScroll();
-        return () => window.removeEventListener('scroll', onScroll);
+        const req = () => { if (!raf) raf = requestAnimationFrame(update); };
+        window.addEventListener('scroll', req, { passive: true });
+        window.addEventListener('resize', req, { passive: true });
+        const iv = setInterval(req, 500);
+        update();
+        return () => { window.removeEventListener('scroll', req); window.removeEventListener('resize', req); clearInterval(iv); if (raf) cancelAnimationFrame(raf); };
       }, []);
-      return <div className="scroll-progress" style={{ transform: `scaleX(${pct / 100})` }} aria-hidden="true" />;
+      return <div ref={ref} className="scroll-progress" aria-hidden="true" />;
+    }
+
+    /* Scroll-driven reveals: tags .eyebrow/.pd-h2/.stone-card with .in-view */
+    function RevealObserver() {
+      const route = useRoute();
+      useEffect(() => {
+        if (prefersReducedMotion) return;
+        document.body.classList.add('js-anim');
+        const t = setTimeout(() => {
+          const els = document.querySelectorAll('.section .eyebrow, .section-sm .eyebrow, .pd-h2, .stone-card');
+          const ob = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in-view'); ob.unobserve(e.target); } }), { threshold: 0.35 });
+          els.forEach(el => ob.observe(el));
+          window.__revealOb = ob;
+        }, 250);
+        return () => { clearTimeout(t); if (window.__revealOb) window.__revealOb.disconnect(); };
+      }, [route]);
+      return null;
     }
 
     function ParticleCanvas() {
@@ -522,25 +545,25 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
     const HOME_MARKETS = [
       {
-        num: '01', country: 'United Kingdom', region: 'Europe', slug: 'united-kingdom', page: '/markets/united-kingdom/',
+        num: '01', country: 'United Kingdom', region: 'Europe', slug: 'united-kingdom', page: '/markets/united-kingdom/', info: 'Via Felixstowe & Southampton — heritage restoration to luxury residential',
         highlight: false,
         desc: 'Heritage restoration specialists and luxury residential developers across England, Scotland, and Wales.',
         buyers: ['Architects', 'Heritage Specialists', 'Stone Fabricators', 'Luxury Developers'],
       },
       {
-        num: '02', country: 'United States', region: 'North America', slug: 'united-states', page: '/markets/united-states/',
+        num: '02', country: 'United States', region: 'North America', slug: 'united-states', page: '/markets/united-states/', info: 'Via Houston, Savannah & New Jersey — kitchen fabrication to commercial flooring',
         highlight: false,
         desc: 'Kitchen and bathroom fabricators, commercial flooring contractors, and luxury hotel developers coast to coast.',
         buyers: ['Kitchen Fabricators', 'Hotel Developers', 'Commercial Contractors'],
       },
       {
-        num: '03', country: 'UAE & Middle East', region: 'Gulf Region', slug: 'uae-middle-east', page: '/markets/uae-middle-east/',
+        num: '03', country: 'UAE & Middle East', region: 'Gulf Region', slug: 'uae-middle-east', page: '/markets/uae-middle-east/', info: 'Via Jebel Ali — palace, hospitality & civic landmark projects',
         highlight: false,
         desc: 'Palace contractors, five-star hospitality groups, and grand civic development projects across the region.',
         buyers: ['Palace Contractors', 'Hospitality Groups', 'Civic Developers'],
       },
       {
-        num: '04', country: 'East Asia', region: 'Japan · Korea · Singapore', slug: 'east-asia', page: '/markets/east-asia/',
+        num: '04', country: 'East Asia', region: 'Japan · Korea · Singapore', slug: 'east-asia', page: '/markets/east-asia/', info: 'Via Yokohama, Busan & Singapore — memorial craft to premium interiors',
         highlight: false,
         desc: 'Memorial craftsmen, luxury interior designers, and civic construction across Japan, South Korea, China, and Singapore.',
         buyers: ['Memorial Craftsmen', 'Interior Designers', 'Civic Construction'],
@@ -654,7 +677,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                 <div className="hero-stats h-fade d5">
                   <div className="hero-stat">
                     <span className="hero-stat-num"><CountUp end={4} /></span>
-                    <span className="hero-stat-label">Continents</span>
+                    <span className="hero-stat-label">Export Markets</span>
                   </div>
                   <div className="hero-stat-div"/>
                   <div className="hero-stat">
@@ -663,8 +686,8 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                   </div>
                   <div className="hero-stat-div"/>
                   <div className="hero-stat">
-                    <span className="hero-stat-num"><CountUp end={20} suffix="+" /></span>
-                    <span className="hero-stat-label">Years of Export</span>
+                    <span className="hero-stat-num">24h</span>
+                    <span className="hero-stat-label">Quote Response</span>
                   </div>
                   <div className="hero-stat-div"/>
                   <div className="hero-stat">
@@ -804,6 +827,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                       <div className="mkt-name-block">
                         <span className="mkt-region">{m.region}</span>
                         <span className="mkt-country">{m.country}</span>
+                        {m.info && <span className="mkt-extra">{m.info}</span>}
                       </div>
 
                       {/* Buyer profile tags */}
@@ -855,7 +879,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                     Request a Quote —<br />
                     <em style={{ color: 'var(--gold)' }}>Response within 24 hours</em>
                   </h2>
-                  <p style={{ color: 'var(--muted)', maxWidth: 460, margin: '0 auto 36px', fontSize: 15 }}>
+                  <p style={{ color: 'var(--muted)', maxWidth: 460, margin: '0 auto 24px', fontSize: 15 }}>
                     Tell us your project requirements and receive a detailed price sheet with
                     sample availability by the next business day.
                   </p>
@@ -1042,7 +1066,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                 <div className="coll-hero-meta">
                   <div><b>4</b><span>Premium Varieties</span></div>
                   <div><b>25+</b><span>Countries Served</span></div>
-                  <div><b>20+</b><span>Years of Export</span></div>
+                  <div><b>100%</b><span>Export Documentation</span></div>
                 </div>
               </FadeUp>
             </div>
@@ -1747,6 +1771,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       return (
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(var(--vh, 1vh) * 100)' }}>
           <ScrollProgress />
+          <RevealObserver />
           <Navbar route={route} />
           <main>{children}</main>
           <Footer />
@@ -1830,9 +1855,20 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
             </div>
           </div>
 
+          {/* In-page sticky tabs */}
+          <nav className="pd-tabs" aria-label="Product sections">
+            <div className="container pd-tabs-inner">
+              <a href="#pd-specs-s">Specifications</a>
+              <a href="#pd-apps-s">Applications</a>
+              <a href="#pd-why-s">Why Granite</a>
+              <a href="#pd-faq-s">FAQ</a>
+              <a href="#pd-more-s">Collection</a>
+            </div>
+          </nav>
+
           {/* Specs */}
           <div className="container">
-            <section className="pd-section">
+            <section className="pd-section" id="pd-specs-s">
               <h2 className="pd-h2"><span className="pd-num">01</span> Technical Specifications</h2>
               <div className="pd-specs">
                 {product.specs.map((s) => (
@@ -1844,7 +1880,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
           {/* Applications */}
           <div className="container">
-            <section className="pd-section">
+            <section className="pd-section" id="pd-apps-s">
               <h2 className="pd-h2"><span className="pd-num">02</span> Common Applications</h2>
               <div className="pd-uses">
                 {product.uses.map((u) => <span key={u} className="pd-use">{u}</span>)}
@@ -1856,7 +1892,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
           
 
           <div className="container">
-            <section className="pd-section">
+            <section className="pd-section" id="pd-why-s">
               <h2 className="pd-h2"><span className="pd-num">03</span> Why Granite Over Tile</h2>
               <div className="pd-care">
                 {(product.whyTile || WHY_GRANITE).map((c, i) => (
@@ -1874,7 +1910,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
           {/* FAQ */}
           <div className="container">
-            <section className="pd-section">
+            <section className="pd-section" id="pd-faq-s">
               <h2 className="pd-h2"><span className="pd-num">04</span> Frequently Asked Questions</h2>
               <div className="pd-faqs">
                 {product.faqs.map((f, i) => (
@@ -1891,7 +1927,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
           {/* Related */}
           <div className="container">
-            <section className="pd-section pd-related">
+            <section className="pd-section pd-related" id="pd-more-s">
               <h2 className="pd-h2"><span className="pd-num">05</span> Also in Our Collection</h2>
               <div className="pd-related-grid">
                 {related.map((p) => (
@@ -2120,7 +2156,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
           {/* Sustainability */}
           <section className="section">
             <div className="container">
-              <FadeUp style={{ marginBottom: 40 }}>
+              <FadeUp style={{ marginBottom: 26 }}>
                 <span className="eyebrow">Sustainability & Carbon</span>
                 <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', marginTop: 10, marginBottom: 18, maxWidth: 620 }}>
                   A lower-carbon surface,<br />for the right reasons
@@ -2178,7 +2214,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                   <h2 className="display-md" style={{ marginBottom: 18 }}>
                     Compare our granites —<br /><em style={{ color: 'var(--gold)' }}>samples on request</em>
                   </h2>
-                  <p style={{ color: 'var(--muted)', maxWidth: 460, margin: '0 auto 36px', fontSize: 15 }}>
+                  <p style={{ color: 'var(--muted)', maxWidth: 460, margin: '0 auto 24px', fontSize: 15 }}>
                     Tell us your application and destination market, and our export team will recommend the
                     right stone and finish with full specifications.
                   </p>
@@ -2313,7 +2349,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
           {/* Process */}
           <section className="section">
             <div className="container">
-              <FadeUp style={{ marginBottom: 40 }}>
+              <FadeUp style={{ marginBottom: 26 }}>
                 <span className="eyebrow">How an Order Works</span>
                 <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', marginTop: 10, marginBottom: 18, maxWidth: 640 }}>
                   Six steps from enquiry to dispatch
@@ -2370,7 +2406,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
           {/* Packing & documentation */}
           <section className="section">
             <div className="container">
-              <FadeUp style={{ marginBottom: 40 }}>
+              <FadeUp style={{ marginBottom: 26 }}>
                 <span className="eyebrow">Packing, QC &amp; Paperwork</span>
                 <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.9rem', marginTop: 10, marginBottom: 18, maxWidth: 640 }}>
                   It arrives intact, and fully documented
@@ -2417,7 +2453,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                   <h2 className="display-md" style={{ marginBottom: 18 }}>
                     Get a delivered-to-port quote —<br /><em style={{ color: 'var(--gold)' }}>FOB or CIF</em>
                   </h2>
-                  <p style={{ color: 'var(--muted)', maxWidth: 480, margin: '0 auto 36px', fontSize: 15 }}>
+                  <p style={{ color: 'var(--muted)', maxWidth: 480, margin: '0 auto 24px', fontSize: 15 }}>
                     Tell us your product, quantity and destination, and our export team will return a clear quote
                     with Incoterm options and a current shipping schedule.
                   </p>
