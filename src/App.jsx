@@ -547,6 +547,51 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       },
     ];
 
+    const HERO_STONES = [
+      { name: 'Black Galaxy', cls: 'granite-galaxy', slug: 'black-galaxy' },
+      { name: 'Jet Black', cls: 'granite-jet', slug: 'jet-black' },
+      { name: 'Black Pearl', cls: 'granite-pearl', slug: 'black-pearl' },
+      { name: 'Steel Gray', cls: 'granite-steel', slug: 'steel-gray' },
+    ];
+
+    function StoneCarousel() {
+      const [idx, setIdx] = useState(0);
+      const n = HERO_STONES.length;
+      useEffect(() => {
+        if (prefersReducedMotion) return;
+        const t = setInterval(() => setIdx(i => (i + 1) % n), 3600);
+        return () => clearInterval(t);
+      }, [n]);
+      const pos = (i) => {
+        const d = (i - idx + n) % n;
+        if (d === 0) return 'sc-active';
+        if (d === 1) return 'sc-next';
+        if (d === n - 1) return 'sc-prev';
+        return 'sc-hidden';
+      };
+      const active = HERO_STONES[idx];
+      return (
+        <div className="sc-wrap" aria-label="Granite specimens">
+          <div className="sc-stage">
+            {HERO_STONES.map((s, i) => (
+              <Link key={s.slug} to={`/products/${s.slug}`} className={`sc-card ${pos(i)}`} tabIndex={pos(i) === 'sc-active' ? 0 : -1} aria-hidden={pos(i) !== 'sc-active'}>
+                <span className={`sc-vis ${s.cls}`} />
+                <span className="sc-meta">
+                  <span className="sc-name">{s.name}</span>
+                  <span className="sc-sub">Granava Natural Granite</span>
+                </span>
+              </Link>
+            ))}
+          </div>
+          <div className="sc-dots" role="tablist" aria-label="Choose specimen">
+            {HERO_STONES.map((s, i) => (
+              <button key={s.slug} className={`sc-dot${i === idx ? ' active' : ''}`} onClick={() => setIdx(i)} aria-label={s.name} />
+            ))}
+          </div>
+        </div>
+      );
+    }
+
     function HomePage() {
       const heroRef = useRef(null);
       useEffect(() => {
@@ -579,6 +624,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
             <div className="hero-grid-overlay" />
             <div className="hero-overlay" />
             <div className="hero-content" ref={heroRef}>
+              <div className="hero-grid">
               <div style={{ maxWidth: 640 }}>
                 <div className="h-fade d1" style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 32 }}>
                   <span className="eyebrow">Direct from Indian Quarries</span>
@@ -626,6 +672,10 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                     <span className="hero-stat-label">Key Markets</span>
                   </div>
                 </div>
+              </div>
+              <div className="h-fade d3 hero-carousel-col">
+                <StoneCarousel />
+              </div>
               </div>
             </div>
             <div className="hero-bottom-line" />
