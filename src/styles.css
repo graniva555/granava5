@@ -947,7 +947,7 @@
       letter-spacing: -0.015em;
       transition: color 0.2s;
     }
-    .mkt-row:hover .mkt-country { color: #fff; }
+    .mkt-row:hover .mkt-country { color: var(--gold); }
     .mkt-country em {
       font-style: normal;
       color: var(--gold);
@@ -1682,7 +1682,7 @@
 
     /* Hover state */
     .nav-ov-link:hover .nav-ov-num   { color: rgba(201,169,110,0.7); }
-    .nav-ov-link:hover .nav-ov-label { color: #fff; }
+    .nav-ov-link:hover .nav-ov-label { color: var(--gold); }
     .nav-ov-link:hover .nav-ov-arrow { transform: translateX(6px); color: var(--gold); }
 
     /* Active (current) route */
@@ -1733,7 +1733,7 @@
       letter-spacing: 0.04em;
       transition: color 0.18s;
     }
-    .nav-ov-contact a:hover { color: rgba(255,255,255,0.65); }
+    .nav-ov-contact a:hover { color: var(--gold); }
 
     /* ── Show/hide logic ──────────────────────────────────────────── */
     /* Desktop: nav links visible, burger + overlay hidden */
@@ -2214,7 +2214,7 @@ h1,h2,h3{ color:var(--text); }
 /* ═══ Mobile overhaul ════════════════════════════════════════════ */
 @media(max-width:768px){
   /* Hero: compact, not full-viewport */
-  .hero{ height:auto; min-height:0; padding:calc(var(--nav-h) + 44px) 0 56px; }
+  .hero{ height:auto; min-height:0; padding:calc(var(--nav-h) + 16px) 0 48px; }
   .hero::before{ width:90vw; height:90vw; top:-8%; right:-30%; }
   .hero::after{ display:none; }
   .hero-stats{ display:grid; grid-template-columns:1fr 1fr; gap:16px 20px; }
@@ -2227,4 +2227,18 @@ h1,h2,h3{ color:var(--text); }
   .nav-overlay{ backdrop-filter:blur(10px) saturate(1.1); -webkit-backdrop-filter:blur(10px) saturate(1.1); }
   /* Calmer reveals on small screens */
   .h-fade{ transform:translateY(12px); animation-duration:.55s; }
+}
+
+/* ═══ Mobile declutter & spacing pass ════════════════════════════ */
+@media(max-width:640px){
+  /* Hero badge row: keep the primary pill only, one clean line */
+  .hero .h-fade.d1{ margin-bottom:22px !important; }
+  .hero .h-fade.d1 > span:nth-child(2),
+  .hero .h-fade.d1 > span:nth-child(3){ display:none; }
+  .hero .eyebrow{ font-size:9.5px; letter-spacing:.14em; padding:7px 13px; white-space:nowrap; }
+  /* Trust marquee: redundant next to hero stats on small screens */
+  .trust-marquee, .marquee, [class*="trust-strip"]{ display:none; }
+  /* Tighter rhythm under hero */
+  .hero-stats{ margin-top:30px; padding-top:24px; }
+  .hero-stones{ margin-top:28px; }
 }
