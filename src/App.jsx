@@ -146,12 +146,15 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         if (prefersReducedMotion) return;
         document.body.classList.add('js-anim');
         const t = setTimeout(() => {
-          const els = document.querySelectorAll('.section .eyebrow, .section-sm .eyebrow, .pd-h2, .stone-card');
+          const els = document.querySelectorAll('.section .eyebrow, .section-sm .eyebrow, .pd-h2, .stone-grid');
           const ob = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in-view'); ob.unobserve(e.target); } }), { threshold: 0.35 });
           els.forEach(el => ob.observe(el));
           window.__revealOb = ob;
         }, 250);
-        return () => { clearTimeout(t); if (window.__revealOb) window.__revealOb.disconnect(); };
+        const failsafe = setTimeout(() => {
+          document.querySelectorAll('.stone-grid').forEach(el => el.classList.add('in-view'));
+        }, 4000);
+        return () => { clearTimeout(t); clearTimeout(failsafe); if (window.__revealOb) window.__revealOb.disconnect(); };
       }, [route]);
       return null;
     }

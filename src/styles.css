@@ -2296,11 +2296,12 @@ h1,h2,h3{ color:var(--text); }
 .pd-h2.in-view::after{ width:64px; }
 
 /* 2) Collection strip: staggered curtain reveal */
-body.js-anim .stone-card{ clip-path:inset(0 100% 0 0); transition:clip-path .9s cubic-bezier(.22,1,.36,1), background .25s; }
+body.js-anim .stone-grid:not(.in-view) .stone-card{ clip-path:inset(0 100% 0 0); }
+body.js-anim .stone-card{ transition:clip-path .9s cubic-bezier(.22,1,.36,1), background .25s; }
 body.js-anim .stone-card:nth-child(2){ transition-delay:.12s; }
 body.js-anim .stone-card:nth-child(3){ transition-delay:.24s; }
 body.js-anim .stone-card:nth-child(4){ transition-delay:.36s; }
-body.js-anim .stone-card.in-view{ clip-path:inset(0 0 0 0); }
+body.js-anim .stone-grid.in-view .stone-card{ clip-path:inset(0 0 0 0); }
 
 /* 5) Interactive market rows */
 .mkt-extra{
@@ -2341,6 +2342,6 @@ body.js-anim .stone-card.in-view{ clip-path:inset(0 0 0 0); }
 @media(max-width:768px){ .cta-banner{ padding:56px 20px; } }
 @media(prefers-reduced-motion:reduce){
   .section .eyebrow::after, .section-sm .eyebrow::after, .pd-h2::after{ transition:none; width:46px; }
-  body.js-anim .stone-card{ clip-path:none; transition:none; }
+  body.js-anim .stone-grid:not(.in-view) .stone-card{ clip-path:none; } body.js-anim .stone-card{ transition:none; }
   .mkt-extra{ transition:none; }
 }
