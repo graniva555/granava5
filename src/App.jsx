@@ -634,7 +634,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
           if (!el) return;
           const y = window.scrollY;
           if (y < window.innerHeight * 1.2) {
-            el.style.transform = `translateY(${y * 0.18}px)`;
             el.style.opacity = String(Math.max(1 - y / (window.innerHeight * 0.9), 0));
           }
         };

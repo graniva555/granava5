@@ -2117,7 +2117,7 @@ a.contact-card:hover{border-color:var(--gold);}
 .footer .footer-col a:hover::after, .footer .fm-links a:hover::after{ width:100%; }
 
 /* Hero parallax layers get GPU hint */
-.hero-content{ will-change:transform; }
+.hero-content{ will-change:opacity; }
 
 /* Gentle float for WhatsApp FAB attention (once, subtle) */
 @keyframes fabIn{ from{ opacity:0; transform:translateY(16px);} to{ opacity:1; transform:translateY(0);} }
