@@ -165,7 +165,8 @@
 
     /* ─── HERO ───────────────────────────────────────────────────── */
     .hero {
-      position: relative; height: calc(var(--vh, 1svh) * 100); min-height: 600px;
+      position: relative; height: auto; min-height: calc(var(--vh, 1svh) * 100);
+      padding: calc(var(--nav-h) + 56px) 0 64px;
       display: flex; align-items: center;
       overflow: hidden;
       background: radial-gradient(ellipse at 20% 80%, rgba(201,169,110,0.10) 0%, var(--bg) 60%);
