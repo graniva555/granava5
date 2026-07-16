@@ -39,7 +39,7 @@ routes.push(['/contact',
 
 routes.push(['/granite-vs-tiles',
   "Natural Granite vs Tile — A Specifier's Comparison | Granava",
-  'How natural granite compares with porcelain and ceramic tile on durability, lifespan, repairability and embodied carbon — a clear guide for architects, fabricators and developers.',
+  'How natural granite compares with porcelain and ceramic tile on durability, lifespan, cost and sustainability — for architects and developers.',
   [
     {
       '@context': 'https://schema.org',
@@ -65,7 +65,7 @@ routes.push(['/granite-vs-tiles',
 
 routes.push(['/export',
   'Granite Export & Logistics | Granava',
-  'How Granava exports premium Indian granite worldwide — Incoterms (EXW, FOB, CFR, CIF), the order process, ports and transit times, seaworthy packing, quality control and full export documentation for the UK, USA, UAE and East Asia.',
+  'How Granava exports Indian granite — Incoterms, order process, ports, transit times, seaworthy packing and full export documentation worldwide.',
   [
     {
       '@context': 'https://schema.org',

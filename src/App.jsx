@@ -1051,7 +1051,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         // Breadcrumb schema
         const bc = document.getElementById('ld-breadcrumb');
         if (bc) bc.textContent = JSON.stringify({"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.granava.in/"},{"@type":"ListItem","position":2,"name":"Products","item":"https://www.granava.in/products"}]});
-        setMeta('Technical specifications for Black Galaxy, Jet Black, Black Pearl & Steel Gray granite for export. Available in polished, honed, flamed & leathered finishes. Request samples.');
+        setMeta('Black Galaxy, Jet Black, Black Pearl & Steel Gray granite for export — polished, honed, flamed & leathered finishes. Request samples.');
       }, []);
       return (
         <div>
@@ -2066,7 +2066,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
     function GraniteVsTilesPage() {
       useEffect(() => {
         document.title = "Natural Granite vs Tile — A Specifier's Comparison | Granava";
-        setMeta("How natural granite compares with porcelain and ceramic tile on durability, lifespan, repairability and embodied carbon — a clear comparison for architects, fabricators and developers.");
+        setMeta("How natural granite compares with porcelain and ceramic tile on durability, lifespan, cost and sustainability — for architects and developers.");
       }, []);
 
       const ROWS = [
@@ -2232,7 +2232,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
     function ExportLogisticsPage() {
       useEffect(() => {
         document.title = 'Granite Export & Logistics | Granava';
-        setMeta('How Granava exports premium Indian granite worldwide — Incoterms, the order process, ports and transit times, seaworthy packing, quality control and full export documentation for the UK, USA, UAE and East Asia.');
+        setMeta('How Granava exports Indian granite — Incoterms, order process, ports, transit times, seaworthy packing and full export documentation worldwide.');
       }, []);
 
       const INCOTERMS = [

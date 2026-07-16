@@ -2,8 +2,8 @@
     :root {
       /* Palette — light Nordic stone */
       --bg: #f6f4ef; --surface: #ffffff; --card: #ffffff;
-      --gold: #a2803e; --gold-light: #c9a96e; --gold-dim: rgba(162,128,62,0.12);
-      --text: #191b20; --text-2: #454e58; --muted: #757e88; --border: #e4dfd4;
+      --gold: #8a6b2e; --gold-light: #c9a96e; --gold-dim: rgba(162,128,62,0.12);
+      --text: #191b20; --text-2: #454e58; --muted: #666f79; --border: #e4dfd4;
       /* Typography */
       --font-serif: 'Playfair Display', Georgia, serif;
       --font-logo: 'Josefin Sans', 'Century Gothic', Arial, sans-serif;
@@ -2326,7 +2326,7 @@ body.js-anim .stone-grid.in-view .stone-card{ clip-path:inset(0 0 0 0); }
   transition:color .2s, border-color .2s, background .2s;
 }
 .pd-tabs a:hover{ color:var(--gold); border-color:rgba(162,128,62,.35); background:#ffffff; }
-.pd-section{ scroll-margin-top:calc(var(--nav-h) + 64px); }
+.pd-section{ scroll-margin-top:64px; } /* html scroll-padding already adds nav-h */
 
 /* 7) Full-bleed CTA statement band */
 .cta-banner{
