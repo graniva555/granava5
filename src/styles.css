@@ -2345,3 +2345,26 @@ body.js-anim .stone-grid.in-view .stone-card{ clip-path:inset(0 0 0 0); }
   body.js-anim .stone-grid:not(.in-view) .stone-card{ clip-path:none; } body.js-anim .stone-card{ transition:none; }
   .mkt-extra{ transition:none; }
 }
+
+/* ═══ Markets globe (with graceful failure) ══════════════════════ */
+.mkt-grid{ display:grid; grid-template-columns:1.12fr .88fr; gap:48px; align-items:center; }
+.mkt-globe{ position:relative; aspect-ratio:1; max-width:500px; margin:0 auto; }
+.mkt-globe canvas{ width:100%; height:100%; cursor:grab; opacity:0; transition:opacity 1s ease; touch-action:none; }
+.globe-label{
+  position:absolute; top:0; left:0; white-space:nowrap; pointer-events:none;
+  background:#ffffff; border:1px solid var(--border); border-radius:999px;
+  padding:5px 11px 5px 20px; font-size:10.5px; font-weight:600; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--text-2); box-shadow:var(--shadow-sm);
+  opacity:0; transition:opacity .35s ease; will-change:transform;
+}
+.globe-label::before{
+  content:''; position:absolute; left:9px; top:50%; margin-top:-2.5px;
+  width:5px; height:5px; border-radius:50%; background:var(--gold-light);
+}
+.globe-label-hq{ background:var(--gold); border-color:var(--gold); color:#ffffff; }
+.globe-label-hq::before{ background:#ffffff; }
+
+/* Failsafe + small screens: collapse to the proven single-column layout */
+.mkt-grid.globe-failed{ grid-template-columns:1fr; }
+.mkt-grid.globe-failed .mkt-globe-col{ display:none; }
+@media(max-width:1000px){ .mkt-grid{ grid-template-columns:1fr; } .mkt-globe-col{ display:none; } }

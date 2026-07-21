@@ -1,3 +1,4 @@
+import createGlobe from 'cobe';
 import React from 'react'
 import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom'
 
@@ -618,6 +619,114 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       );
     }
 
+
+    const GLOBE_POINTS = [
+      { id: 'hq', loc: [15.5, 80.05], label: 'Ongole \u00b7 HQ', hq: true },
+      { id: 'uk', loc: [51.51, -0.13], label: 'London' },
+      { id: 'us', loc: [40.71, -74.01], label: 'New York' },
+      { id: 'ae', loc: [25.2, 55.27], label: 'Dubai' },
+      { id: 'jp', loc: [35.68, 139.65], label: 'Tokyo' },
+      { id: 'sg', loc: [1.35, 103.82], label: 'Singapore' },
+    ];
+
+    /* Interactive globe. If WebGL/cobe fails to draw within 2.5s the whole
+       column removes itself and the markets grid falls back to one column. */
+    function MarketGlobe() {
+      const wrapRef = useRef(null);
+      const canvasRef = useRef(null);
+      const labelRefs = useRef({});
+      const drag = useRef({ active: null, off: 0 });
+
+      useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        let globe = null, width = 0, frames = 0, watchdog = 0, ro = null;
+        let phi = 4.6;
+        const speed = prefersReducedMotion ? 0 : 0.0022;
+        const THETA = 0.24;
+
+        const bail = () => {
+          const grid = wrapRef.current && wrapRef.current.closest('.mkt-grid');
+          if (grid) grid.classList.add('globe-failed');
+        };
+
+        const project = (latD, lngD, curPhi) => {
+          const lat = latD * Math.PI / 180, lng = lngD * Math.PI / 180;
+          const a = lng + curPhi;
+          const x = Math.cos(lat) * Math.sin(a);
+          const y = Math.sin(lat);
+          const z = Math.cos(lat) * Math.cos(a);
+          return { x, y: y * Math.cos(THETA) - z * Math.sin(THETA), z: y * Math.sin(THETA) + z * Math.cos(THETA) };
+        };
+
+        const init = () => {
+          width = canvas.offsetWidth;
+          if (!width || globe) return;
+          try {
+            globe = createGlobe(canvas, {
+              devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+              width: width * 2, height: width * 2,
+              phi, theta: THETA, dark: 0, diffuse: 1.6,
+              mapSamples: 14000, mapBrightness: 5.2,
+              baseColor: [0.93, 0.91, 0.86],
+              markerColor: [0.79, 0.66, 0.43],
+              glowColor: [0.98, 0.97, 0.94],
+              markers: GLOBE_POINTS.map(m => ({ location: m.loc, size: m.hq ? 0.09 : 0.055 })),
+              opacity: 0.92,
+              onRender: (state) => {
+                frames++;
+                if (frames === 1) canvas.style.opacity = '1';
+                if (drag.current.active === null) phi += speed;
+                const cur = phi + drag.current.off;
+                state.phi = cur;
+                const r = width / 2, k = 0.985;
+                GLOBE_POINTS.forEach(m => {
+                  const el = labelRefs.current[m.id];
+                  if (!el) return;
+                  const pt = project(m.loc[0], m.loc[1], cur);
+                  const vis = pt.z > 0.12;
+                  el.style.opacity = vis ? '1' : '0';
+                  if (vis) el.style.transform =
+                    'translate(' + (r + pt.x * r * k) + 'px,' + (r - pt.y * r * k) + 'px) translate(-50%,-130%)';
+                });
+              },
+            });
+          } catch (err) { bail(); return; }
+          watchdog = setTimeout(() => { if (frames === 0) bail(); }, 2500);
+        };
+
+        if (canvas.offsetWidth > 0) init();
+        else {
+          ro = new ResizeObserver(es => { if (es[0] && es[0].contentRect.width > 0) { ro.disconnect(); init(); } });
+          ro.observe(canvas);
+          setTimeout(() => { if (!globe) bail(); }, 3500);
+        }
+
+        const move = (e) => { if (drag.current.active !== null) drag.current.off = (e.clientX - drag.current.active) / 200; };
+        const up = () => { if (drag.current.active !== null) { phi += drag.current.off; drag.current.off = 0; drag.current.active = null; canvas.style.cursor = 'grab'; } };
+        window.addEventListener('pointermove', move, { passive: true });
+        window.addEventListener('pointerup', up, { passive: true });
+        return () => {
+          clearTimeout(watchdog);
+          if (ro) ro.disconnect();
+          window.removeEventListener('pointermove', move);
+          window.removeEventListener('pointerup', up);
+          if (globe) globe.destroy();
+        };
+      }, []);
+
+      return (
+        <div className="mkt-globe" ref={wrapRef} aria-label="Granava export destinations">
+          <canvas ref={canvasRef}
+            onPointerDown={(e) => { drag.current.active = e.clientX; e.currentTarget.style.cursor = 'grabbing'; }} />
+          {GLOBE_POINTS.map(m => (
+            <span key={m.id} ref={el => { labelRefs.current[m.id] = el; }}
+              className={'globe-label' + (m.hq ? ' globe-label-hq' : '')}>{m.label}</span>
+          ))}
+        </div>
+      );
+    }
+
     function HomePage() {
       const heroRef = useRef(null);
       useEffect(() => {
@@ -817,7 +926,8 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                 </div>
               </FadeUp>
 
-              {/* Editorial row list */}
+              {/* Editorial row list + globe */}
+              <div className="mkt-grid">
               <div className="mkt-list">
                 {HOME_MARKETS.map((m, i) => (
                   <FadeUp key={m.country} delay={i * 70}>
@@ -847,6 +957,10 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                     </Link>
                   </FadeUp>
                 ))}
+              </div>
+              <div className="mkt-globe-col">
+                <MarketGlobe />
+              </div>
               </div>
 
               {/* Stat strip under markets list */}
