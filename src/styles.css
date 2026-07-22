@@ -2393,3 +2393,10 @@ body.js-anim .stone-grid.in-view .stone-card{ clip-path:inset(0 0 0 0); }
 .pd-vis.granite-jet.fin-flamed{ background-image:url('/images/jet-black-flamed.jpg'); filter:none; }
 .pd-vis.granite-pearl.fin-brushed{ background-image:url('/images/black-pearl-leathered.jpg'); filter:none; }
 .pd-visual.granite-jet, .pd-visual.granite-pearl{ background-size:300px 300px; }
+
+/* Stone names must stay legible over real (dark) stone photography */
+.stone-vis-name{ color:#ffffff; text-shadow:0 1px 10px rgba(0,0,0,.55); }
+.stone-vis-num{ color:rgba(212,184,132,0.95); }
+.stone-vis-fade{
+  background:linear-gradient(to bottom, transparent 30%, rgba(6,10,16,0.55) 62%, rgba(6,10,16,0.96) 100%);
+}

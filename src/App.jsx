@@ -40,7 +40,13 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
      * @param {string} raw
      * @returns {string}
      */
+    /* Legacy slugs kept alive so previously shared/indexed links never 404 */
+    const SLUG_ALIASES = { 'jet-black': 'absolute-black' };
+
     function normalizeSlug(raw) {
+      const cleaned = decodeURIComponent(raw)
+        .trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      if (SLUG_ALIASES[cleaned]) return SLUG_ALIASES[cleaned];
       return decodeURIComponent(raw)   // decode %XX sequences first
         .trim()                         // strip leading / trailing whitespace
         .toLowerCase()                  // force lowercase
@@ -242,11 +248,11 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
     const GALLERY = [
       { id: 'g1',  title: 'Black Galaxy Kitchen Island', product: 'Black Galaxy', application: 'Countertops', location: 'London, UK', cls: 'granite-galaxy', img: null },
       { id: 'g2',  title: 'Steel Gray Facade Cladding', product: 'Steel Gray', application: 'Facades', location: 'Dubai, UAE', cls: 'granite-steel', img: '/images/steel-gray.jpg' },
-      { id: 'g3',  title: 'Jet Black Flooring', product: 'Jet Black', application: 'Flooring', location: 'New York, USA', cls: 'granite-jet', img: null },
+      { id: 'g3',  title: 'Absolute Black Flooring', product: 'Absolute Black', application: 'Flooring', location: 'New York, USA', cls: 'granite-jet', img: null },
       { id: 'g4',  title: 'Black Pearl Feature Wall', product: 'Black Pearl', application: 'Wall Cladding', location: 'Singapore', cls: 'granite-pearl', img: null },
       { id: 'g5',  title: 'Black Galaxy Bathroom Vanity', product: 'Black Galaxy', application: 'Countertops', location: 'Manchester, UK', cls: 'granite-galaxy', img: null },
       { id: 'g6',  title: 'Steel Gray Staircase', product: 'Steel Gray', application: 'Flooring', location: 'Abu Dhabi, UAE', cls: 'granite-steel', img: '/images/steel-gray-dark.jpg' },
-      { id: 'g7',  title: 'Jet Black Commercial Lobby', product: 'Jet Black', application: 'Flooring', location: 'Tokyo, Japan', cls: 'granite-jet', img: null },
+      { id: 'g7',  title: 'Absolute Black Commercial Lobby', product: 'Absolute Black', application: 'Flooring', location: 'Tokyo, Japan', cls: 'granite-jet', img: null },
       { id: 'g8',  title: 'Black Pearl Kitchen Worktop', product: 'Black Pearl', application: 'Countertops', location: 'Los Angeles, USA', cls: 'granite-pearl', img: null },
       { id: 'g9',  title: 'Black Galaxy Hotel Reception', product: 'Black Galaxy', application: 'Facades', location: 'Dubai, UAE', cls: 'granite-galaxy', img: null },
     ];
@@ -421,7 +427,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                   <li><Link to="/products">Black Galaxy Granite</Link></li>
                   <li><Link to="/products">Black Pearl Granite</Link></li>
                   <li><Link to="/products">Steel Gray Granite</Link></li>
-                  <li><Link to="/products">Jet Black Granite</Link></li>
+                  <li><Link to="/products">Absolute Black Granite</Link></li>
                   <li><Link to="/granite-vs-tiles">Granite vs Tile</Link></li>
                   <li><Link to="/export">Export & Logistics</Link></li>
                   <li><Link to="/contact">Request Sample</Link></li>
@@ -487,7 +493,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                     <li><Link to="/products">Black Galaxy Granite</Link></li>
                     <li><Link to="/products">Black Pearl Granite</Link></li>
                     <li><Link to="/products">Steel Gray Granite</Link></li>
-                    <li><Link to="/products">Jet Black Granite</Link></li>
+                    <li><Link to="/products">Absolute Black Granite</Link></li>
                     <li><Link to="/granite-vs-tiles">Granite vs Tile</Link></li>
                     <li><Link to="/export">Export & Logistics</Link></li>
                     <li><Link to="/contact">Request a Sample</Link></li>
@@ -532,7 +538,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         finishes: ['Polished', 'Honed', 'Flamed', 'Brushed'],
       },
       {
-        num: '04', slug: 'jet-black',    name: 'Jet Black', type: 'Granite',
+        num: '04', slug: 'absolute-black',    name: 'Absolute Black', type: 'Granite',
         cls: 'granite-jet', img: null,
         origin: 'Karimnagar, Telangana',
         desc: 'Absolute, uniform black with a mirror-like depth unlike any other stone. Zero visible inclusions — pure velvety darkness that commands every space it touches.',
@@ -576,7 +582,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
     const HERO_STONES = [
       { name: 'Black Galaxy', cls: 'granite-galaxy', slug: 'black-galaxy' },
-      { name: 'Jet Black', cls: 'granite-jet', slug: 'jet-black' },
+      { name: 'Absolute Black', cls: 'granite-jet', slug: 'absolute-black' },
       { name: 'Black Pearl', cls: 'granite-pearl', slug: 'black-pearl' },
       { name: 'Steel Gray', cls: 'granite-steel', slug: 'steel-gray' },
     ];
@@ -730,8 +736,8 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
     function HomePage() {
       const heroRef = useRef(null);
       useEffect(() => {
-        document.title = 'Granava | Indian Granite Exporter — Black Galaxy, Jet Black & Natural Stone';
-        setMeta('Export-grade Black Galaxy, Jet Black, Black Pearl & Steel Gray granite from India. Trusted granite supplier for architects & fabricators in UK, USA, UAE & East Asia.');
+        document.title = 'Granava | Indian Granite Exporter — Black Galaxy, Absolute Black & Natural Stone';
+        setMeta('Export-grade Black Galaxy, Absolute Black, Black Pearl & Steel Gray granite from India. Trusted granite supplier for architects & fabricators in UK, USA, UAE & East Asia.');
       }, []);
       useEffect(() => {
         if (prefersReducedMotion) return;
@@ -771,7 +777,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                   to the World
                 </h1>
                 <p className="h-fade d3" style={{ fontSize: 17, color: 'var(--muted)', maxWidth: 520, marginBottom: 40, lineHeight: 1.75 }}>
-                  Four exceptional granites — Black Galaxy, Jet Black, Black Pearl &amp; Steel Gray —
+                  Four exceptional granites — Black Galaxy, Absolute Black, Black Pearl &amp; Steel Gray —
                   quarried in India and exported directly to architects, fabricators and developers
                   across the UK, USA, UAE and East Asia.
                 </p>
@@ -781,7 +787,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                 </div>
                 <div className="hero-stones h-fade d5" aria-label="Our granites">
                   <Link to="/products/black-galaxy" className="hero-stone"><span className="hero-stone-vis granite-galaxy" /><span className="hero-stone-name">Black Galaxy</span></Link>
-                  <Link to="/products/jet-black" className="hero-stone"><span className="hero-stone-vis granite-jet" /><span className="hero-stone-name">Jet Black</span></Link>
+                  <Link to="/products/absolute-black" className="hero-stone"><span className="hero-stone-vis granite-jet" /><span className="hero-stone-name">Absolute Black</span></Link>
                   <Link to="/products/black-pearl" className="hero-stone"><span className="hero-stone-vis granite-pearl" /><span className="hero-stone-name">Black Pearl</span></Link>
                   <Link to="/products/steel-gray" className="hero-stone"><span className="hero-stone-vis granite-steel" /><span className="hero-stone-name">Steel Gray</span></Link>
                 </div>
@@ -1088,14 +1094,14 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         faqs: [{ q: `Is Steel Gray good for outdoor use?`, a: `Yes — excellent frost resistance, and flamed or sandblasted finishes give good slip resistance for paving and cladding.` }, { q: `What colour is Steel Gray exactly?`, a: `Deep charcoal to steel-blue grey with fine white and silver veining — cooler and more uniform than warmer greys.` }, { q: `How many finishes are available?`, a: `Five — the widest range in our collection.` }, { q: `What is the minimum order quantity?`, a: `120 square metres.` }],
       },
       {
-        name: 'Jet Black Granite',    slug: 'jet-black',
+        name: 'Absolute Black Granite',    slug: 'absolute-black',
         origin: 'Karimnagar, Telangana, India',
         cls: 'granite-jet',
         tagline: 'Absolute darkness. Absolute elegance.',
-        desc: `Jet Black is the purest expression of natural granite — quarried from the ancient formations of Karimnagar, Telangana, it presents an almost void-like uniformity of colour with zero visible veining or inclusions. When mirror-polished, the surface achieves a depth of black that no manufactured material can replicate. Architects prize it for the way it transforms a space: walls appear to dissolve, countertops become obsidian pools, floors become a statement. An uncompromising choice for spaces that demand absolute presence.`,
+        desc: `Absolute Black is the purest expression of natural granite — quarried from the ancient formations of Karimnagar, Telangana, it presents an almost void-like uniformity of colour with zero visible veining or inclusions. When mirror-polished, the surface achieves a depth of black that no manufactured material can replicate. Architects prize it for the way it transforms a space: walls appear to dissolve, countertops become obsidian pools, floors become a statement. An uncompromising choice for spaces that demand absolute presence.`,
         uses: ['Feature walls & statement surfaces', 'Kitchen countertops', 'Bathroom floors & vanities', 'Commercial lobbies', 'Luxury retail & hospitality', 'Memorial & monumental work'],
         whyTile: [
-          { title: 'Flawless uniform black', text: "Jet Black's near-void uniformity has zero visible inclusions — a depth that printed black tile, with its repeating pattern, simply cannot fake." },
+          { title: 'Flawless uniform black', text: "Absolute Black's near-void uniformity has zero visible inclusions — a depth that printed black tile, with its repeating pattern, simply cannot fake." },
           { title: 'Mirror polish, real depth', text: 'Mirror-polished natural stone reflects with a depth no manufactured glaze reaches; tile gloss sits on the surface and scratches off.' },
           { title: 'Solid through and through', text: "Damage anywhere still shows pure black stone, not the lighter body hiding beneath a tile's printed face." },
           { title: 'Luxury that lasts', text: 'For feature walls and luxury retail, the finish renews in place for decades; a chipped tile means a visible, mismatched swap.' },
@@ -1107,7 +1113,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         rev: true,
         img: null,   // ← replace with '/images/jet-black.jpg' when ready
         specs: [{ k: 'Origin', v: 'Telangana, India' }, { k: 'Density', v: '3.0–3.2 g/cm³' }, { k: 'Water Absorption', v: '0.03%' }, { k: 'Compressive Strength', v: '200–220 MPa' }, { k: 'Flexural Strength', v: '16–19 MPa' }, { k: 'Mohs Hardness', v: '6–7' }, { k: 'Frost Resistance', v: 'Excellent' }, { k: 'Available Finishes', v: '4 options' }],
-        faqs: [{ q: `What makes Jet Black different from other black granites?`, a: `Zero visible veining, flecks or inclusions — a completely uniform pure black, ideal where total uniformity is required.` }, { q: `Is Jet Black truly 100% black?`, a: `Among the most uniform black granites available; mirror-polished it reaches a depth engineered stones cannot match.` }, { q: `What is the best finish for Jet Black?`, a: `Mirror Polish for maximum depth; Honed for contemporary matte; Flamed and Leathered for texture.` }, { q: `Why is Jet Black popular for memorials?`, a: `Its flawless surface takes engraving beautifully; Japanese craftsmen value its consistency.` }],
+        faqs: [{ q: `What makes Absolute Black different from other black granites?`, a: `Zero visible veining, flecks or inclusions — a completely uniform pure black, ideal where total uniformity is required.` }, { q: `Is Absolute Black truly 100% black?`, a: `Among the most uniform black granites available; mirror-polished it reaches a depth engineered stones cannot match.` }, { q: `What is the best finish for Absolute Black?`, a: `Mirror Polish for maximum depth; Honed for contemporary matte; Flamed and Leathered for texture.` }, { q: `Why is Absolute Black popular for memorials?`, a: `Its flawless surface takes engraving beautifully; Japanese craftsmen value its consistency.` }],
       },
     ];
 
@@ -1125,7 +1131,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
         /**
          * Retry loop — rAF fires once per frame, but products 3 & 4
-         * (Steel Gray, Jet Black) are below-fold; React may not have
+         * (Steel Gray, Absolute Black) are below-fold; React may not have
          * committed their DOM nodes by the first frame.
          * We retry up to MAX_ATTEMPTS times, 50ms apart.
          */
@@ -1161,11 +1167,11 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       }, [targetSlug]);
 
       useEffect(() => {
-        document.title = 'Black Galaxy, Black Pearl, Steel Gray & Jet Black Granite Export | Granava India';
+        document.title = 'Black Galaxy, Black Pearl, Steel Gray & Absolute Black Granite Export | Granava India';
         // Breadcrumb schema
         const bc = document.getElementById('ld-breadcrumb');
         if (bc) bc.textContent = JSON.stringify({"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.granava.in/"},{"@type":"ListItem","position":2,"name":"Products","item":"https://www.granava.in/products"}]});
-        setMeta('Black Galaxy, Jet Black, Black Pearl & Steel Gray granite for export — polished, honed, flamed & leathered finishes. Request samples.');
+        setMeta('Black Galaxy, Absolute Black, Black Pearl & Steel Gray granite for export — polished, honed, flamed & leathered finishes. Request samples.');
       }, []);
       return (
         <div>
@@ -1392,7 +1398,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                   </p>
                   <p style={{ color: 'var(--muted)', fontSize: 14.5, lineHeight: 1.82 }}>
                     From this position, we expanded to supply Black Pearl from Karnataka, Steel Gray from Tamil Nadu,
-                    and Jet Black from Telangana — building a portfolio of India's four most internationally respected
+                    and Absolute Black from Telangana — building a portfolio of India's four most internationally respected
                     dark granites, all under one reliably sourced roof.
                   </p>
                 </FadeUp>
@@ -1592,7 +1598,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
             <div className="f-group full">
               <label className="f-label">Product Interest <span className="req">*</span></label>
               <div className="cb-grid">
-                {['Black Galaxy Granite', 'Black Pearl Granite', 'Steel Gray Granite', 'Jet Black Granite', 'All Products'].map(p => (
+                {['Black Galaxy Granite', 'Black Pearl Granite', 'Steel Gray Granite', 'Absolute Black Granite', 'All Products'].map(p => (
                   <label key={p} className="cb-item">
                     <input type="checkbox" checked={form.products.includes(p)} onChange={() => toggleProd(p)} />
                     <span>{p}</span>
@@ -1769,7 +1775,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       const [lightbox, setLightbox] = useState(null);
       useEffect(() => {
         document.title = 'Project Gallery | Granava Granite in Real Spaces';
-        setMeta('See Granava premium Indian granite installed in real projects worldwide — Black Galaxy, Steel Gray, Jet Black and Black Pearl in kitchens, facades and floors.');
+        setMeta('See Granava premium Indian granite installed in real projects worldwide — Black Galaxy, Steel Gray, Absolute Black and Black Pearl in kitchens, facades and floors.');
       }, []);
 
       const applications = ['All', ...Array.from(new Set(GALLERY.map(g => g.application)))];
@@ -2409,7 +2415,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                       <div className="exp-glance-row"><dt>Markets</dt><dd>UK · USA · UAE &amp; Middle East · East Asia</dd></div>
                       <div className="exp-glance-row"><dt>Incoterms</dt><dd>EXW · FOB · CFR · CIF</dd></div>
                       <div className="exp-glance-row"><dt>Loading Ports</dt><dd>Krishnapatnam · Chennai</dd></div>
-                      <div className="exp-glance-row"><dt>Granites</dt><dd>Black Galaxy · Black Pearl · Steel Gray · Jet Black</dd></div>
+                      <div className="exp-glance-row"><dt>Granites</dt><dd>Black Galaxy · Black Pearl · Steel Gray · Absolute Black</dd></div>
                       <div className="exp-glance-row"><dt>Documentation</dt><dd>Full export set provided</dd></div>
                     </dl>
                   </aside>
