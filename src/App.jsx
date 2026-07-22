@@ -241,11 +241,11 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
     // Set img to the filename; until then an elegant stone-texture placeholder shows.
     const GALLERY = [
       { id: 'g1',  title: 'Black Galaxy Kitchen Island', product: 'Black Galaxy', application: 'Countertops', location: 'London, UK', cls: 'granite-galaxy', img: null },
-      { id: 'g2',  title: 'Steel Gray Facade Cladding', product: 'Steel Gray', application: 'Facades', location: 'Dubai, UAE', cls: 'granite-steel', img: null },
+      { id: 'g2',  title: 'Steel Gray Facade Cladding', product: 'Steel Gray', application: 'Facades', location: 'Dubai, UAE', cls: 'granite-steel', img: '/images/steel-gray.jpg' },
       { id: 'g3',  title: 'Jet Black Flooring', product: 'Jet Black', application: 'Flooring', location: 'New York, USA', cls: 'granite-jet', img: null },
       { id: 'g4',  title: 'Black Pearl Feature Wall', product: 'Black Pearl', application: 'Wall Cladding', location: 'Singapore', cls: 'granite-pearl', img: null },
       { id: 'g5',  title: 'Black Galaxy Bathroom Vanity', product: 'Black Galaxy', application: 'Countertops', location: 'Manchester, UK', cls: 'granite-galaxy', img: null },
-      { id: 'g6',  title: 'Steel Gray Staircase', product: 'Steel Gray', application: 'Flooring', location: 'Abu Dhabi, UAE', cls: 'granite-steel', img: null },
+      { id: 'g6',  title: 'Steel Gray Staircase', product: 'Steel Gray', application: 'Flooring', location: 'Abu Dhabi, UAE', cls: 'granite-steel', img: '/images/steel-gray-dark.jpg' },
       { id: 'g7',  title: 'Jet Black Commercial Lobby', product: 'Jet Black', application: 'Flooring', location: 'Tokyo, Japan', cls: 'granite-jet', img: null },
       { id: 'g8',  title: 'Black Pearl Kitchen Worktop', product: 'Black Pearl', application: 'Countertops', location: 'Los Angeles, USA', cls: 'granite-pearl', img: null },
       { id: 'g9',  title: 'Black Galaxy Hotel Reception', product: 'Black Galaxy', application: 'Facades', location: 'Dubai, UAE', cls: 'granite-galaxy', img: null },
@@ -526,7 +526,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       },
       {
         num: '03', slug: 'steel-gray',   name: 'Steel Gray', type: 'Granite',
-        cls: 'granite-steel', img: null,
+        cls: 'granite-steel',
         origin: 'Krishnagiri, Tamil Nadu',
         desc: 'Sophisticated charcoal-gray with fine silver veining. Architecturally versatile — equally at home in minimal interiors and heritage restoration.',
         finishes: ['Polished', 'Honed', 'Flamed', 'Brushed'],
@@ -1068,7 +1068,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       {
         name: 'Steel Gray Granite',   slug: 'steel-gray',
         origin: 'Krishnagiri, Tamil Nadu, India',
-        cls: 'granite-steel',
+        cls: 'granite-steel', img: '/images/steel-gray.jpg',
         tagline: 'Architectural sophistication in every vein.',
         desc: `From Tamil Nadu's Krishnagiri district, Steel Gray is defined by its restrained, sophisticated palette — deep charcoal and steel-blue tones threaded with fine white and silver veining. Its versatility bridges the contemporary and classical, equally at home in a minimalist Tokyo interior and a heritage stone restoration in Edinburgh.`,
         uses: ['Architectural facades', 'Commercial flooring', 'Countertops', 'Heritage restoration', 'Memorial stones', 'Landscape paving'],

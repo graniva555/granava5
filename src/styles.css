@@ -2368,3 +2368,28 @@ body.js-anim .stone-grid.in-view .stone-card{ clip-path:inset(0 0 0 0); }
 .mkt-grid.globe-failed{ grid-template-columns:1fr; }
 .mkt-grid.globe-failed .mkt-globe-col{ display:none; }
 @media(max-width:1000px){ .mkt-grid{ grid-template-columns:1fr; } .mkt-globe-col{ display:none; } }
+
+/* ═══ Real stone photography ═════════════════════════════════════
+   Overrides the procedural gradient for Steel Gray everywhere it
+   appears (hero carousel, collection strip, gallery, product page). */
+.granite-steel{
+  background-image:url('/images/steel-gray.jpg');
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+.pd-visual.granite-steel{ background-size:cover; }
+
+/* Jet Black & Black Pearl: 300px textures tiled at native size (sharp, no upscaling) */
+.granite-jet{
+  background-image:url('/images/jet-black.jpg');
+  background-size:300px 300px; background-repeat:repeat; background-position:center;
+}
+.granite-pearl{
+  background-image:url('/images/black-pearl.jpg');
+  background-size:300px 300px; background-repeat:repeat; background-position:center;
+}
+/* Real per-finish photography — filter disabled so the true surface shows */
+.pd-vis.granite-jet.fin-flamed{ background-image:url('/images/jet-black-flamed.jpg'); filter:none; }
+.pd-vis.granite-pearl.fin-brushed{ background-image:url('/images/black-pearl-leathered.jpg'); filter:none; }
+.pd-visual.granite-jet, .pd-visual.granite-pearl{ background-size:300px 300px; }
