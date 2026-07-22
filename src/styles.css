@@ -2400,3 +2400,10 @@ body.js-anim .stone-grid.in-view .stone-card{ clip-path:inset(0 0 0 0); }
 .stone-vis-fade{
   background:linear-gradient(to bottom, transparent 30%, rgba(6,10,16,0.55) 62%, rgba(6,10,16,0.96) 100%);
 }
+
+/* Black Galaxy — full-resolution photography */
+.granite-galaxy{
+  background-image:url('/images/black-galaxy.jpg');
+  background-size:cover; background-position:center; background-repeat:no-repeat;
+}
+.pd-visual.granite-galaxy{ background-size:cover; }

@@ -246,15 +246,15 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
     // Inspiration gallery — real project photos go in public/images/gallery/
     // Set img to the filename; until then an elegant stone-texture placeholder shows.
     const GALLERY = [
-      { id: 'g1',  title: 'Black Galaxy Kitchen Island', product: 'Black Galaxy', application: 'Countertops', location: 'London, UK', cls: 'granite-galaxy', img: null },
+      { id: 'g1',  title: 'Black Galaxy Kitchen Island', product: 'Black Galaxy', application: 'Countertops', location: 'London, UK', cls: 'granite-galaxy', img: '/images/black-galaxy.jpg' },
       { id: 'g2',  title: 'Steel Gray Facade Cladding', product: 'Steel Gray', application: 'Facades', location: 'Dubai, UAE', cls: 'granite-steel', img: '/images/steel-gray.jpg' },
       { id: 'g3',  title: 'Absolute Black Flooring', product: 'Absolute Black', application: 'Flooring', location: 'New York, USA', cls: 'granite-jet', img: null },
       { id: 'g4',  title: 'Black Pearl Feature Wall', product: 'Black Pearl', application: 'Wall Cladding', location: 'Singapore', cls: 'granite-pearl', img: null },
-      { id: 'g5',  title: 'Black Galaxy Bathroom Vanity', product: 'Black Galaxy', application: 'Countertops', location: 'Manchester, UK', cls: 'granite-galaxy', img: null },
+      { id: 'g5',  title: 'Black Galaxy Bathroom Vanity', product: 'Black Galaxy', application: 'Countertops', location: 'Manchester, UK', cls: 'granite-galaxy', img: '/images/black-galaxy.jpg' },
       { id: 'g6',  title: 'Steel Gray Staircase', product: 'Steel Gray', application: 'Flooring', location: 'Abu Dhabi, UAE', cls: 'granite-steel', img: '/images/steel-gray-dark.jpg' },
       { id: 'g7',  title: 'Absolute Black Commercial Lobby', product: 'Absolute Black', application: 'Flooring', location: 'Tokyo, Japan', cls: 'granite-jet', img: null },
       { id: 'g8',  title: 'Black Pearl Kitchen Worktop', product: 'Black Pearl', application: 'Countertops', location: 'Los Angeles, USA', cls: 'granite-pearl', img: null },
-      { id: 'g9',  title: 'Black Galaxy Hotel Reception', product: 'Black Galaxy', application: 'Facades', location: 'Dubai, UAE', cls: 'granite-galaxy', img: null },
+      { id: 'g9',  title: 'Black Galaxy Hotel Reception', product: 'Black Galaxy', application: 'Facades', location: 'Dubai, UAE', cls: 'granite-galaxy', img: '/images/black-galaxy.jpg' },
     ];
 
     const NAV = [
@@ -1045,7 +1045,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         thickness: '15mm · 18mm · 20mm · 30mm',
         moq: '100 sq. metres',
         rev: false,
-        img: null,   // ← replace with '/images/black-galaxy.jpg' when ready
+        img: '/images/black-galaxy.jpg',
         specs: [{ k: 'Origin', v: 'Andhra Pradesh, India' }, { k: 'Density', v: '3.0–3.1 g/cm³' }, { k: 'Water Absorption', v: '0.04%' }, { k: 'Compressive Strength', v: '190–210 MPa' }, { k: 'Flexural Strength', v: '15–18 MPa' }, { k: 'Mohs Hardness', v: '6–7' }, { k: 'Frost Resistance', v: 'Excellent' }, { k: 'Available Finishes', v: '4 options' }],
         faqs: [{ q: `What causes the golden flecks in Black Galaxy granite?`, a: `The golden-bronze flecks are bronzite, a naturally occurring magnesium-iron silicate mineral. Premium-grade Black Galaxy has fine, evenly distributed flecks.` }, { q: `Is Black Galaxy suitable for kitchen countertops?`, a: `Yes — with 0.04% water absorption and high heat resistance it is one of the best granites for worktops. A polished finish is recommended.` }, { q: `What finishes are available?`, a: `Polished, Honed, Flamed and Leathered.` }, { q: `What is the minimum order quantity?`, a: `100 square metres, with full export documentation provided.` }],
       },
