@@ -324,7 +324,7 @@
     }
 
 
-    .granite-jet {
+    .granite-absolute {
       background-color: #010204;
       background-image:
         /* surface polish sheen — light catching a mirror-polished face */
@@ -403,7 +403,7 @@
     .pd-visual.granite-galaxy,
     .pd-visual.granite-pearl,
     .pd-visual.granite-steel,
-    .pd-visual.granite-jet {
+    .pd-visual.granite-absolute {
       background-attachment: scroll;
       background-size: auto;
     }
@@ -2381,8 +2381,8 @@ body.js-anim .stone-grid.in-view .stone-card{ clip-path:inset(0 0 0 0); }
 .pd-visual.granite-steel{ background-size:cover; }
 
 /* Jet Black & Black Pearl: 300px textures tiled at native size (sharp, no upscaling) */
-.granite-jet{
-  background-image:url('/images/jet-black.jpg');
+.granite-absolute{
+  background-image:url('/images/absolute-black.jpg');
   background-size:300px 300px; background-repeat:repeat; background-position:center;
 }
 .granite-pearl{
@@ -2390,9 +2390,9 @@ body.js-anim .stone-grid.in-view .stone-card{ clip-path:inset(0 0 0 0); }
   background-size:300px 300px; background-repeat:repeat; background-position:center;
 }
 /* Real per-finish photography — filter disabled so the true surface shows */
-.pd-vis.granite-jet.fin-flamed{ background-image:url('/images/jet-black-flamed.jpg'); filter:none; }
+.pd-vis.granite-absolute.fin-flamed{ background-image:url('/images/absolute-black-flamed.jpg'); filter:none; }
 .pd-vis.granite-pearl.fin-brushed{ background-image:url('/images/black-pearl-leathered.jpg'); filter:none; }
-.pd-visual.granite-jet, .pd-visual.granite-pearl{ background-size:300px 300px; }
+.pd-visual.granite-absolute, .pd-visual.granite-pearl{ background-size:300px 300px; }
 
 /* Stone names must stay legible over real (dark) stone photography */
 .stone-vis-name{ color:#ffffff; text-shadow:0 1px 10px rgba(0,0,0,.55); }

@@ -248,11 +248,11 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
     const GALLERY = [
       { id: 'g1',  title: 'Black Galaxy Kitchen Island', product: 'Black Galaxy', application: 'Countertops', location: 'London, UK', cls: 'granite-galaxy', img: '/images/black-galaxy.jpg' },
       { id: 'g2',  title: 'Steel Gray Facade Cladding', product: 'Steel Gray', application: 'Facades', location: 'Dubai, UAE', cls: 'granite-steel', img: '/images/steel-gray.jpg' },
-      { id: 'g3',  title: 'Absolute Black Flooring', product: 'Absolute Black', application: 'Flooring', location: 'New York, USA', cls: 'granite-jet', img: null },
+      { id: 'g3',  title: 'Absolute Black Flooring', product: 'Absolute Black', application: 'Flooring', location: 'New York, USA', cls: 'granite-absolute', img: null },
       { id: 'g4',  title: 'Black Pearl Feature Wall', product: 'Black Pearl', application: 'Wall Cladding', location: 'Singapore', cls: 'granite-pearl', img: null },
       { id: 'g5',  title: 'Black Galaxy Bathroom Vanity', product: 'Black Galaxy', application: 'Countertops', location: 'Manchester, UK', cls: 'granite-galaxy', img: '/images/black-galaxy.jpg' },
       { id: 'g6',  title: 'Steel Gray Staircase', product: 'Steel Gray', application: 'Flooring', location: 'Abu Dhabi, UAE', cls: 'granite-steel', img: '/images/steel-gray-dark.jpg' },
-      { id: 'g7',  title: 'Absolute Black Commercial Lobby', product: 'Absolute Black', application: 'Flooring', location: 'Tokyo, Japan', cls: 'granite-jet', img: null },
+      { id: 'g7',  title: 'Absolute Black Commercial Lobby', product: 'Absolute Black', application: 'Flooring', location: 'Tokyo, Japan', cls: 'granite-absolute', img: null },
       { id: 'g8',  title: 'Black Pearl Kitchen Worktop', product: 'Black Pearl', application: 'Countertops', location: 'Los Angeles, USA', cls: 'granite-pearl', img: null },
       { id: 'g9',  title: 'Black Galaxy Hotel Reception', product: 'Black Galaxy', application: 'Facades', location: 'Dubai, UAE', cls: 'granite-galaxy', img: '/images/black-galaxy.jpg' },
     ];
@@ -539,7 +539,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       },
       {
         num: '04', slug: 'absolute-black',    name: 'Absolute Black', type: 'Granite',
-        cls: 'granite-jet', img: null,
+        cls: 'granite-absolute', img: null,
         origin: 'Karimnagar, Telangana',
         desc: 'Absolute, uniform black with a mirror-like depth unlike any other stone. Zero visible inclusions — pure velvety darkness that commands every space it touches.',
         finishes: ['Mirror Polish', 'Honed', 'Flamed', 'Leathered'],
@@ -582,7 +582,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 
     const HERO_STONES = [
       { name: 'Black Galaxy', cls: 'granite-galaxy', slug: 'black-galaxy' },
-      { name: 'Absolute Black', cls: 'granite-jet', slug: 'absolute-black' },
+      { name: 'Absolute Black', cls: 'granite-absolute', slug: 'absolute-black' },
       { name: 'Black Pearl', cls: 'granite-pearl', slug: 'black-pearl' },
       { name: 'Steel Gray', cls: 'granite-steel', slug: 'steel-gray' },
     ];
@@ -787,7 +787,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                 </div>
                 <div className="hero-stones h-fade d5" aria-label="Our granites">
                   <Link to="/products/black-galaxy" className="hero-stone"><span className="hero-stone-vis granite-galaxy" /><span className="hero-stone-name">Black Galaxy</span></Link>
-                  <Link to="/products/absolute-black" className="hero-stone"><span className="hero-stone-vis granite-jet" /><span className="hero-stone-name">Absolute Black</span></Link>
+                  <Link to="/products/absolute-black" className="hero-stone"><span className="hero-stone-vis granite-absolute" /><span className="hero-stone-name">Absolute Black</span></Link>
                   <Link to="/products/black-pearl" className="hero-stone"><span className="hero-stone-vis granite-pearl" /><span className="hero-stone-name">Black Pearl</span></Link>
                   <Link to="/products/steel-gray" className="hero-stone"><span className="hero-stone-vis granite-steel" /><span className="hero-stone-name">Steel Gray</span></Link>
                 </div>
@@ -1096,7 +1096,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       {
         name: 'Absolute Black Granite',    slug: 'absolute-black',
         origin: 'Karimnagar, Telangana, India',
-        cls: 'granite-jet',
+        cls: 'granite-absolute',
         tagline: 'Absolute darkness. Absolute elegance.',
         desc: `Absolute Black is the purest expression of natural granite — quarried from the ancient formations of Karimnagar, Telangana, it presents an almost void-like uniformity of colour with zero visible veining or inclusions. When mirror-polished, the surface achieves a depth of black that no manufactured material can replicate. Architects prize it for the way it transforms a space: walls appear to dissolve, countertops become obsidian pools, floors become a statement. An uncompromising choice for spaces that demand absolute presence.`,
         uses: ['Feature walls & statement surfaces', 'Kitchen countertops', 'Bathroom floors & vanities', 'Commercial lobbies', 'Luxury retail & hospitality', 'Memorial & monumental work'],
@@ -1111,7 +1111,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
         thickness: '15mm · 18mm · 20mm · 30mm',
         moq: '100 sq. metres',
         rev: true,
-        img: null,   // ← replace with '/images/jet-black.jpg' when ready
+        img: null,   // ← replace with '/images/absolute-black.jpg' when ready
         specs: [{ k: 'Origin', v: 'Telangana, India' }, { k: 'Density', v: '3.0–3.2 g/cm³' }, { k: 'Water Absorption', v: '0.03%' }, { k: 'Compressive Strength', v: '200–220 MPa' }, { k: 'Flexural Strength', v: '16–19 MPa' }, { k: 'Mohs Hardness', v: '6–7' }, { k: 'Frost Resistance', v: 'Excellent' }, { k: 'Available Finishes', v: '4 options' }],
         faqs: [{ q: `What makes Absolute Black different from other black granites?`, a: `Zero visible veining, flecks or inclusions — a completely uniform pure black, ideal where total uniformity is required.` }, { q: `Is Absolute Black truly 100% black?`, a: `Among the most uniform black granites available; mirror-polished it reaches a depth engineered stones cannot match.` }, { q: `What is the best finish for Absolute Black?`, a: `Mirror Polish for maximum depth; Honed for contemporary matte; Flamed and Leathered for texture.` }, { q: `Why is Absolute Black popular for memorials?`, a: `Its flawless surface takes engraving beautifully; Japanese craftsmen value its consistency.` }],
       },
