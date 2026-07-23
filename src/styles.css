@@ -2407,3 +2407,15 @@ body.js-anim .stone-grid.in-view .stone-card{ clip-path:inset(0 0 0 0); }
   background-size:cover; background-position:center; background-repeat:no-repeat;
 }
 .pd-visual.granite-galaxy{ background-size:cover; }
+
+/* Touch targets: keep small inline links comfortably tappable on mobile */
+@media(max-width:768px){
+  a[href^="mailto:"], a[href^="tel:"]{ display:inline-flex; align-items:center; min-height:44px; }
+  .footer a{ display:inline-flex; align-items:center; min-height:36px; }
+  .mkt-head-link{ display:inline-flex; align-items:center; min-height:44px; }
+}
+
+/* Footer link colour must not override button text (gold CTA needs white) */
+.footer .btn-gold{ color:#ffffff; }
+.footer .btn-outline{ color:#f2f0ea; border-color:rgba(242,240,234,.45); }
+.footer .btn-outline:hover{ background:#f2f0ea; color:#15171c; }

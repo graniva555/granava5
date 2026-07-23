@@ -18,8 +18,8 @@ const template = readFileSync(join(DIST, 'index.html'), 'utf8')
 const routes = []
 
 routes.push(['/products',
-  'Granite Collection — Black Galaxy, Jet Black, Steel Gray | Granava',
-  "Explore Granava's premium Indian granite collection: Black Galaxy, Black Pearl, Steel Gray and Jet Black. Export-grade slabs and tiles for worldwide projects."])
+  'Granite Collection — Black Galaxy, Absolute Black, Steel Gray | Granava',
+  "Explore Granava's premium Indian granite collection: Black Galaxy, Black Pearl, Steel Gray and Absolute Black. Export-grade slabs and tiles for worldwide projects."])
 
 routes.push(['/markets',
   'Export Markets — UK, USA, UAE & East Asia | Granava Granite',
@@ -27,7 +27,7 @@ routes.push(['/markets',
 
 routes.push(['/gallery',
   'Project Gallery | Granava Granite in Real Spaces',
-  'See Granava premium Indian granite installed in real projects worldwide — Black Galaxy, Steel Gray, Jet Black and Black Pearl in kitchens, facades and floors.'])
+  'See Granava premium Indian granite installed in real projects worldwide — Black Galaxy, Steel Gray, Absolute Black and Black Pearl in kitchens, facades and floors.'])
 
 routes.push(['/about',
   'About Granava — Premium Indian Granite Exporter',
@@ -35,7 +35,7 @@ routes.push(['/about',
 
 routes.push(['/contact',
   'Contact Granava — Request a Granite Quote or Samples',
-  'Contact the Granava export team for granite samples, pricing, and shipping quotes. Premium Black Galaxy, Black Pearl, Steel Gray and Jet Black granite.'])
+  'Contact the Granava export team for granite samples, pricing, and shipping quotes. Premium Black Galaxy, Black Pearl, Steel Gray and Absolute Black granite.'])
 
 routes.push(['/granite-vs-tiles',
   "Natural Granite vs Tile — A Specifier's Comparison | Granava",

@@ -11,7 +11,11 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
        e.g. India 98765 43210  →  '919876543210'
        The floating button and the Contact-page WhatsApp link appear
        automatically once a number is set; leave '' to hide them.        */
-    const WHATSAPP_NUMBER = '910000000000'; // ← REPLACE with your real number (or '' to hide)
+    /* Set your real number (digits only, country code first). While this is
+       empty or the placeholder, the WhatsApp button hides itself automatically
+       so a broken chat link can never ship to production. */
+    const WHATSAPP_NUMBER = ''; // e.g. '9198XXXXXXXX'
+    const DISPLAY_PHONE = ''; // e.g. '+91 98XXX XXXXX' — phone rows hide while empty
     const WHATSAPP_MSG = 'Hello Granava, I am interested in your natural granite for export. Could you share more details?';
     const waLink = WHATSAPP_NUMBER
       ? `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MSG)}`
@@ -438,7 +442,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                 <h4>Contact</h4>
                 <p>📍 Ongole, Andhra Pradesh, India</p>
                 <p>📧 info@granava.in</p>
-                <p>📞 +91 00000 00000</p>
+                {DISPLAY_PHONE && <p>📞 {DISPLAY_PHONE}</p>}
                 <p style={{ marginTop: 14, fontSize: 12, color: 'var(--muted)', borderTop: '1px solid var(--border)', paddingTop: 14 }}>
                   Mon–Fri 9 AM – 6 PM IST<br />Saturday 9 AM – 2 PM IST
                 </p>
@@ -737,7 +741,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
       const heroRef = useRef(null);
       useEffect(() => {
         document.title = 'Granava | Indian Granite Exporter — Black Galaxy, Absolute Black & Natural Stone';
-        setMeta('Export-grade Black Galaxy, Absolute Black, Black Pearl & Steel Gray granite from India. Trusted granite supplier for architects & fabricators in UK, USA, UAE & East Asia.');
+        setMeta('Export-grade Black Galaxy, Absolute Black, Black Pearl & Steel Gray granite from India — supplying architects and fabricators worldwide.');
       }, []);
       useEffect(() => {
         if (prefersReducedMotion) return;
@@ -922,7 +926,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                       <em style={{ fontStyle:'italic', color:'var(--gold)' }}>Local Understanding.</em>
                     </h2>
                   </div>
-                  <Link to="/markets" style={{
+                  <Link className="mkt-head-link" to="/markets" style={{
                     fontFamily:'var(--font-sans)', fontSize:11, fontWeight:600,
                     letterSpacing:'0.14em', textTransform:'uppercase',
                     color:'var(--muted)', borderBottom:'1px solid var(--border)',
@@ -1707,7 +1711,7 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
                       <span style={{ fontSize: '1.4rem', flexShrink: 0 }}>📞</span>
                       <div>
                         <div style={{ fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: 7 }}>Phone</div>
-                        <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>+91 00000 00000</p>
+                        {DISPLAY_PHONE ? <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>{DISPLAY_PHONE}</p> : <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>Phone number available on request</p>}
                         {waLink && (
                           <p style={{ fontSize: 12, marginTop: 4 }}>
                             <a href={waLink} target="_blank" rel="noopener noreferrer"
